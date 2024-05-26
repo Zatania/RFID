@@ -18,8 +18,8 @@ Ensure you have the following software installed:
 Clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/Zatania/RFID.git
+cd RFID
 yarn install
 ```
 
