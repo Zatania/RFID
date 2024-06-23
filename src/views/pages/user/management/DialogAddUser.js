@@ -225,7 +225,23 @@ const DialogAddUser = ({ refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='email'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Email'
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
                 <Controller
                   name='phone'
                   control={control}
@@ -241,7 +257,7 @@ const DialogAddUser = ({ refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <Controller
                   name='rfid'
                   control={control}
