@@ -6,7 +6,7 @@ const fetchLogs = async () => {
     const [rows] = await db.query(`
       SELECT
         logs.*,
-        CONCAT(users.first_name, ' ', users.last_name) AS user_full_name,
+        CONCAT(users.first_name, ' ', COALESCE(CONCAT(users.middle_name, ' '), ''), users.last_name) AS user_full_name,
         CONCAT(security_guards.first_name, ' ', COALESCE(CONCAT(security_guards.middle_name, ' '), ''), security_guards.last_name) AS guard_full_name
       FROM logs
       LEFT JOIN users ON logs.user_id = users.user_id
