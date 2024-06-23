@@ -91,10 +91,10 @@ const App = props => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`${themeConfig.templateName} - Parking Attendance Management System`}</title>
+        <title>{`${themeConfig.templateName} - PIYUCHECKPOINT`}</title>
         <meta
           name='description'
-          content={`${themeConfig.templateName} - Parking Attendance Management System - is a straightforward management system for parking lots to manage parking lot users.`}
+          content={`${themeConfig.templateName} - PIYUCHECKPOINT - is a straightforward management system for parking lots to manage parking lot users.`}
         />
         <meta
           name='keywords'

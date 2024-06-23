@@ -26,7 +26,7 @@ const AppBrand = () => {
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <img src='/images/logo.png' alt='logo' width='50' height='50' />
       <Typography variant='h6' sx={{ ml: 2 }}>
-        Parking Attendance Management System
+        PIYUCHECKPOINT
       </Typography>
     </Box>
   )
@@ -78,7 +78,7 @@ const UserLayout = ({ children, contentHeightFixed }) => {
         }
       }}
       footerProps={{
-        content: () => `© ${new Date().getFullYear()} - Parking Attendance Management System `
+        content: () => `© ${new Date().getFullYear()} - PIYUCHECKPOINT`
       }}
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
