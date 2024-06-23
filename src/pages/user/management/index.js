@@ -90,6 +90,17 @@ const UserManagement = () => {
     },
     {
       flex: 0.1,
+      minWidth: 250,
+      field: 'email',
+      headerName: 'Email',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.email}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
       minWidth: 150,
       field: 'phone',
       headerName: 'Phone Number',
