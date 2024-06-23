@@ -31,6 +31,7 @@ const addUser = async data => {
     last_name,
     first_name,
     middle_name,
+    email,
     phone,
     address,
     image,
@@ -55,11 +56,12 @@ const addUser = async data => {
 
   try {
     await db.query(
-      'INSERT INTO users (last_name, first_name, middle_name, phone, address, image, rfid, vehicle_maker, vehicle_model, vehicle_color, vehicle_plate_number, vehicle_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (last_name, first_name, middle_name, email, phone, address, image, rfid, vehicle_maker, vehicle_model, vehicle_color, vehicle_plate_number, vehicle_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         last_name,
         first_name,
         middle_name,
+        email,
         phone,
         address,
         image,
@@ -85,6 +87,7 @@ const editUser = async data => {
     last_name,
     first_name,
     middle_name,
+    email,
     phone,
     address,
     image,
@@ -121,11 +124,12 @@ const editUser = async data => {
 
   try {
     await db.query(
-      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone = ?, address = ?, image = ?, rfid = ?, vehicle_maker = ?, vehicle_model = ?, vehicle_color = ?, vehicle_plate_number = ?, vehicle_image = ? WHERE user_id = ?',
+      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, email=?, phone = ?, address = ?, image = ?, rfid = ?, vehicle_maker = ?, vehicle_model = ?, vehicle_color = ?, vehicle_plate_number = ?, vehicle_image = ? WHERE user_id = ?',
       [
         last_name,
         first_name,
         middle_name,
+        email,
         phone,
         address,
         image,
