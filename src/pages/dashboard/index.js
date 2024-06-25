@@ -72,10 +72,10 @@ const DashboardPage = () => {
   // Refresh list of logs
   const fetchLogs = () => {
     axios
-      .get('/api/user/logs')
+      .get('/api/user/logs/daily')
       .then(response => {
         const currentDay = dayjs().startOf('day')
-        const filteredLogs = response.data.filter(log => dayjs(log.timestamp_in).isAfter(currentDay))
+        const filteredLogs = response.data.filter(log => dayjs(log.timestamp).isAfter(currentDay))
         setLogs(filteredLogs)
       })
       .catch(error => console.error('Error fetching data', error))
@@ -182,11 +182,23 @@ const DashboardPage = () => {
                             <Grid item xs={6}>
                               <Typography variant='body2'>{log.user_full_name}</Typography>
                               <Typography variant='caption' color='textSecondary'>
-                                {dayjs(log.timestamp_in).format('MMMM DD, YYYY hh:mm:ss A')}
+                                {log.timestamp}
                               </Typography>
                             </Grid>
                             <Grid item xs={6}>
-                              {log.status}
+                              {log.status === 'TIME IN' ? (
+                                <Typography variant='h6' color='primary'>
+                                  {log.status}
+                                </Typography>
+                              ) : log.status === 'TIME OUT' ? (
+                                <Typography variant='h6' color='secondary'>
+                                  {log.status}
+                                </Typography>
+                              ) : (
+                                <Typography variant='h6' color='error'>
+                                  {log.status}
+                                </Typography>
+                              )}
                             </Grid>
                           </Grid>
                         </Box>
