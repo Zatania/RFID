@@ -37,14 +37,29 @@ const updateAttendance = async (user_id, guard_id) => {
       if (hours >= 17) {
         const notes = 'Time out way past 5pm.'
         await db.query('UPDATE logs SET timestamp_out = ? WHERE log_id = ?', [currentTime, log.log_id])
+        await db.query('INSERT INTO daily_logs (daily_user_id, daily_guard_id, status) VALUES (?, ?, ?)', [
+          user_id,
+          guard_id,
+          'LATE TIME OUT'
+        ])
         await addViolation(user_id, notes, log.log_id)
         message = 'Time out recorded. Violation added for late time out.'
       } else {
         await db.query('UPDATE logs SET timestamp_out = ? WHERE log_id = ?', [currentTime, log.log_id])
+        await db.query('INSERT INTO daily_logs (daily_user_id, daily_guard_id, status) VALUES (?, ?, ?)', [
+          user_id,
+          guard_id,
+          'TIME OUT'
+        ])
         message = 'Time out recorded.'
       }
     } else {
       await db.query('INSERT INTO logs (user_id, guard_id) VALUES (?, ?)', [user_id, guard_id])
+      await db.query('INSERT INTO daily_logs (daily_user_id, daily_guard_id, status) VALUES (?, ?, ?)', [
+        user_id,
+        guard_id,
+        'TIME IN'
+      ])
       message = 'Time in recorded.'
     }
 
