@@ -82,6 +82,7 @@ const GuardManagement = () => {
       minWidth: 200,
       field: 'fullName',
       headerName: 'Full Name',
+      valueGetter: params => params.row.first_name + ' ' + (params.row.middle_name || '') + ' ' + params.row.last_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.first_name + ' ' + (params.row.middle_name || '') + ' ' + params.row.last_name}
@@ -93,6 +94,7 @@ const GuardManagement = () => {
       minWidth: 150,
       field: 'phone',
       headerName: 'Phone Number',
+      valueGetter: params => params.row.phone,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.phone}
@@ -104,6 +106,7 @@ const GuardManagement = () => {
       minWidth: 150,
       field: 'address',
       headerName: 'Address',
+      valueGetter: params => params.row.address,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.address}
@@ -115,6 +118,7 @@ const GuardManagement = () => {
       minWidth: 150,
       field: 'username',
       headerName: 'Username',
+      valueGetter: params => params.row.username,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.username}

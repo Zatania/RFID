@@ -76,6 +76,7 @@ const UserLogs = () => {
       minWidth: 200,
       field: 'fullName',
       headerName: 'User',
+      valueGetter: params => params.row.user_full_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.user_full_name}
@@ -87,6 +88,7 @@ const UserLogs = () => {
       minWidth: 200,
       field: 'guard_name',
       headerName: 'Security Guard on Duty',
+      valueGetter: params => params.row.guard_full_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.guard_full_name}
@@ -98,6 +100,7 @@ const UserLogs = () => {
       minWidth: 150,
       field: 'timestamp_in',
       headerName: 'Time In',
+      valueGetter: params => params.row.timestamp_in,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.timestamp_in}
@@ -109,6 +112,7 @@ const UserLogs = () => {
       minWidth: 150,
       field: 'timestamp_out',
       headerName: 'Time Out',
+      valueGetter: params => params.row.timestamp_out,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.timestamp_out}
@@ -120,6 +124,7 @@ const UserLogs = () => {
       minWidth: 150,
       field: 'duration',
       headerName: 'Duration',
+      valueGetter: params => params.row.duration,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.duration}

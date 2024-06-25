@@ -82,6 +82,7 @@ const UserManagement = () => {
       minWidth: 200,
       field: 'fullName',
       headerName: 'Full Name',
+      valueGetter: params => params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name}
@@ -93,6 +94,7 @@ const UserManagement = () => {
       minWidth: 250,
       field: 'email',
       headerName: 'Email',
+      valueGetter: params => params.row.email,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.email}
@@ -104,6 +106,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'phone',
       headerName: 'Phone Number',
+      valueGetter: params => params.row.phone,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.phone}
@@ -115,6 +118,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'address',
       headerName: 'Address',
+      valueGetter: params => params.row.address,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.address}
@@ -126,6 +130,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'rfid',
       headerName: 'RFID Number',
+      valueGetter: params => params.row.rfid,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.rfid}
@@ -137,6 +142,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'vehicle_maker',
       headerName: 'Vehicle Maker',
+      valueGetter: params => params.row.vehicle_maker,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.vehicle_maker}
@@ -148,6 +154,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'vehicle_model',
       headerName: 'Vehicle Model',
+      valueGetter: params => params.row.vehicle_model,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.vehicle_model}
@@ -159,6 +166,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'vehicle_color',
       headerName: 'Vehicle Color',
+      valueGetter: params => params.row.vehicle_color,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.vehicle_color}
@@ -170,6 +178,7 @@ const UserManagement = () => {
       minWidth: 150,
       field: 'vehicle_plate_number',
       headerName: 'Vehicle Plate Number',
+      valueGetter: params => params.row.vehicle_plate_number,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.vehicle_plate_number}
