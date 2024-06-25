@@ -82,6 +82,7 @@ const UserSubscription = () => {
       minWidth: 200,
       field: 'fullName',
       headerName: 'Full Name',
+      valueGetter: params => params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name}
@@ -91,33 +92,36 @@ const UserSubscription = () => {
     {
       flex: 0.1,
       minWidth: 150,
-      field: 'phone',
-      headerName: 'Phone Number',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.phone}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'address',
-      headerName: 'Address',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.address}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
       field: 'rfid',
       headerName: 'RFID Number',
+      valueGetter: params => params.row.rfid,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.rfid}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 150,
+      field: 'duration',
+      headerName: 'Duration',
+      valueGetter: params => params.row.duration,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.duration}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 150,
+      field: 'expiry',
+      headerName: 'Expiry Date',
+      valueGetter: params => params.row.expiry,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.expiry}
         </Typography>
       )
     },
@@ -141,7 +145,7 @@ const UserSubscription = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='Users' />
+          <CardHeader title='Users Subscription' />
           <DataGrid
             autoHeight
             columns={userColumn}
