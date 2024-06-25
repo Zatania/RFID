@@ -22,8 +22,8 @@ const fetchLogs = async () => {
 
       return {
         ...row,
-        timestamp_in: dayjs(row.timestamp_in).format('MMMM D, YYYY hh:mm:ss A'),
-        timestamp_out: dayjs(row.timestamp_out).format('MMMM D, YYYY hh:mm:ss A'),
+        timestamp_in: row.timestamp_in ? dayjs(row.timestamp_in).format('MMMM D, YYYY hh:mm:ss A') : '',
+        timestamp_out: row.timestamp_out ? dayjs(row.timestamp_out).format('MMMM D, YYYY hh:mm:ss A') : '',
         duration: formattedDuration
       }
     })
