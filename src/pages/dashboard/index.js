@@ -75,7 +75,7 @@ const DashboardPage = () => {
       .get('/api/user/logs/daily')
       .then(response => {
         const currentDay = dayjs().startOf('day')
-        const filteredLogs = response.data.filter(log => dayjs(log.timestamp).isAfter(currentDay))
+        const filteredLogs = response.data.filter(log => dayjs(log.daily_timestamp).isAfter(currentDay))
         setLogs(filteredLogs)
       })
       .catch(error => console.error('Error fetching data', error))
@@ -182,21 +182,21 @@ const DashboardPage = () => {
                             <Grid item xs={6}>
                               <Typography variant='body2'>{log.user_full_name}</Typography>
                               <Typography variant='caption' color='textSecondary'>
-                                {log.timestamp}
+                                {log.daily_timestamp}
                               </Typography>
                             </Grid>
                             <Grid item xs={6}>
-                              {log.status === 'TIME IN' ? (
+                              {log.daily_status === 'TIME IN' ? (
                                 <Typography variant='h6' color='primary'>
-                                  {log.status}
+                                  {log.daily_status}
                                 </Typography>
                               ) : log.status === 'TIME OUT' ? (
                                 <Typography variant='h6' color='secondary'>
-                                  {log.status}
+                                  {log.daily_status}
                                 </Typography>
                               ) : (
                                 <Typography variant='h6' color='error'>
-                                  {log.status}
+                                  {log.daily_status}
                                 </Typography>
                               )}
                             </Grid>
