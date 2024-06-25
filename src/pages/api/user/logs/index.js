@@ -11,7 +11,7 @@ const fetchLogs = async () => {
       FROM logs
       LEFT JOIN users ON logs.user_id = users.user_id
       LEFT JOIN security_guards ON logs.guard_id = security_guards.guard_id
-      ORDER BY logs.created_at DESC
+      ORDER BY logs.timestamp_in DESC
     `)
 
     const formattedRows = rows.map(row => {
