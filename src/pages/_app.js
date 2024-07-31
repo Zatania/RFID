@@ -23,8 +23,8 @@ import AclGuard from 'src/layouts/components/auth/UserAclGuard'
 import AuthGuard from 'src/layouts/components/auth/UserAuthGuard'
 import GuestGuard from 'src/layouts/components/auth/UserGuestGuard'
 
-// ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+// ** UserSpinner Import
+import UserSpinner from 'src/layouts/components/UserSpinner'
 
 // ** Contexts
 import { SessionProvider } from 'next-auth/react'
@@ -66,11 +66,11 @@ if (themeConfig.routingLoader) {
 
 const Guard = ({ children, authGuard, guestGuard }) => {
   if (guestGuard) {
-    return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
+    return <GuestGuard fallback={<UserSpinner />}>{children}</GuestGuard>
   } else if (!guestGuard && !authGuard) {
     return <>{children}</>
   } else {
-    return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
+    return <AuthGuard fallback={<UserSpinner />}>{children}</AuthGuard>
   }
 }
 
