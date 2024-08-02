@@ -13,14 +13,14 @@ const navigation = () => {
       action: 'read',
       subject: 'user-management',
       icon: 'mdi:people'
-    } /*
+    },
     {
-      title: 'User Subscription',
-      path: '/user/subscription',
+      title: 'BAO Management',
+      path: '/bao/management',
       action: 'read',
-      subject: 'user-subscription',
-      icon: 'mdi:calendar-clock-outline'
-    }, */,
+      subject: 'bao-management',
+      icon: 'mdi:people'
+    },
     {
       title: 'Guard Management',
       path: '/guard/management',
