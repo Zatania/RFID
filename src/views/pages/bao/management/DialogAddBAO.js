@@ -88,9 +88,11 @@ const DialogAddBAO = ({ refreshData }) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    const imagePath = baoImagePath || 'default.png'
+
     const formData = {
       ...data,
-      image: baoImagePath,
+      image: imagePath,
       password: hashedPassword
     }
     try {
