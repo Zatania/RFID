@@ -74,14 +74,14 @@ const DialogEditBAO = ({ bao, refreshData }) => {
 
       toast.success('Image uploaded successfully')
 
+      if (baoImage && baoImage !== 'default.png') {
+        await axios.delete(`/api/image/${baoImage}`)
+      }
+
       return response.data.imagePath
     } catch (error) {
-      console.error(error)
-      if (error) {
-        toast.error(error.message)
-      } else {
-        toast.error('Failed to upload image')
-      }
+      console.error('Image upload error:', error.response ? error.response.data : error.message)
+      toast.error(error.response ? error.response.data.error : 'Failed to upload image')
 
       return ''
     }
@@ -97,7 +97,7 @@ const DialogEditBAO = ({ bao, refreshData }) => {
     const formData = {
       ...data,
       bao_id: baoID,
-      image: baoImagePath
+      image: baoImagePath || 'default.png'
     }
     try {
       const response = await fetch('/api/bao', {
@@ -170,6 +170,52 @@ const DialogEditBAO = ({ bao, refreshData }) => {
             </Box>
             <Grid container spacing={6}>
               <Grid item sm={12} xs={12}>
+                <Grid
+                  container
+                  spacing={6}
+                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <Grid item sm={12} xs={12}>
+                    <FormControl>
+                      <Input
+                        type='file'
+                        id='bao-image-upload'
+                        style={{ display: 'none' }}
+                        onChange={async ({ target }) => {
+                          if (target.files && target.files.length > 0) {
+                            const file = target.files[0]
+                            const imagePath = await handleImageUpload(file)
+                            if (imagePath) {
+                              setBAOImageUploaded(true)
+                              setBAOImagePath(imagePath)
+                            }
+                          }
+                        }}
+                      />
+                      {baoImage ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <img
+                            src={`/api/image/${baoImagePath}`}
+                            alt='BAO Profile Image'
+                            style={{ maxWidth: '50%', cursor: 'pointer' }}
+                            onClick={() => document.getElementById('bao-image-upload').click()}
+                          />
+                        </Box>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          component='label'
+                          htmlFor='bao-image-upload'
+                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                        >
+                          Select Image
+                        </Button>
+                      )}
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item sm={12} xs={12}>
                 <Typography variant='body1'>BAO Information</Typography>
               </Grid>
               <Grid item sm={4} xs={12}>
@@ -218,66 +264,6 @@ const DialogEditBAO = ({ bao, refreshData }) => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Grid
-                  container
-                  spacing={6}
-                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
-                >
-                  <Grid item sm={12} xs={12}>
-                    <Typography variant='body1'>BAO Image</Typography>
-                  </Grid>
-                  <Grid item sm={12} xs={12}>
-                    <FormControl>
-                      <Input
-                        type='file'
-                        id='bao-image-upload'
-                        style={{ display: 'none' }}
-                        onChange={async ({ target }) => {
-                          if (target.files && target.files.length > 0) {
-                            const file = target.files[0]
-                            const imagePath = await handleImageUpload(file)
-                            if (imagePath) {
-                              setBAOImageUploaded(true)
-                              setBAOImagePath(imagePath)
-                            }
-                          }
-                        }}
-                      />
-                      {baoImage ? (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                          {baoImageUploaded ? (
-                            <>
-                              <img
-                                src={`/api/image/${baoImagePath}`}
-                                alt='BAO Profile Image'
-                                style={{ maxWidth: '50%' }}
-                              />
-                              <Typography>BAO Profile Image Successfully Uploaded</Typography>
-                            </>
-                          ) : (
-                            <>
-                              <img src={`/api/image/${baoImage}`} alt='BAO Profile Image' style={{ maxWidth: '50%' }} />
-                              <Button variant='outlined' component='label' htmlFor='bao-image-upload' sx={{ mt: 2 }}>
-                                Change Image
-                              </Button>
-                            </>
-                          )}
-                        </Box>
-                      ) : (
-                        <Button
-                          variant='outlined'
-                          component='label'
-                          htmlFor='bao-image-upload'
-                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
-                        >
-                          Select Image
-                        </Button>
-                      )}
-                    </FormControl>
-                  </Grid>
-                </Grid>
               </Grid>
               <Grid item sm={6} xs={12}>
                 <Controller
