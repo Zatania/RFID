@@ -55,6 +55,7 @@
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.2.0",
     "keen-slider": "6.8.5",
+    "mime-type": "^4.0.0",
     "mysql2": "^3.9.7",
     "next": "13.3.2",
     "next-auth": "^4.24.7",
