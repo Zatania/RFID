@@ -16,7 +16,7 @@ const readFile = (req, saveLocally) => {
       return Date.now().toString() + '_' + path.originalFilename
     }
   }
-  options.maxFileSize = 4000 * 1024 * 1024
+  options.maxFileSize = 100 * 1024 * 1024
   const form = formidable(options)
 
   return new Promise((resolve, reject) => {
@@ -29,23 +29,22 @@ const readFile = (req, saveLocally) => {
 
 const handler = async (req, res) => {
   try {
-    await fs.readdir(path.join(process.cwd(), '/uploads'))
-  } catch (error) {
-    await fs.mkdir(path.join(process.cwd(), '/uploads'))
-  }
+    const uploadDir = path.join(process.cwd(), '/uploads')
+    await fs.readdir(uploadDir).catch(() => fs.mkdir(uploadDir))
 
-  try {
     const file = await readFile(req, true)
     const myImage = file.files.myImage
+
     if (Array.isArray(myImage) && myImage.length > 0) {
       const fullPath = myImage[0].filepath
-      const relativePath = path.relative(path.join(process.cwd(), 'uploads'), fullPath)
-
+      const relativePath = path.relative(uploadDir, fullPath)
       res.json({ imagePath: relativePath.replace(/\\/g, '/') })
+    } else {
+      res.status(400).json({ error: 'No image uploaded' })
     }
   } catch (error) {
-    console.log(error)
-    console.error(error)
+    console.error('Error in upload handler:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }
 
