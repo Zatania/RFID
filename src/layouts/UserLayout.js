@@ -5,6 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Layout from 'src/@core/layouts/Layout'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import Icon from 'src/@core/components/icon'
 
 // ** Navigation Imports
 import VerticalNavItems from 'src/navigation/vertical'
@@ -21,16 +22,11 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
 
-const AppBrand = () => {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <img src='/images/logo.png' alt='logo' width='50' height='50' />
-      <Typography variant='h6' sx={{ ml: 2 }}>
-        PIYUCHECKPOINT
-      </Typography>
-    </Box>
-  )
-}
+// ** Next Import
+import Link from 'next/link'
+
+// ** MUI Import
+import { styled, useTheme } from '@mui/material/styles'
 
 const UserLayout = ({ children, contentHeightFixed }) => {
   // ** Hooks
@@ -52,6 +48,31 @@ const UserLayout = ({ children, contentHeightFixed }) => {
     settings.layout = 'vertical'
   }
 
+  const LinkStyled = styled(Link)({
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none'
+  })
+
+  const HeaderTitle = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    lineHeight: 'normal',
+    textTransform: 'uppercase',
+    color: theme.palette.text.primary,
+    transition: 'opacity .25s ease-in-out, margin .25s ease-in-out'
+  }))
+
+  const AppBrand = () => {
+    return (
+      <LinkStyled href='/'>
+        <img src='/images/logo.png' alt='logo' width='30' height='30' />
+        <HeaderTitle variant='h6' sx={{ ml: 4, mr: 4 }}>
+          PIYUCHECKPOINT
+        </HeaderTitle>
+      </LinkStyled>
+    )
+  }
+
   return (
     <Layout
       hidden={hidden}
@@ -60,8 +81,10 @@ const UserLayout = ({ children, contentHeightFixed }) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: VerticalNavItems(),
-          branding: () => <AppBrand />
+          branding: () => <AppBrand />,
+          lockedIcon: <Icon icon='mdi:chevron-left' />,
+          unlockedIcon: <Icon icon='mdi:chevron-right' />,
+          navItems: VerticalNavItems()
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
           // navItems: verticalMenuItems

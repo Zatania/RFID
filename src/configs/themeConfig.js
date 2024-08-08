@@ -7,7 +7,7 @@
 const themeConfig = {
   // ** Layout Configs
   templateName: 'PIYUCHECKPOINT' /* App Name */,
-  layout: 'horizontal' /* vertical | horizontal */,
+  layout: 'vertical' /* vertical | horizontal */,
   mode: 'light' /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   direction: 'ltr' /* ltr | rtl */,
   skin: 'bordered' /* default | bordered */,
@@ -21,8 +21,8 @@ const themeConfig = {
   navSubItemIcon: 'mdi:circle-outline' /* Icon */,
   verticalNavToggleType: 'accordion' /* accordion | collapse /*! Note: This is for Vertical navigation menu only */,
   navCollapsed: false /* true | false /*! Note: This is for Vertical navigation menu only */,
-  navigationSize: 260 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
-  collapsedNavigationSize: 68 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
+  navigationSize: 300 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
+  collapsedNavigationSize: 60 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
   afterVerticalNavMenuContentPosition: 'fixed' /* fixed | static */,
   beforeVerticalNavMenuContentPosition: 'fixed' /* fixed | static */,
   horizontalMenuToggle: 'hover' /* click | hover /*! Note: This is for Horizontal navigation menu only */,
