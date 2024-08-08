@@ -166,7 +166,7 @@ const DialogEditBAO = ({ bao, refreshData }) => {
               <Typography variant='h5' sx={{ mb: 3 }}>
                 Edit BAO Information
               </Typography>
-              <Typography variant='body2'>Fill BAO Information</Typography>
+              <Typography variant='body2'>Edit BAO Information</Typography>
             </Box>
             <Grid container spacing={6}>
               <Grid item sm={12} xs={12}>
