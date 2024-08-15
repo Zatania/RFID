@@ -16,9 +16,9 @@ const handler = async (req, res) => {
     if (req.method === 'DELETE') {
       const { bao_id } = req.query
       try {
-        const guard = await deleteBAO(bao_id)
+        const bao = await deleteBAO(bao_id)
 
-        if (!guard) return res.status(400).json({ message: 'Failed to delete bao' })
+        if (!bao) return res.status(400).json({ message: 'Failed to delete bao' })
 
         return res.status(200).json({ message: 'BAO deleted successfully' })
       } catch (error) {
