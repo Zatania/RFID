@@ -139,7 +139,7 @@ const BAOManagement = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title="BAO's" />
+          <CardHeader title='BAOs' />
           <DataGrid
             autoHeight
             columns={baoColumn}
