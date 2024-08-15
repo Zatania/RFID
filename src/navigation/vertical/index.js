@@ -15,18 +15,25 @@ const navigation = () => {
       icon: 'mdi:people'
     },
     {
+      title: 'Admin Management',
+      path: '/admin/management',
+      action: 'read',
+      subject: 'admin-management',
+      icon: 'mdi:account-eye'
+    },
+    {
       title: 'BAO Management',
       path: '/bao/management',
       action: 'read',
       subject: 'bao-management',
-      icon: 'mdi:people'
+      icon: 'mdi:account-cash'
     },
     {
       title: 'Guard Management',
       path: '/guard/management',
       action: 'read',
       subject: 'guard-management',
-      icon: 'mdi:shield-account-outline'
+      icon: 'mdi:account-tie-hat'
     },
     {
       title: 'User Logs',
