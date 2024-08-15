@@ -34,7 +34,11 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const DialogEditGuard = ({ guard, refreshData }) => {
   const [show, setShow] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [guardID, setGuardID] = useState('')
+  const [guardImageUploaded, setGuardImageUploaded] = useState(false)
+  const [guardImagePath, setGuardImagePath] = useState('')
+  const [guardImage, setGuardImage] = useState('')
 
   const {
     control,
@@ -50,12 +54,50 @@ const DialogEditGuard = ({ guard, refreshData }) => {
     setShow(false)
     reset()
     refreshData()
+    setGuardImageUploaded(false)
+    setGuardImagePath('')
+    setGuardImage('')
+  }
+
+  const handleImageUpload = async file => {
+    if (!file) return ''
+
+    const formData = new FormData()
+    formData.append('myImage', file)
+
+    try {
+      const response = await axios.post('/api/upload/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      toast.success('Image uploaded successfully')
+
+      if (guardImage && guardImage !== 'default.png') {
+        await axios.delete(`/api/image/${guardImage}`)
+      }
+
+      return response.data.imagePath
+    } catch (error) {
+      console.error('Image upload error:', error.response ? error.response.data : error.message)
+      toast.error(error.response ? error.response.data.error : 'Failed to upload image')
+
+      return ''
+    }
   }
 
   const onSubmit = async data => {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10)
+    } else {
+      data.password = guard.password
+    }
+
     const formData = {
       ...data,
-      guard_id: guardID
+      guard_id: guardID,
+      image: guardImagePath || 'default.png'
     }
     try {
       const response = await fetch('/api/guard', {
@@ -87,8 +129,8 @@ const DialogEditGuard = ({ guard, refreshData }) => {
       setValue('last_name', guard.last_name)
       setValue('first_name', guard.first_name)
       setValue('middle_name', guard.middle_name)
-      setValue('phone', guard.phone)
-      setValue('address', guard.address)
+      setGuardImagePath(guard.image)
+      setGuardImage(guard.image)
       setValue('username', guard.username)
     }
   }, [setValue, guard])
@@ -124,9 +166,55 @@ const DialogEditGuard = ({ guard, refreshData }) => {
               <Typography variant='h5' sx={{ mb: 3 }}>
                 Edit Security Guard
               </Typography>
-              <Typography variant='body2'>Fill Security Guard Information</Typography>
+              <Typography variant='body2'>Edit Security Guard Information</Typography>
             </Box>
             <Grid container spacing={6}>
+              <Grid item sm={12} xs={12}>
+                <Grid
+                  container
+                  spacing={6}
+                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <Grid item sm={12} xs={12}>
+                    <FormControl>
+                      <Input
+                        type='file'
+                        id='guard-image-upload'
+                        style={{ display: 'none' }}
+                        onChange={async ({ target }) => {
+                          if (target.files && target.files.length > 0) {
+                            const file = target.files[0]
+                            const imagePath = await handleImageUpload(file)
+                            if (imagePath) {
+                              setGuardImageUploaded(true)
+                              setGuardImagePath(imagePath)
+                            }
+                          }
+                        }}
+                      />
+                      {guardImage ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <img
+                            src={`/api/image/${guardImagePath}`}
+                            alt='Security Guard Profile Image'
+                            style={{ maxWidth: '50%', cursor: 'pointer' }}
+                            onClick={() => document.getElementById('guard-image-upload').click()}
+                          />
+                        </Box>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          component='label'
+                          htmlFor='guard-image-upload'
+                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                        >
+                          Select Image
+                        </Button>
+                      )}
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid item sm={12} xs={12}>
                 <Typography variant='body1'>Security Guard Information</Typography>
               </Grid>
@@ -177,39 +265,7 @@ const DialogEditGuard = ({ guard, refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='phone'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Phone Number'
-                      error={!!errors.phone}
-                      helperText={errors.phone?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={8} xs={12}>
-                <Controller
-                  name='address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Address'
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Controller
                   name='username'
                   control={control}
@@ -224,6 +280,37 @@ const DialogEditGuard = ({ guard, refreshData }) => {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor='auth-login-v2-password'>Password</InputLabel>
+                  <Controller
+                    name='password'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <OutlinedInput
+                        value={value}
+                        onBlur={onBlur}
+                        label='Password'
+                        onChange={onChange}
+                        id='auth-login-v2-password'
+                        error={Boolean(errors.password)}
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                          <InputAdornment position='end'>
+                            <IconButton
+                              edge='end'
+                              onMouseDown={e => e.preventDefault()}
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    )}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
           </DialogContent>
