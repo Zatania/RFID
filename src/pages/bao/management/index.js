@@ -8,13 +8,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import axios from 'axios'
-import {
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarFilterButton,
-  GridToolbarQuickFilter
-} from '@mui/x-data-grid'
+import { GridToolbarContainer, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 
 // ** Views
