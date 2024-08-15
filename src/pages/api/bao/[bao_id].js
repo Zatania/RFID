@@ -1,6 +1,6 @@
 import db from '../db'
 
-const deleteGuard = async bao_id => {
+const deleteBAO = async bao_id => {
   try {
     await db.query('DELETE FROM baos WHERE id = ?', [bao_id])
 
@@ -16,7 +16,7 @@ const handler = async (req, res) => {
     if (req.method === 'DELETE') {
       const { bao_id } = req.query
       try {
-        const guard = await deleteGuard(bao_id)
+        const guard = await deleteBAO(bao_id)
 
         if (!guard) return res.status(400).json({ message: 'Failed to delete bao' })
 
