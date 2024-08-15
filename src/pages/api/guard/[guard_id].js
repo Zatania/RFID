@@ -2,7 +2,7 @@ import db from '../db'
 
 const deleteGuard = async guard_id => {
   try {
-    await db.query('DELETE FROM security_guards WHERE guard_id = ?', [guard_id])
+    await db.query('DELETE FROM security_guards WHERE id = ?', [guard_id])
 
     return true
   } catch (error) {
