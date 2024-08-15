@@ -4,24 +4,23 @@ const fetchGuards = async () => {
   const [guards] = await db.query('SELECT * FROM security_guards')
 
   return guards.map(guard => ({
-    guard_id: guard.guard_id,
+    guard_id: guard.id,
     first_name: guard.first_name,
     middle_name: guard.middle_name,
     last_name: guard.last_name,
-    phone: guard.phone,
-    address: guard.address,
     username: guard.username,
+    password: guard.password,
     image: guard.image
   }))
 }
 
 const addGuard = async data => {
-  const { last_name, first_name, middle_name, phone, address, username, password } = data
+  const { last_name, first_name, middle_name, image, username, password } = data
 
   try {
     await db.query(
-      'INSERT INTO security_guards (last_name, first_name, middle_name, phone, address, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone, address, username, password]
+      'INSERT INTO security_guards (last_name, first_name, middle_name, image, username, password) VALUES (?, ?, ?, ?, ?, ?)',
+      [last_name, first_name, middle_name, image, username, password]
     )
 
     return true
@@ -32,12 +31,12 @@ const addGuard = async data => {
 }
 
 const editGuard = async data => {
-  const { guard_id, last_name, first_name, middle_name, phone, address, username } = data
+  const { guard_id, last_name, first_name, middle_name, image, username, password } = data
 
   try {
     await db.query(
-      'UPDATE security_guards SET last_name = ?, first_name = ?, middle_name = ?, phone = ?, address = ?, username = ? WHERE guard_id = ?',
-      [last_name, first_name, middle_name, phone, address, username, guard_id]
+      'UPDATE security_guards SET last_name = ?, first_name = ?, middle_name = ?, image = ?, username = ?, password = ? WHERE id = ?',
+      [last_name, first_name, middle_name, image, username, password, guard_id]
     )
 
     return true
@@ -66,9 +65,9 @@ const handler = async (req, res) => {
         }
       }
     } else if (req.method === 'POST') {
-      const { data } = req.body
+      const { formData } = req.body
       try {
-        const guard = await addGuard(data)
+        const guard = await addGuard(formData)
 
         if (!guard) return res.status(400).json({ message: 'Failed to add security guard' })
 
