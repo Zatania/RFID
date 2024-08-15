@@ -1,4 +1,4 @@
-import { Ref, useState, forwardRef, ReactElement, useEffect } from 'react'
+import { useState, forwardRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
-import Fade, { FadeProps } from '@mui/material/Fade'
+import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import AddIcon from '@mui/icons-material/Add'
@@ -17,7 +17,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
 import InputAdornment from '@mui/material/InputAdornment'
-import { FormControlLabel, FormGroup, Checkbox } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
