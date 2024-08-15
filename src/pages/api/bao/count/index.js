@@ -1,8 +1,8 @@
 import db from '../../db'
 
-const fetchGuardCount = async () => {
+const fetchBAOCount = async () => {
   try {
-    const [result] = await db.query('SELECT COUNT(*) AS count FROM security_guards')
+    const [result] = await db.query('SELECT COUNT(*) AS count FROM baos')
 
     return result[0].count
   } catch (error) {
@@ -14,9 +14,9 @@ const fetchGuardCount = async () => {
 const handler = async (req, res) => {
   if (req.method === 'GET') {
     try {
-      const guardCount = await fetchGuardCount()
+      const baoCount = await fetchBAOCount()
 
-      res.status(200).json(guardCount)
+      res.status(200).json(baoCount)
     } catch (error) {
       res.status(500).json({ error: error.message })
     }
