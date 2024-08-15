@@ -8,13 +8,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import axios from 'axios'
-import {
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarFilterButton,
-  GridToolbarQuickFilter
-} from '@mui/x-data-grid'
+import { GridToolbarContainer, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 
 // ** Views
@@ -80,36 +74,36 @@ const GuardManagement = () => {
     {
       flex: 0.2,
       minWidth: 200,
-      field: 'fullName',
-      headerName: 'Full Name',
-      valueGetter: params => params.row.first_name + ' ' + (params.row.middle_name || '') + ' ' + params.row.last_name,
+      field: 'firstName',
+      headerName: 'First Name',
+      valueGetter: params => params.row.first_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.first_name + ' ' + (params.row.middle_name || '') + ' ' + params.row.last_name}
+          {params.row.first_name}
         </Typography>
       )
     },
     {
       flex: 0.2,
-      minWidth: 150,
-      field: 'phone',
-      headerName: 'Phone Number',
-      valueGetter: params => params.row.phone,
+      minWidth: 200,
+      field: 'middleName',
+      headerName: 'Middle Name',
+      valueGetter: params => params.row.middle_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.phone}
+          {params.row.middle_name || 'N/A'}
         </Typography>
       )
     },
     {
       flex: 0.2,
-      minWidth: 150,
-      field: 'address',
-      headerName: 'Address',
-      valueGetter: params => params.row.address,
+      minWidth: 200,
+      field: 'lastName',
+      headerName: 'Last Name',
+      valueGetter: params => params.row.last_name,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.address}
+          {params.row.last_name}
         </Typography>
       )
     },
