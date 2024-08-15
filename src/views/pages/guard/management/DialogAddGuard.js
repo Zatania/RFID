@@ -1,4 +1,4 @@
-import { Ref, useState, forwardRef, ReactElement, useEffect } from 'react'
+import { useState, forwardRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
-import Fade, { FadeProps } from '@mui/material/Fade'
+import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import AddIcon from '@mui/icons-material/Add'
@@ -17,7 +17,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
 import InputAdornment from '@mui/material/InputAdornment'
-import { FormControlLabel, FormGroup, Checkbox } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -26,6 +25,7 @@ import Icon from 'src/@core/components/icon'
 import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import * as bcrypt from 'bcryptjs'
+import axios from 'axios'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -34,6 +34,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 const DialogAddGuard = ({ refreshData }) => {
   const [show, setShow] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [guardImageUploaded, setGuardImageUploaded] = useState(false)
+  const [guardImagePath, setGuardImagePath] = useState('')
 
   const {
     control,
@@ -48,6 +50,36 @@ const DialogAddGuard = ({ refreshData }) => {
     setShow(false)
     reset()
     refreshData()
+    setGuardImageUploaded(false)
+    setGuardImagePath('')
+  }
+
+  const handleImageUpload = async file => {
+    if (!file) return ''
+
+    const formData = new FormData()
+    formData.append('myImage', file)
+
+    try {
+      const response = await axios.post('/api/upload/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      toast.success('Image uploaded successfully')
+
+      return response.data.imagePath
+    } catch (error) {
+      console.error(error)
+      if (error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Failed to upload image')
+      }
+
+      return ''
+    }
   }
 
   const onSubmit = async data => {
@@ -55,14 +87,20 @@ const DialogAddGuard = ({ refreshData }) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    data.password = hashedPassword
+    const imagePath = guardImagePath || 'default.png'
+
+    const formData = {
+      ...data,
+      image: imagePath,
+      password: hashedPassword
+    }
     try {
       const response = await fetch('/api/guard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ data })
+        body: JSON.stringify({ formData })
       })
 
       if (!response.ok) {
@@ -216,37 +254,47 @@ const DialogAddGuard = ({ refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='phone'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Phone Number'
-                      error={!!errors.phone}
-                      helperText={errors.phone?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={8} xs={12}>
-                <Controller
-                  name='address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Address'
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                  )}
-                />
+              <Grid item sm={12} xs={12}>
+                <Grid
+                  container
+                  spacing={6}
+                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <Grid item sm={12} xs={12}>
+                    <Typography variant='body1'>Upload Security Guard Profile Image</Typography>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <FormControl>
+                      <Input
+                        type='file'
+                        id='guard-image-upload'
+                        style={{ display: 'none' }}
+                        onChange={async ({ target }) => {
+                          if (target.files && target.files.length > 0) {
+                            const file = target.files[0]
+                            const imagePath = await handleImageUpload(file)
+                            if (imagePath) {
+                              setGuardImageUploaded(true)
+                              setGuardImagePath(imagePath)
+                            }
+                          }
+                        }}
+                      />
+                      {guardImageUploaded ? (
+                        <Typography>Securty Guard Profile Image Successfully Uploaded</Typography>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          component='label'
+                          htmlFor='guard-image-upload'
+                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                        >
+                          Select Image
+                        </Button>
+                      )}
+                    </FormControl>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </DialogContent>
