@@ -12,16 +12,35 @@ import axios from 'axios'
 
 const Home = () => {
   const [userCount, setUserCount] = useState(0)
+  const [adminCount, setAdminCount] = useState(0)
+  const [baoCount, setBaoCount] = useState(0)
   const [guardCount, setGuardCount] = useState(0)
   const [violationCount, setViolationCount] = useState(0)
   const [rfidCount, setRfidCount] = useState(0)
 
-  // Refresh list of users
   const fetchUsers = () => {
     axios
       .get('/api/user/count')
       .then(response => {
         setUserCount(response.data)
+      })
+      .catch(error => console.error('Error fetching data', error))
+  }
+
+  const fetchAdmins = () => {
+    axios
+      .get('/api/admin/count')
+      .then(response => {
+        setAdminCount(response.data)
+      })
+      .catch(error => console.error('Error fetching data', error))
+  }
+
+  const fetchBAOs = () => {
+    axios
+      .get('/api/bao/count')
+      .then(response => {
+        setBaoCount(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
   }
@@ -56,6 +75,8 @@ const Home = () => {
   // Fetch data on component mount
   useEffect(() => {
     fetchUsers()
+    fetchAdmins()
+    fetchBAOs()
     fetchGuards()
     fetchViolations()
     fetchRFID()
@@ -67,12 +88,13 @@ const Home = () => {
         <UserDetails icon='mdi:account-group-outline' color='primary' count={userCount} title='Total Users' />
       </Grid>
       <Grid item xs={3} md={3}>
-        <UserDetails
-          icon='mdi:shield-account-outline'
-          color='primary'
-          count={guardCount}
-          title='Total Security Guards'
-        />
+        <UserDetails icon='mdi:account-eye' color='primary' count={adminCount} title='Total Admins' />
+      </Grid>
+      <Grid item xs={3} md={3}>
+        <UserDetails icon='mdi:account-cash' color='primary' count={baoCount} title='Total BAOs' />
+      </Grid>
+      <Grid item xs={3} md={3}>
+        <UserDetails icon='mdi:account-tie-hat' color='primary' count={guardCount} title='Total Security Guards' />
       </Grid>
       <Grid item xs={3} md={3}>
         <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
