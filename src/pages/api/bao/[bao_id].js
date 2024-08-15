@@ -15,7 +15,6 @@ const handler = async (req, res) => {
   try {
     if (req.method === 'DELETE') {
       const { bao_id } = req.query
-      console.log('bao_id:', bao_id)
       try {
         const guard = await deleteGuard(bao_id)
 
