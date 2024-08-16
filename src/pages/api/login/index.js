@@ -28,7 +28,17 @@ const findUserInTable = async (username, password, tableName, role) => {
 const findUser = async (username, password) => {
   let user
 
+  user = await findUserInTable(username, password, 'superadmin', 'super_admin')
+  if (user) {
+    return user
+  }
+
   user = await findUserInTable(username, password, 'admins', 'admin')
+  if (user) {
+    return user
+  }
+
+  user = await findUserInTable(username, password, 'baos', 'bao')
   if (user) {
     return user
   }
