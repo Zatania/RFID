@@ -78,10 +78,10 @@ const UserDropdown = props => {
         }}
       >
         <Avatar
-          alt='John Doe'
+          alt='Profile Image'
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={`/api/image/${session?.user.image}`}
         />
       </Badge>
       <Menu
@@ -102,13 +102,21 @@ const UserDropdown = props => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar
+                alt='Profile Image'
+                src={`/api/image/${session?.user.image}`}
+                sx={{ width: '2.5rem', height: '2.5rem' }}
+              />
             </Badge>
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 600 }}>{session?.user.fullname}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                {session?.user.role === 'admin'
+                {session?.user.role === 'super_admin'
+                  ? 'Super Admin'
+                  : session?.user.role === 'super_admin'
                   ? 'Admin'
+                  : session?.user.role === 'bao'
+                  ? 'BAO'
                   : session?.user.role === 'security_guard'
                   ? 'Security Guard'
                   : session?.user.role}

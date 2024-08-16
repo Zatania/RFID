@@ -98,9 +98,10 @@ export const authOptions = {
          * For adding custom parameters to user in session, we first need to add those parameters
          * in token which then will be available in the `session()` callback
          */
-        token.id = user_data.user_id || user_data.guard_id
+        token.id = user_data.id
         token.fullname = user_data.first_name + ' ' + user_data.last_name
         token.username = user_data.username
+        token.image = user_data.image
         token.role = user.role
       }
 
@@ -112,6 +113,7 @@ export const authOptions = {
         session.user.id = token.id
         session.user.fullname = token.fullname
         session.user.username = token.username
+        session.user.image = token.image
         session.user.role = token.role
       }
 
