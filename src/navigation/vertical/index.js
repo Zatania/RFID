@@ -15,6 +15,13 @@ const navigation = () => {
       icon: 'mdi:people'
     },
     {
+      title: 'Premium Management',
+      path: '/premium/management',
+      action: 'read',
+      subject: 'premium-management',
+      icon: 'mdi:people'
+    },
+    {
       title: 'Visitor Management',
       path: '/visitor/management',
       action: 'read',
