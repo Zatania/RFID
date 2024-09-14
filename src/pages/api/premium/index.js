@@ -87,10 +87,10 @@ const addPremium = async data => {
     await db.query('INSERT INTO rfids (premium_id, value) VALUES (LAST_INSERT_ID(), ?)', [rfid])
 
     // Insert into Driver's Licenses Table
-    await db.query('INSERT INTO drivers_licenses (license_number, expiration) VALUES (?, ?)', [
-      license_number,
-      expirationDate.format('YYYY-MM-DD')
-    ])
+    await db.query(
+      'INSERT INTO drivers_licenses (premium_id, license_number, expiration) VALUES (LAST_INSERT_ID(), ?, ?)',
+      [license_number, expirationDate.format('YYYY-MM-DD')]
+    )
 
     return true
   } catch (error) {
