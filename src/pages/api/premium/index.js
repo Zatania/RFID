@@ -78,19 +78,24 @@ const addPremium = async data => {
   }
 
   try {
-    await db.query(
+    // Insert into Premiums table
+    const [premiumResult] = await db.query(
       'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Missing Details']
     )
 
-    // Insert into RFID table
-    await db.query('INSERT INTO rfids (premium_id, value) VALUES (LAST_INSERT_ID(), ?)', [rfid])
+    // Get the premium_id from the last insert
+    const premiumId = premiumResult.insertId
 
-    // Insert into Driver's Licenses Table
-    await db.query(
-      'INSERT INTO drivers_licenses (premium_id, license_number, expiration) VALUES (LAST_INSERT_ID(), ?, ?)',
-      [license_number, expirationDate.format('YYYY-MM-DD')]
-    )
+    // Insert into RFID table
+    await db.query('INSERT INTO rfids (premium_id, value) VALUES (?, ?)', [premiumId, rfid])
+
+    // Insert into Driver's Licenses table
+    await db.query('INSERT INTO drivers_licenses (premium_id, license_number, expiration) VALUES (?, ?, ?)', [
+      premiumId,
+      license_number,
+      expirationDate.format('YYYY-MM-DD')
+    ])
 
     return true
   } catch (error) {
