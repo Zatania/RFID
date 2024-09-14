@@ -14,6 +14,7 @@ import Tooltip from '@mui/material/Tooltip'
 
 // ** Views
 import DialogAddPremium from 'src/views/pages/premium/management/DialogAddPremium'
+import DialogEditPremium from 'src/views/pages/premium/management/DialogEditPremium'
 import DialogDeletePremium from 'src/views/pages/premium/management/DialogDeletePremium'
 
 function CustomToolbar(props) {
@@ -84,19 +85,6 @@ const PremiumManagement = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 150,
-      field: 'vehicles',
-      headerName: 'Vehicles',
-      renderCell: params => {
-        return (
-          <>
-            <DialogDeletePremium premium_id={params.row.id} refreshData={fetchPremiums} />
-          </>
-        )
-      }
-    },
-    {
       flex: 0.1,
       minWidth: 100,
       field: 'status',
@@ -118,6 +106,7 @@ const PremiumManagement = () => {
       renderCell: params => {
         return (
           <>
+            <DialogEditPremium premium={params.row} refreshData={fetchPremiums} />
             <DialogDeletePremium premium_id={params.row.id} refreshData={fetchPremiums} />
           </>
         )
