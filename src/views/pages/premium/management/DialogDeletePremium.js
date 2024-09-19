@@ -48,7 +48,7 @@ const DialogDeletePremium = ({ premium_id, refreshData }) => {
 
   return (
     <Card>
-      <Button size='small' startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Button size='small' sx={{ mr: 3 }} startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
         Delete
       </Button>
       <Dialog

@@ -181,7 +181,7 @@ const DialogViewPremium = ({ premium, refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Button size='small' startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
         View Info
       </Button>
       <Dialog
