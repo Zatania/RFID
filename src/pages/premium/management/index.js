@@ -16,6 +16,7 @@ import Tooltip from '@mui/material/Tooltip'
 import DialogAddPremium from 'src/views/pages/premium/management/DialogAddPremium'
 import DialogViewPremium from 'src/views/pages/premium/management/DialogViewPremium'
 import DialogDeletePremium from 'src/views/pages/premium/management/DialogDeletePremium'
+import DialogViewVehicles from 'src/views/pages/vehicles/management/DialogViewVehicles'
 
 function CustomToolbar(props) {
   const { setPremiumRows } = props
@@ -72,7 +73,7 @@ const PremiumManagement = () => {
   const premiumColumns = [
     {
       flex: 0.1,
-      minWidth: 200,
+      minWidth: 250,
       field: 'fullName',
       headerName: 'Full Name',
       valueGetter: params => params.row.first_name + ' ' + params.row.last_name,
@@ -86,7 +87,21 @@ const PremiumManagement = () => {
     },
     {
       flex: 0.1,
-      minWidth: 100,
+      minWidth: 250,
+      field: 'load_balance',
+      headerName: 'Load Balance',
+      valueGetter: params => params.row.load_balance,
+      renderCell: params => (
+        <Tooltip title={params.row.load_balance}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.load_balance}
+          </Typography>
+        </Tooltip>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 50,
       field: 'status',
       headerName: 'Status',
       valueGetter: params => params.row.status,
@@ -100,13 +115,14 @@ const PremiumManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 100,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {
         return (
           <>
             <DialogViewPremium premium={params.row} refreshData={fetchPremiums} />
+            <DialogViewVehicles premium_id={params.row.id} refreshData={fetchPremiums} />
             <DialogDeletePremium premium_id={params.row.id} refreshData={fetchPremiums} />
           </>
         )
