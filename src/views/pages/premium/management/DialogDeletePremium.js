@@ -1,5 +1,5 @@
 // ** React Imports
-import { Ref, useEffect, useState, forwardRef, ReactElement } from 'react'
+import { useState, forwardRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -8,7 +8,7 @@ import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Fade, { FadeProps } from '@mui/material/Fade'
+import Fade from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
@@ -48,7 +48,7 @@ const DialogDeletePremium = ({ premium_id, refreshData }) => {
 
   return (
     <Card>
-      <Button size='small' sx={{ mr: 3 }} startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Button size='small' startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
         Delete
       </Button>
       <Dialog
