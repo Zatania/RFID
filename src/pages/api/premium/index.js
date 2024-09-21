@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 const fetchPremiums = async () => {
   try {
     const [premiums] = await db.query(`
-      SELECT premiums.*, rfids.value as rfid, drivers_licenses.license_number, drivers_licenses.expiration
+      SELECT premiums.*, rfids.value as rfid, rfids.load_balance as load_balance, drivers_licenses.license_number, drivers_licenses.expiration
       FROM premiums
       LEFT JOIN rfids ON premiums.id = rfids.premium_id
       LEFT JOIN drivers_licenses ON premiums.id = drivers_licenses.premium_id
