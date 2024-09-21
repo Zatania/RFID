@@ -337,7 +337,7 @@ const DialogViewPremium = ({ premium, refreshData }) => {
                         setValue('rfid', e.target.value)
                       }}
                       InputProps={{
-                        readOnly: !isEditing,
+                        readOnly: true,
                         endAdornment: isEditing ? (
                           <InputAdornment position='end'>
                             {rfidScanning ? (
