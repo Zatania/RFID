@@ -69,6 +69,7 @@ const DialogViewPremium = ({ premium, refreshData }) => {
     setPremiumID('')
     setRfid('')
     setIsEditing(false)
+    setRfidScanning(false)
   }
 
   useEffect(() => {
