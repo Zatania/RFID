@@ -349,7 +349,14 @@ const DialogAddPremium = ({ refreshData }) => {
                         }}
                       />
                       {premiumImageUploaded ? (
-                        <Typography>Premium Profile Image Successfully Uploaded</Typography>
+                        <>
+                          <img
+                            src={`/api/image/${premiumImagePath}`}
+                            alt='Premium User Profile Picture'
+                            style={{ maxWidth: '50%' }}
+                          />
+                          <Typography>Premium Profile Image Successfully Uploaded</Typography>
+                        </>
                       ) : (
                         <Button
                           variant='outlined'
