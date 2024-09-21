@@ -483,7 +483,14 @@ const DialogViewPremium = ({ premium, refreshData }) => {
                 <Button type='submit' variant='contained'>
                   Save
                 </Button>
-                <Button variant='outlined' color='secondary' onClick={() => setIsEditing(false)}>
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={() => {
+                    setIsEditing(false)
+                    setRfidScanning(false)
+                  }}
+                >
                   Cancel
                 </Button>
               </>
