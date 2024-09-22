@@ -2,7 +2,21 @@ import db from '../../db'
 
 const deleteVehicle = async vehicle_id => {
   try {
+    const [vehicle] = await db.query('SELECT premium_id FROM vehicles WHERE id = ?', [vehicle_id])
+
+    if (vehicle.length === 0) {
+      throw new Error('Vehicle not found')
+    }
+
+    const premium_id = vehicle[0].premium_id
+
     await db.query('DELETE FROM vehicles WHERE id = ?', [vehicle_id])
+
+    const [countResult] = await db.query('SELECT COUNT(*) as count FROM vehicles WHERE premium_id = ?', [premium_id])
+
+    if (countResult[0].count <= 1) {
+      await db.query('UPDATE premiums SET status = ? WHERE id = ?', ['Missing Details', premium_id])
+    }
 
     return true
   } catch (error) {
