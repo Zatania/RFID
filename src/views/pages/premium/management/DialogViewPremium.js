@@ -113,6 +113,10 @@ const DialogViewPremium = ({ premium, refreshData }) => {
 
       toast.success('Image uploaded successfully')
 
+      if (premiumImage && premiumImage !== 'default.png') {
+        await axios.delete(`/api/image/${premiumImage}`)
+      }
+
       return response.data.imagePath
     } catch (error) {
       console.error(error)
