@@ -160,7 +160,7 @@ const DialogViewVehicle = ({ vehicle, refreshData }) => {
       setValue('rfid', vehicle.rfid)
       setValue('or_number', vehicle.or_number)
       setValue('cr_number', vehicle.cr_number)
-      setValue('expiration', vehicle.registration_expiration)
+      setValue('registration_expiration', vehicle.registration_expiration)
       setVehicleImagePath(vehicle.image)
       setVehicleImage(vehicle.image)
       if (vehicle && vehicle.rfid) {
