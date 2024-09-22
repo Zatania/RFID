@@ -58,8 +58,6 @@ const DialogViewVehicles = ({ premium_id, refreshData }) => {
     }
   }, [show, premium_id])
 
-  console.log(vehicles)
-
   const fetchVehicles = async premium_id => {
     try {
       const response = await axios.get(`/api/premium/${premium_id}`)
