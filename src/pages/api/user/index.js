@@ -60,6 +60,7 @@ const addUser = async data => {
     email_address,
     address,
     image,
+    type,
     rfid,
     license_number,
     expiration
@@ -87,8 +88,8 @@ const addUser = async data => {
 
   try {
     const [userResult] = await db.query(
-      'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Missing Details']
+      'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, 'Missing Details']
     )
 
     const userID = userResult.insertId
@@ -118,6 +119,7 @@ const editUser = async data => {
     email_address,
     address,
     image,
+    type,
     rfid,
     license_number,
     expiration
@@ -162,8 +164,8 @@ const editUser = async data => {
 
   try {
     await db.query(
-      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ? WHERE id = ?',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, user_id]
+      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ?, type =? WHERE id = ?',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, user_id]
     )
 
     await db.query('UPDATE rfids SET value = ? WHERE user_id = ?', [rfid, user_id])

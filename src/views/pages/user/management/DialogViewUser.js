@@ -24,6 +24,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import FormHelperText from '@mui/material/FormHelperText'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -171,6 +174,7 @@ const DialogViewUser = ({ user, refreshData }) => {
       setValue('email_address', user.email_address)
       setValue('address', user.address)
       setValue('rfid', user.rfid)
+      setValue('type', user.type)
       setValue('license_number', user.license_number)
       setValue('expiration', user.expiration)
       setImagePath(user.image)
@@ -270,7 +274,7 @@ const DialogViewUser = ({ user, refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <Controller
                   name='phone_number'
                   control={control}
@@ -303,6 +307,31 @@ const DialogViewUser = ({ user, refreshData }) => {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item sm={2} xs={12}>
+                <FormControl fullWidth error={!!errors.type}>
+                  <InputLabel htmlFor='type-select'>Type</InputLabel>
+                  <Controller
+                    name='type'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        id='type-select'
+                        label='Type'
+                        disabled={!isEditing}
+                        onChange={e => {
+                          field.onChange(e)
+                        }}
+                      >
+                        <MenuItem value='Student'>Student</MenuItem>
+                        <MenuItem value='Staff'>Staff</MenuItem>
+                      </Select>
+                    )}
+                  />
+                  {errors.type && <FormHelperText>{errors.type.message}</FormHelperText>}
+                </FormControl>
               </Grid>
               <Grid item sm={8} xs={12}>
                 <Controller

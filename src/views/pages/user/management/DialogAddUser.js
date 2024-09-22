@@ -20,6 +20,10 @@ import Input from '@mui/material/Input'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import { InputLabel } from '@mui/material'
+import FormHelperText from '@mui/material/FormHelperText'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -233,7 +237,7 @@ const DialogAddUser = ({ refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={5} xs={12}>
                 <Controller
                   name='phone_number'
                   control={control}
@@ -249,7 +253,7 @@ const DialogAddUser = ({ refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={5} xs={12}>
                 <Controller
                   name='email_address'
                   control={control}
@@ -264,6 +268,30 @@ const DialogAddUser = ({ refreshData }) => {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item sm={2} xs={12}>
+                <FormControl fullWidth error={!!errors.type}>
+                  <InputLabel htmlFor='type-select'>Type</InputLabel>
+                  <Controller
+                    name='type'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <Select
+                        id='type-select'
+                        label='Type'
+                        {...field}
+                        onChange={e => {
+                          field.onChange(e)
+                        }}
+                      >
+                        <MenuItem value='Student'>Student</MenuItem>
+                        <MenuItem value='Staff'>Staff</MenuItem>
+                      </Select>
+                    )}
+                  />
+                  {errors.type && <FormHelperText>{errors.type.message}</FormHelperText>}
+                </FormControl>
               </Grid>
               <Grid item sm={8} xs={12}>
                 <Controller
