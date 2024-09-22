@@ -14,7 +14,6 @@ const defineRulesFor = (role, subject) => {
   } else if (role === 'admin') {
     can(['read'], 'home')
     can(['read'], 'user-management')
-    can(['read'], 'user-subscription')
     can(['read'], 'premium-management')
   } else if (role === 'bao') {
     can(['read'], 'home')
