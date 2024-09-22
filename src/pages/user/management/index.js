@@ -16,11 +16,13 @@ import {
   GridToolbarQuickFilter
 } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
+import Tooltip from '@mui/material/Tooltip'
 
 // ** Views
 import DialogAddUser from 'src/views/pages/user/management/DialogAddUser'
-import DialogEditUser from 'src/views/pages/user/management/DialogEditUser'
+import DialogViewUser from 'src/views/pages/user/management/DialogViewUser'
 import DialogDeleteUser from 'src/views/pages/user/management/DialogDeleteUser'
+import DialogViewVehicles from 'src/views/pages/user/vehicles/management/DialogViewVehicles'
 
 function CustomToolbar(props) {
   const { setUserRows } = props
@@ -79,122 +81,57 @@ const UserManagement = () => {
   const userColumn = [
     {
       flex: 0.1,
-      minWidth: 200,
+      minWidth: 250,
       field: 'fullName',
       headerName: 'Full Name',
-      valueGetter: params => params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name,
+      valueGetter: params => params.row.first_name + ' ' + params.row.last_name,
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.first_name + ' ' + params.row.middle_name + ' ' + params.row.last_name}
-        </Typography>
+        <Tooltip title={params.row.first_name + ' ' + params.row.last_name}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.first_name + ' ' + params.row.last_name}
+          </Typography>
+        </Tooltip>
       )
     },
     {
       flex: 0.1,
       minWidth: 250,
-      field: 'email',
-      headerName: 'Email',
-      valueGetter: params => params.row.email,
+      field: 'load_balance',
+      headerName: 'Load Balance',
+      valueGetter: params => params.row.load_balance,
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.email}
-        </Typography>
+        <Tooltip title={params.row.load_balance}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.load_balance}
+          </Typography>
+        </Tooltip>
       )
     },
     {
       flex: 0.1,
-      minWidth: 150,
-      field: 'phone',
-      headerName: 'Phone Number',
-      valueGetter: params => params.row.phone,
+      minWidth: 50,
+      field: 'status',
+      headerName: 'Status',
+      valueGetter: params => params.row.status,
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.phone}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'address',
-      headerName: 'Address',
-      valueGetter: params => params.row.address,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.address}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'rfid',
-      headerName: 'RFID Number',
-      valueGetter: params => params.row.rfid,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.rfid}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'vehicle_maker',
-      headerName: 'Vehicle Maker',
-      valueGetter: params => params.row.vehicle_maker,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.vehicle_maker}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'vehicle_model',
-      headerName: 'Vehicle Model',
-      valueGetter: params => params.row.vehicle_model,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.vehicle_model}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'vehicle_color',
-      headerName: 'Vehicle Color',
-      valueGetter: params => params.row.vehicle_color,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.vehicle_color}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 150,
-      field: 'vehicle_plate_number',
-      headerName: 'Vehicle Plate Number',
-      valueGetter: params => params.row.vehicle_plate_number,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.vehicle_plate_number}
-        </Typography>
+        <Tooltip title={params.row.status}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.status}
+          </Typography>
+        </Tooltip>
       )
     },
     {
       flex: 0.2,
-      minWidth: 250,
+      minWidth: 100,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {
         return (
           <>
-            <DialogEditUser user={params.row} refreshData={fetchUsers} />
-            <DialogDeleteUser user_id={params.row.user_id} refreshData={fetchUsers} />
+            <DialogViewUser user={params.row} refreshData={fetchUsers} />
+            <DialogViewVehicles user_id={params.row.id} refreshData={fetchUsers} />
+            <DialogDeleteUser user_id={params.row.id} refreshData={fetchUsers} />
           </>
         )
       }
@@ -210,7 +147,7 @@ const UserManagement = () => {
             autoHeight
             columns={userColumn}
             rows={userRows}
-            getRowId={row => row.user_id}
+            getRowId={row => row.id}
             pageSizeOptions={[10, 25, 50, 100]}
             paginationModel={userPaginationModel}
             slots={{ toolbar: CustomToolbar }}

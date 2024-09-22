@@ -1,24 +1,49 @@
 import db from '../db'
+import dayjs from 'dayjs'
 
 const fetchUsers = async () => {
   try {
-    const [users] = await db.query('SELECT * FROM users')
+    const [users] = await db.query(`
+      SELECT users.*, rfids.value as rfid, rfids.load_balance as load_balance, drivers_licenses.license_number, drivers_licenses.expiration
+      FROM users
+      LEFT JOIN rfids ON users.id = rfids.user_id
+      LEFT JOIN drivers_licenses ON users.id = drivers_licenses.user_id
+    `)
 
-    return users
+    return users.map(user => {
+      if (user.expiration) {
+        user.expiration = dayjs(user.expiration).format('MM/DD/YYYY')
+      }
+
+      return user
+    })
   } catch (error) {
     console.error('SQL Error:', error)
     throw error
   }
 }
 
-const checkUnique = async (field, value, userId = null, currentUserValue = null) => {
-  let query = `SELECT COUNT(*) as count FROM users WHERE ${field} = ?`
-  const params = [value]
+const checkRFIDUnique = async (rfid, userID = null, currentUserRfid = null) => {
+  let query = `SELECT COUNT(*) as count FROM rfids WHERE value = ?`
+  const params = [rfid]
 
-  // If userId is provided and currentUserValue is different from the new value, exclude the current user's own value
-  if (userId && currentUserValue !== value) {
+  if (userID && currentUserRfid !== rfid) {
     query += ` AND user_id != ?`
-    params.push(userId)
+    params.push(userID)
+  }
+
+  const [result] = await db.query(query, params)
+
+  return result[0].count === 0
+}
+
+const checkLicenseNumberUnique = async (license_number, userID = null, currentLicenseNumber = null) => {
+  let query = `SELECT COUNT(*) as count FROM drivers_licenses WHERE license_number = ?`
+  const params = [license_number]
+
+  if (userID && currentLicenseNumber !== license_number) {
+    query += ` AND user_id != ?`
+    params.push(userID)
   }
 
   const [result] = await db.query(query, params)
@@ -31,48 +56,50 @@ const addUser = async data => {
     last_name,
     first_name,
     middle_name,
-    email,
-    phone,
+    phone_number,
+    email_address,
     address,
     image,
     rfid,
-    vehicle_maker,
-    vehicle_model,
-    vehicle_color,
-    vehicle_plate_number,
-    vehicle_image
+    license_number,
+    expiration
   } = data
 
-  const isRfidUnique = await checkUnique('rfid', rfid)
-  const isPlateNumberUnique = await checkUnique('vehicle_plate_number', vehicle_plate_number)
+  const isRfidUnique = await checkRFIDUnique(rfid)
+  const isLicenseNumberUnique = await checkLicenseNumberUnique(license_number)
 
   if (!isRfidUnique) {
-    throw new Error('RFID number already exists')
+    throw new Error('RFID number already in-use')
   }
 
-  if (!isPlateNumberUnique) {
-    throw new Error('Vehicle plate number already exists')
+  if (!isLicenseNumberUnique) {
+    throw new Error('License number already exists')
+  }
+
+  const today = dayjs()
+  const expirationDate = dayjs(expiration)
+
+  if (expirationDate.isBefore(today, 'day')) {
+    throw new Error(`The Driver's License is already expired.`)
+  } else if (expirationDate.isSame(today, 'day')) {
+    throw new Error(`The Driver's License is expiring today.`)
   }
 
   try {
-    await db.query(
-      'INSERT INTO users (last_name, first_name, middle_name, email, phone, address, image, rfid, vehicle_maker, vehicle_model, vehicle_color, vehicle_plate_number, vehicle_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        last_name,
-        first_name,
-        middle_name,
-        email,
-        phone,
-        address,
-        image,
-        rfid,
-        vehicle_maker,
-        vehicle_model,
-        vehicle_color,
-        vehicle_plate_number,
-        vehicle_image
-      ]
+    const [userResult] = await db.query(
+      'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Missing Details']
     )
+
+    const userID = userResult.insertId
+
+    await db.query('INSERT INTO rfids (user_id, value) VALUES (?, ?)', [userID, rfid])
+
+    await db.query('INSERT INTO drivers_licenses (user_id, license_number, expiration) VALUES (?, ?, ?)', [
+      userID,
+      license_number,
+      expirationDate.format('YYYY-MM-DD')
+    ])
 
     return true
   } catch (error) {
@@ -87,61 +114,65 @@ const editUser = async data => {
     last_name,
     first_name,
     middle_name,
-    email,
-    phone,
+    phone_number,
+    email_address,
     address,
     image,
     rfid,
-    vehicle_maker,
-    vehicle_model,
-    vehicle_color,
-    vehicle_plate_number,
-    vehicle_image
+    license_number,
+    expiration
   } = data
 
-  const currentUser = await db.query('SELECT rfid, vehicle_plate_number FROM users WHERE user_id = ?', [user_id])
-  const currentUserRfid = currentUser[0].rfid
-  const currentUserPlateNumber = currentUser[0].vehicle_plate_number
-
-  // Check uniqueness of RFID excluding the current user's RFID
-  const isRfidUnique = await checkUnique('rfid', rfid, user_id, currentUserRfid)
-
-  // Check uniqueness of plate number excluding the current user's plate number
-  const isPlateNumberUnique = await checkUnique(
-    'vehicle_plate_number',
-    vehicle_plate_number,
-    user_id,
-    currentUserPlateNumber
+  const currentUser = await db.query(
+    `SELECT rfids.value as rfid, drivers_licenses.license_number
+    FROM users
+    LEFT JOIN rfids ON users.id = rfids.user_id
+    LEFT JOIN drivers_licenses ON users.id = drivers_licenses.user_id
+    WHERE users.id = ?`,
+    [user_id]
   )
 
-  if (!isRfidUnique) {
-    throw new Error('RFID number already exists')
+  if (currentUser.length === 0) {
+    throw new Error('User not found')
   }
 
-  if (!isPlateNumberUnique) {
-    throw new Error('Vehicle plate number already exists')
+  const currentUserRfid = currentUser[0].rfid
+  const currentLicenseNumber = currentUser[0].license_number
+
+  const isRfidUnique = await checkRFIDUnique(rfid, user_id, currentUserRfid)
+  const isLicenseNumberUnique = await checkLicenseNumberUnique(license_number, user_id, currentLicenseNumber)
+
+  if (!isRfidUnique) {
+    throw new Error('RFID number already in use')
+  }
+
+  if (!isLicenseNumberUnique) {
+    throw new Error('License number already exists')
+  }
+
+  // Check if the expiration date is not today or already expired
+  const today = dayjs()
+  const expirationDate = dayjs(expiration)
+
+  if (expirationDate.isBefore(today, 'day')) {
+    throw new Error(`The Driver's License is already expired.`)
+  } else if (expirationDate.isSame(today, 'day')) {
+    throw new Error(`The Driver's License is expiring today.`)
   }
 
   try {
     await db.query(
-      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, email=?, phone = ?, address = ?, image = ?, rfid = ?, vehicle_maker = ?, vehicle_model = ?, vehicle_color = ?, vehicle_plate_number = ?, vehicle_image = ? WHERE user_id = ?',
-      [
-        last_name,
-        first_name,
-        middle_name,
-        email,
-        phone,
-        address,
-        image,
-        rfid,
-        vehicle_maker,
-        vehicle_model,
-        vehicle_color,
-        vehicle_plate_number,
-        vehicle_image,
-        user_id
-      ]
+      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ? WHERE id = ?',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, user_id]
     )
+
+    await db.query('UPDATE rfids SET value = ? WHERE user_id = ?', [rfid, user_id])
+
+    await db.query('UPDATE drivers_licenses SET license_number = ?, expiration = ? WHERE user_id = ?', [
+      license_number,
+      expirationDate.format('YYYY-MM-DD'),
+      user_id
+    ])
 
     return true
   } catch (error) {

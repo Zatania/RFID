@@ -24,7 +24,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogDeleteUser = ({ user_id, refreshData }) => {
+const DialogDeleteVehicle = ({ vehicle_id, refreshData }) => {
   const [show, setShow] = useState(false)
 
   const handleClose = () => {
@@ -34,9 +34,9 @@ const DialogDeleteUser = ({ user_id, refreshData }) => {
 
   const handleDeleteClick = () => {
     axios
-      .delete(`/api/user/${user_id}`)
+      .delete(`/api/premium/vehicle/${vehicle_id}`)
       .then(() => {
-        toast.success('User deleted successfully')
+        toast.success('Vehicle deleted successfully')
         handleClose()
       })
       .catch(error => {
@@ -48,7 +48,7 @@ const DialogDeleteUser = ({ user_id, refreshData }) => {
 
   return (
     <Card>
-      <Button size='small' startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Button size='small' startIcon={<DeleteIcon />} color='error' variant='outlined' onClick={() => setShow(true)}>
         Delete
       </Button>
       <Dialog
@@ -72,7 +72,7 @@ const DialogDeleteUser = ({ user_id, refreshData }) => {
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant='h6' gutterBottom>
-              Are you sure you want to delete this user?
+              Are you sure you want to delete this user's vehicle?
             </Typography>
           </Box>
         </DialogContent>
@@ -95,4 +95,4 @@ const DialogDeleteUser = ({ user_id, refreshData }) => {
   )
 }
 
-export default DialogDeleteUser
+export default DialogDeleteVehicle

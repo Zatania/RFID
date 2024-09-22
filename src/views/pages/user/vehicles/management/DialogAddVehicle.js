@@ -1,4 +1,5 @@
-import { useState, forwardRef, useEffect, useRef } from 'react'
+// ** React Imports
+import { Ref, useState, forwardRef, ReactElement, useEffect, useRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -8,15 +9,18 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Fade from '@mui/material/Fade'
+import FormControl from '@mui/material/FormControl'
+import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import AddIcon from '@mui/icons-material/Add'
-import InputAdornment from '@mui/material/InputAdornment'
-import CircularProgress from '@mui/material/CircularProgress'
 import EditIcon from '@mui/icons-material/Edit'
-import FormControl from '@mui/material/FormControl'
+import ViewIcon from '@mui/icons-material/Visibility'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import Input from '@mui/material/Input'
+import InputLabel from '@mui/material/InputLabel'
+import InputAdornment from '@mui/material/InputAdornment'
+import { FormControlLabel, FormGroup, Checkbox } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -28,18 +32,19 @@ import Icon from 'src/@core/components/icon'
 import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import dayjs from 'dayjs'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogAddUser = ({ refreshData }) => {
+const DialogAddVehicle = ({ user_id, refreshData }) => {
   const [show, setShow] = useState(false)
+  const [vehicleImageUploaded, setVehicleImageUploaded] = useState(false)
+  const [vehicleImagePath, setVehicleImagePath] = useState('')
   const [rfidScanning, setRfidScanning] = useState(false)
   const [rfid, setRfid] = useState('')
   const rfidRef = useRef()
-  const [userImageUploaded, setUserImageUploaded] = useState(false)
-  const [userImagePath, setUserImagePath] = useState('')
 
   const {
     control,
@@ -55,17 +60,17 @@ const DialogAddUser = ({ refreshData }) => {
     setShow(false)
     reset()
     refreshData()
+    setVehicleImageUploaded(false)
+    setVehicleImagePath('')
     setRfid('')
     setRfidScanning(false)
-    setUserImageUploaded(false)
-    setUserImagePath('')
   }
 
   useEffect(() => {
     if (show && rfidRef.current) {
       const socket = new WebSocket('ws://localhost:4000')
 
-      console.log('Connecting to websocket server in adding user...')
+      console.log('Connecting to websocket server in adding vehicle...')
 
       socket.addEventListener('message', event => {
         const message = event.data
@@ -116,44 +121,33 @@ const DialogAddUser = ({ refreshData }) => {
   }
 
   const onSubmit = async data => {
-    const imagePath = userImagePath || 'default.png'
+    const imagePath = vehicleImagePath || 'default.png'
 
     const formData = {
       ...data,
+      user_id: user_id,
       image: imagePath
     }
+
     try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ formData })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to submit form')
+      const response = await axios.post(`/api/user/vehicle`, { formData })
+      if (response.status === 200) {
+        toast.success('Vehicle Added Successfully')
       }
-
-      toast.success('User Added Successfully')
       handleClose()
     } catch (error) {
-      console.error(error)
-      toast.error(error.message || 'Failed to submit form')
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message)
+      } else {
+        toast.error('Failed to add vehicle')
+      }
     }
   }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Button
-        size='small'
-        onClick={() => setShow(true)}
-        startIcon={<AddIcon />}
-        variant='outlined'
-        style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
-      >
-        Add Student/Staff User
+      <Button sx={{ mr: 3 }} variant='contained' onClick={() => setShow(true)}>
+        Add Vehicle
       </Button>
       <Dialog
         fullWidth
@@ -178,110 +172,123 @@ const DialogAddUser = ({ refreshData }) => {
             </IconButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h5' sx={{ mb: 3 }}>
-                Add Student/Staff User
+                View Vehicle
               </Typography>
-              <Typography variant='body2'>Fill User Information</Typography>
+              <Typography variant='body2'>View Vehicle Information</Typography>
             </Box>
             <Grid container spacing={6}>
               <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>User Information</Typography>
+                <Typography variant='body1'>Vehicle Image</Typography>
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Grid
+                  container
+                  spacing={6}
+                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <Grid item sm={12} xs={12}>
+                    <FormControl>
+                      <Input
+                        type='file'
+                        id='vehicle-image-upload'
+                        style={{ display: 'none' }}
+                        onChange={async ({ target }) => {
+                          if (target.files && target.files.length > 0) {
+                            const file = target.files[0]
+                            const imagePath = await handleImageUpload(file)
+                            if (imagePath) {
+                              setVehicleImageUploaded(true)
+                              setVehicleImagePath(imagePath)
+                            }
+                          }
+                        }}
+                      />
+                      {vehicleImageUploaded ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <img src={`/api/image/${vehicleImagePath}`} alt='Vehicle Image' style={{ maxWidth: '25%' }} />
+                          <Typography>Vehicle Image Successfully Uploaded</Typography>
+                        </Box>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          component='label'
+                          htmlFor='vehicle-image-upload'
+                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                        >
+                          Select Image
+                        </Button>
+                      )}
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Typography variant='body1'>Vehicle Information</Typography>
               </Grid>
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='last_name'
+                  name='maker'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Last Name'
-                      error={!!errors.last_name}
-                      helperText={errors.last_name?.message}
+                      label='Maker'
+                      error={!!errors.maker}
+                      helperText={errors.maker?.message}
                     />
                   )}
                 />
               </Grid>
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='first_name'
+                  name='model'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='First Name'
-                      error={!!errors.first_name}
-                      helperText={errors.first_name?.message}
+                      label='Model'
+                      error={!!errors.model}
+                      helperText={errors.model?.message}
                     />
                   )}
                 />
               </Grid>
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='middle_name'
+                  name='color'
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Middle Name'
-                      error={!!errors.middle_name}
-                      helperText={errors.middle_name?.message}
+                      label='Color'
+                      error={!!errors.color}
+                      helperText={errors.color?.message}
                     />
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <Controller
-                  name='phone_number'
+                  name='plate_number'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Phone Number (09xxxxxxxxx)'
-                      error={!!errors.phone_number}
-                      helperText={errors.phone_number?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='email_address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Email Address'
-                      error={!!errors.email_address}
-                      helperText={errors.email_address?.message}
+                      label='Plate Number (ABC-1234)'
+                      error={!!errors.plate_number}
+                      helperText={errors.plate_number?.message}
                     />
                   )}
                 />
               </Grid>
               <Grid item sm={8} xs={12}>
-                <Controller
-                  name='address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Address'
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
                 <Controller
                   name='rfid'
                   control={control}
@@ -300,6 +307,7 @@ const DialogAddUser = ({ refreshData }) => {
                         setValue('rfid', e.target.value)
                       }}
                       InputProps={{
+                        readOnly: true,
                         endAdornment: (
                           <InputAdornment position='end'>
                             {rfidScanning ? (
@@ -317,85 +325,58 @@ const DialogAddUser = ({ refreshData }) => {
                           </InputAdornment>
                         )
                       }}
-                      disabled
                     />
                   )}
                 />
               </Grid>
               <Grid item sm={12} xs={12}>
-                <Grid
-                  container
-                  spacing={6}
-                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
-                >
-                  <Grid item sm={12} xs={12}>
-                    <Typography variant='body1'>Upload User Profile Image</Typography>
-                  </Grid>
-                  <Grid item sm={12} xs={12}>
-                    <FormControl>
-                      <Input
-                        type='file'
-                        id='user-image-upload'
-                        style={{ display: 'none' }}
-                        onChange={async ({ target }) => {
-                          if (target.files && target.files.length > 0) {
-                            const file = target.files[0]
-                            const imagePath = await handleImageUpload(file)
-                            if (imagePath) {
-                              setUserImageUploaded(true)
-                              setUserImagePath(imagePath)
-                            }
-                          }
-                        }}
-                      />
-                      {userImageUploaded ? (
-                        <>
-                          <img
-                            src={`/api/image/${userImagePath}`}
-                            alt='User Profile Picture'
-                            style={{ maxWidth: '50%' }}
-                          />
-                          <Typography>User Profile Image Successfully Uploaded</Typography>
-                        </>
-                      ) : (
-                        <Button
-                          variant='outlined'
-                          component='label'
-                          htmlFor='user-image-upload'
-                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
-                        >
-                          Select Image
-                        </Button>
-                      )}
-                    </FormControl>
-                  </Grid>
-                </Grid>
+                <Typography variant='body1'>Official Receipt and Certifcate of Registration Information</Typography>
               </Grid>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>Driver's License Information</Typography>
-              </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <Controller
-                  name='license_number'
+                  name='or_number'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='License Number'
-                      error={!!errors.license_number}
-                      helperText={errors.license_number?.message}
+                      label='OR Number'
+                      error={!!errors.or_number}
+                      helperText={errors.or_number?.message}
                     />
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='cr_number'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='CR Number'
+                      error={!!errors.cr_number}
+                      helperText={errors.cr_number?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
                 <FormControl fullWidth sx={{ mb: 4 }}>
                   <Controller
-                    name='expiration'
+                    name='registration_expiration'
                     control={control}
-                    render={({ field }) => <DatePicker label='Expiration Date' {...field} />}
+                    render={({ field }) => (
+                      <DatePicker
+                        label='Expiration Date'
+                        value={field.value ? dayjs(field.value) : null}
+                        onChange={field.onChange}
+                        renderInput={params => <TextField {...params} />}
+                      />
+                    )}
                   />
                 </FormControl>
               </Grid>
@@ -421,4 +402,4 @@ const DialogAddUser = ({ refreshData }) => {
   )
 }
 
-export default DialogAddUser
+export default DialogAddVehicle

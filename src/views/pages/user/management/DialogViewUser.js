@@ -14,12 +14,16 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import EditIcon from '@mui/icons-material/Edit'
+import ViewIcon from '@mui/icons-material/Visibility'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
 import InputAdornment from '@mui/material/InputAdornment'
 import { FormControlLabel, FormGroup, Checkbox } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,19 +32,18 @@ import Icon from 'src/@core/components/icon'
 import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import dayjs from 'dayjs'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogEditUser = ({ user, refreshData }) => {
+const DialogViewUser = ({ user, refreshData }) => {
   const [show, setShow] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [userImageUploaded, setUserImageUploaded] = useState(false)
-  const [vehicleImageUploaded, setVehicleImageUploaded] = useState(false)
-  const [userImagePath, setUserImagePath] = useState('')
-  const [vehicleImagePath, setVehicleImagePath] = useState('')
+  const [userImagePath, setImagePath] = useState('')
   const [userImage, setUserImage] = useState('')
-  const [vehicleImage, setVehicleImage] = useState('')
   const [userID, setUserID] = useState('')
   const [rfidScanning, setRfidScanning] = useState(false)
   const [rfid, setRfid] = useState('')
@@ -61,13 +64,12 @@ const DialogEditUser = ({ user, refreshData }) => {
     reset()
     refreshData()
     setUserImageUploaded(false)
-    setVehicleImageUploaded(false)
-    setUserImagePath('')
-    setVehicleImagePath('')
+    setImagePath('')
     setUserImage('')
-    setVehicleImage('')
     setUserID('')
     setRfid('')
+    setIsEditing(false)
+    setRfidScanning(false)
   }
 
   useEffect(() => {
@@ -111,6 +113,10 @@ const DialogEditUser = ({ user, refreshData }) => {
 
       toast.success('Image uploaded successfully')
 
+      if (userImage && userImage !== 'default.png') {
+        await axios.delete(`/api/image/${userImage}`)
+      }
+
       return response.data.imagePath
     } catch (error) {
       console.error(error)
@@ -125,11 +131,12 @@ const DialogEditUser = ({ user, refreshData }) => {
   }
 
   const onSubmit = async data => {
+    const imagePath = userImagePath || 'default.png'
+
     const formData = {
       ...data,
       user_id: userID,
-      image: userImagePath,
-      vehicle_image: vehicleImagePath
+      image: imagePath
     }
     try {
       const response = await fetch('/api/user', {
@@ -155,22 +162,19 @@ const DialogEditUser = ({ user, refreshData }) => {
 
   useEffect(() => {
     if (user) {
-      setUserID(user.user_id)
+      setUserID(user.id)
       setValue('last_name', user.last_name)
       setValue('first_name', user.first_name)
       setValue('middle_name', user.middle_name)
       setValue('email', user.email)
-      setValue('phone', user.phone)
+      setValue('phone_number', user.phone_number)
+      setValue('email_address', user.email_address)
       setValue('address', user.address)
-      setUserImagePath(user.image)
+      setValue('rfid', user.rfid)
+      setValue('license_number', user.license_number)
+      setValue('expiration', user.expiration)
+      setImagePath(user.image)
       setUserImage(user.image)
-      setValue('vehicle_maker', user.vehicle_maker)
-      setValue('vehicle_model', user.vehicle_model)
-      setValue('vehicle_color', user.vehicle_color)
-      setValue('vehicle_plate_number', user.vehicle_plate_number)
-      setVehicleImage(user.vehicle_image)
-      setVehicleImagePath(user.vehicle_image)
-
       if (user && user.rfid) {
         setRfid(user.rfid)
         setValue('rfid', user.rfid)
@@ -181,11 +185,10 @@ const DialogEditUser = ({ user, refreshData }) => {
   }, [setValue, user])
 
   return (
-    <>
-      <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined' sx={{ mr: 5 }}>
-        Edit
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
+        View Info
       </Button>
-
       <Dialog
         fullWidth
         open={show}
@@ -209,9 +212,9 @@ const DialogEditUser = ({ user, refreshData }) => {
             </IconButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h5' sx={{ mb: 3 }}>
-                Edit User
+                {isEditing ? 'Edit User' : 'View User'}
               </Typography>
-              <Typography variant='body2'>Fill User Information</Typography>
+              <Typography variant='body2'>{isEditing ? 'Edit User Information' : 'View User Information'}</Typography>
             </Box>
             <Grid container spacing={6}>
               <Grid item sm={12} xs={12}>
@@ -229,6 +232,7 @@ const DialogEditUser = ({ user, refreshData }) => {
                       label='Last Name'
                       error={!!errors.last_name}
                       helperText={errors.last_name?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
@@ -245,6 +249,7 @@ const DialogEditUser = ({ user, refreshData }) => {
                       label='First Name'
                       error={!!errors.first_name}
                       helperText={errors.first_name?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
@@ -260,38 +265,58 @@ const DialogEditUser = ({ user, refreshData }) => {
                       label='Middle Name'
                       error={!!errors.middle_name}
                       helperText={errors.middle_name?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
               </Grid>
-              <Grid item sm={4} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Controller
-                  name='email'
+                  name='phone_number'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Email'
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
+                      label='Phone Number (09xxxxxxxxx)'
+                      error={!!errors.phone_number}
+                      helperText={errors.phone_number?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
               </Grid>
-              <Grid item sm={4} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Controller
-                  name='phone'
+                  name='email_address'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Phone Number'
-                      error={!!errors.phone}
-                      helperText={errors.phone?.message}
+                      label='Email Address'
+                      error={!!errors.email_address}
+                      helperText={errors.email_address?.message}
+                      InputProps={{ readOnly: !isEditing }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={8} xs={12}>
+                <Controller
+                  name='address'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Address'
+                      error={!!errors.address}
+                      helperText={errors.address?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
@@ -315,7 +340,8 @@ const DialogEditUser = ({ user, refreshData }) => {
                         setValue('rfid', e.target.value)
                       }}
                       InputProps={{
-                        endAdornment: (
+                        readOnly: true,
+                        endAdornment: isEditing ? (
                           <InputAdornment position='end'>
                             {rfidScanning ? (
                               <CircularProgress size={24} />
@@ -324,31 +350,15 @@ const DialogEditUser = ({ user, refreshData }) => {
                                 size='small'
                                 startIcon={<EditIcon />}
                                 onClick={() => handleUpdateRfid()}
+                                disabled={!isEditing}
                                 variant='text'
                               >
                                 Change
                               </Button>
                             )}
                           </InputAdornment>
-                        )
+                        ) : null
                       }}
-                      disabled
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Controller
-                  name='address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Address'
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
                     />
                   )}
                 />
@@ -374,7 +384,7 @@ const DialogEditUser = ({ user, refreshData }) => {
                             const imagePath = await handleImageUpload(file)
                             if (imagePath) {
                               setUserImageUploaded(true)
-                              setUserImagePath(imagePath)
+                              setImagePath(imagePath)
                             }
                           }
                         }}
@@ -383,15 +393,25 @@ const DialogEditUser = ({ user, refreshData }) => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                           {userImageUploaded ? (
                             <>
-                              <img src={`/api/image/${userImagePath}`} alt='User' style={{ maxWidth: '50%' }} />
-                              <Typography>New User Image Successfully Uploaded</Typography>
+                              <img
+                                src={`/api/image/${userImagePath}`}
+                                alt='User Profile Picture'
+                                style={{ maxWidth: '50%' }}
+                              />
+                              <Typography>User Image Successfully Uploaded</Typography>
                             </>
                           ) : (
                             <>
-                              <img src={`/api/image/${userImage}`} alt='User' style={{ maxWidth: '50%' }} />
-                              <Button variant='outlined' component='label' htmlFor='user-image-upload' sx={{ mt: 2 }}>
-                                Change Image
-                              </Button>
+                              <img
+                                src={`/api/image/${userImage}`}
+                                alt='User Profile Picture'
+                                style={{ maxWidth: '50%' }}
+                              />
+                              {isEditing && (
+                                <Button variant='outlined' component='label' htmlFor='user-image-upload' sx={{ mt: 2 }}>
+                                  Change Image
+                                </Button>
+                              )}
                             </>
                           )}
                         </Box>
@@ -410,132 +430,41 @@ const DialogEditUser = ({ user, refreshData }) => {
                 </Grid>
               </Grid>
               <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>Vehicle Information</Typography>
+                <Typography variant='body1'>Driver's License Information</Typography>
               </Grid>
               <Grid item sm={6} xs={12}>
                 <Controller
-                  name='vehicle_maker'
+                  name='license_number'
                   control={control}
                   rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Vehicle Maker'
-                      error={!!errors.vehicle_maker}
-                      helperText={errors.vehicle_maker?.message}
+                      label='License Number'
+                      error={!!errors.license_number}
+                      helperText={errors.license_number?.message}
+                      InputProps={{ readOnly: !isEditing }}
                     />
                   )}
                 />
               </Grid>
               <Grid item sm={6} xs={12}>
-                <Controller
-                  name='vehicle_model'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Vehicle Model'
-                      error={!!errors.vehicle_model}
-                      helperText={errors.vehicle_model?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='vehicle_color'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Vehicle Color'
-                      error={!!errors.vehicle_color}
-                      helperText={errors.vehicle_color?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='vehicle_plate_number'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Vehicle Plate Number'
-                      error={!!errors.vehicle_plate_number}
-                      helperText={errors.vehicle_plate_number?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Grid
-                  container
-                  spacing={6}
-                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
-                >
-                  <Grid item sm={12} xs={12}>
-                    <Typography variant='body1'>Vehicle Image</Typography>
-                  </Grid>
-                  <Grid item sm={12} xs={12}>
-                    <FormControl>
-                      <Input
-                        type='file'
-                        id='vehicle-image-upload'
-                        style={{ display: 'none' }}
-                        onChange={async ({ target }) => {
-                          if (target.files && target.files.length > 0) {
-                            const file = target.files[0]
-                            const imagePath = await handleImageUpload(file)
-                            if (imagePath) {
-                              setVehicleImageUploaded(true)
-                              setVehicleImagePath(imagePath)
-                            }
-                          }
-                        }}
+                <FormControl fullWidth sx={{ mb: 4 }}>
+                  <Controller
+                    name='expiration'
+                    control={control}
+                    render={({ field }) => (
+                      <DatePicker
+                        label='Expiration Date'
+                        value={field.value ? dayjs(field.value) : null}
+                        onChange={field.onChange}
+                        readOnly={!isEditing}
+                        renderInput={params => <TextField {...params} />}
                       />
-                      {vehicleImage ? (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                          {vehicleImageUploaded ? (
-                            <>
-                              <img src={`/api/image/${vehicleImagePath}`} alt='Vehicle' style={{ maxWidth: '50%' }} />
-                              <Typography>Vehicle Image Successfully Uploaded</Typography>
-                            </>
-                          ) : (
-                            <>
-                              <img src={`/api/image/${vehicleImage}`} alt='Vehicle' style={{ maxWidth: '50%' }} />
-                              <Button
-                                variant='outlined'
-                                component='label'
-                                htmlFor='vehicle-image-upload'
-                                sx={{ mt: 2 }}
-                              >
-                                Change Image
-                              </Button>
-                            </>
-                          )}
-                        </Box>
-                      ) : (
-                        <Button
-                          variant='outlined'
-                          component='label'
-                          htmlFor='vehicle-image-upload'
-                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
-                        >
-                          Select Image
-                        </Button>
-                      )}
-                    </FormControl>
-                  </Grid>
-                </Grid>
+                    )}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
           </DialogContent>
@@ -546,17 +475,43 @@ const DialogEditUser = ({ user, refreshData }) => {
               pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
             }}
           >
-            <Button variant='contained' sx={{ mr: 1 }} type='submit'>
-              Submit
-            </Button>
-            <Button variant='outlined' color='secondary' onClick={handleClose}>
-              Cancel
-            </Button>
+            {isEditing ? (
+              <>
+                <Button type='submit' variant='contained'>
+                  Save
+                </Button>
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={() => {
+                    setIsEditing(false)
+                    setRfidScanning(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant='contained'
+                  onClick={e => {
+                    e.preventDefault()
+                    setIsEditing(true)
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button variant='outlined' color='secondary' onClick={handleClose}>
+                  Close
+                </Button>
+              </>
+            )}
           </DialogActions>
         </form>
       </Dialog>
-    </>
+    </LocalizationProvider>
   )
 }
 
-export default DialogEditUser
+export default DialogViewUser
