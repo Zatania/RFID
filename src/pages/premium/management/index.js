@@ -16,7 +16,7 @@ import Tooltip from '@mui/material/Tooltip'
 import DialogAddPremium from 'src/views/pages/premium/management/DialogAddPremium'
 import DialogViewPremium from 'src/views/pages/premium/management/DialogViewPremium'
 import DialogDeletePremium from 'src/views/pages/premium/management/DialogDeletePremium'
-import DialogViewVehicles from 'src/views/pages/vehicles/management/DialogViewVehicles'
+import DialogViewVehicles from 'src/views/pages/premium/vehicles/management/DialogViewVehicles'
 
 function CustomToolbar(props) {
   const { setPremiumRows } = props
