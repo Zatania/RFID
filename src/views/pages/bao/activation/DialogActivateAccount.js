@@ -139,6 +139,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                       label='First Name'
                       error={!!errors.first_name}
                       helperText={errors.first_name?.message}
+                      inputProps={{ readOnly: true }}
                     />
                   )}
                 />
@@ -155,6 +156,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                       label='Middle Name'
                       error={!!errors.middle_name}
                       helperText={errors.middle_name?.message}
+                      inputProps={{ readOnly: true }}
                     />
                   )}
                 />
@@ -171,6 +173,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                       label='Last Name'
                       error={!!errors.last_name}
                       helperText={errors.last_name?.message}
+                      inputProps={{ readOnly: true }}
                     />
                   )}
                 />
