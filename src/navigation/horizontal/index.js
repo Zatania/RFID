@@ -21,6 +21,13 @@ const navigation = () => [
     icon: 'mdi:people'
   },
   {
+    title: 'Activations',
+    path: '/bao/activation',
+    action: 'read',
+    subject: 'bao-activation',
+    icon: 'mdi:people'
+  },
+  {
     title: 'Visitor Management',
     path: '/visitor/management',
     action: 'read',
