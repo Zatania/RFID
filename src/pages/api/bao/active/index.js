@@ -1,5 +1,37 @@
 import db from '../../db'
 
+const fetchActives = async () => {
+  try {
+    const [result] = await db.query(`
+        SELECT
+            COALESCE(users.id, premiums.id, guardians.id) AS id,
+            COALESCE(users.image, premiums.image, guardians.image) AS image,
+            COALESCE(users.first_name, premiums.first_name, guardians.first_name) AS first_name,
+            COALESCE(users.middle_name, premiums.middle_name, guardians.middle_name) AS middle_name,
+            COALESCE(users.last_name, premiums.last_name, guardians.last_name) AS last_name,
+            COALESCE(users.status, premiums.status, guardians.status) AS status,
+            rfids.load_balance AS load_balance,
+            CASE
+              WHEN users.id IS NOT NULL THEN 'User'
+              WHEN premiums.id IS NOT NULL THEN 'Premium'
+              WHEN guardians.id IS NOT NULL THEN 'Guardian'
+              ELSE 'Unknown'
+            END AS account_type
+        FROM
+            RFIDs rfids
+        LEFT JOIN Users users ON rfids.user_id = users.id
+        LEFT JOIN Premiums premiums ON rfids.premium_id = premiums.id
+        LEFT JOIN Guardians guardians ON rfids.guardian_id = guardians.id
+        WHERE COALESCE(users.status, premiums.status, guardians.status) = 'Active';
+      `)
+
+    return result
+  } catch (error) {
+    console.error('SQL Error:', error)
+    throw error
+  }
+}
+
 const activateAccount = async ({ id, load_balance, account_type }) => {
   let accountQuery
   let rfidQuery
@@ -35,7 +67,9 @@ const handler = async (req, res) => {
   try {
     if (req.method === 'GET') {
       try {
-        res.status(200).json('No data')
+        const activeCount = await fetchActives()
+
+        res.status(200).json(activeCount)
       } catch (error) {
         res.status(500).json({ error: error.message })
       }

@@ -28,6 +28,13 @@ const navigation = () => [
     icon: 'mdi:people'
   },
   {
+    title: 'Account Top-Up',
+    path: '/bao/topup',
+    action: 'read',
+    subject: 'bao-topup',
+    icon: 'mdi:people'
+  },
+  {
     title: 'Visitor Management',
     path: '/visitor/management',
     action: 'read',

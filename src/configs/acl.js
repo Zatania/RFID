@@ -18,6 +18,7 @@ const defineRulesFor = (role, subject) => {
   } else if (role === 'bao') {
     can(['read'], 'home')
     can(['read'], 'bao-activation')
+    can(['read'], 'bao-topup')
   } else if (role === 'security_guard') {
     can(['read'], 'home')
     can(['read'], 'visitor-management')
