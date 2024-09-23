@@ -85,7 +85,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.1,
-      minWidth: 200,
+      minWidth: 150,
       field: 'purpose',
       headerName: 'Purpose',
       valueGetter: params => params.row.purpose,
@@ -141,7 +141,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.1,
-      minWidth: 150,
+      minWidth: 200,
       field: 'vehicle_plate_number',
       headerName: 'Vehicle Plate Number',
       valueGetter: params => params.row.vehicle_plate_number,
