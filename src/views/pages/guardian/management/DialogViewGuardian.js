@@ -77,7 +77,7 @@ const DialogViewGuardian = ({ guardian, users, refreshData }) => {
 
   useEffect(() => {
     if (show && rfidRef.current) {
-      const socket = new WebSocket('ws://localhost:4000')
+      const socket = new WebSocket('ws://localhost:4000/user')
 
       console.log('Connecting to websocket server in editing guardian...')
 
