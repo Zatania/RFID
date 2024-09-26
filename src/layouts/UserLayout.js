@@ -82,8 +82,9 @@ const UserLayout = ({ children, contentHeightFixed }) => {
       verticalLayoutProps={{
         navMenu: {
           branding: () => <AppBrand />,
-          lockedIcon: <Icon icon='mdi:chevron-left' />,
-          unlockedIcon: <Icon icon='mdi:chevron-right' />,
+
+          //lockedIcon: <Icon icon='mdi:chevron-left' />,
+          //unlockedIcon: <Icon icon='mdi:chevron-right' />,
           navItems: VerticalNavItems()
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
