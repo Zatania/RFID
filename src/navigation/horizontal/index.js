@@ -18,28 +18,7 @@ const navigation = () => [
     path: '/premium/management',
     action: 'read',
     subject: 'premium-management',
-    icon: 'mdi:people'
-  },
-  {
-    title: 'Activations',
-    path: '/bao/activation',
-    action: 'read',
-    subject: 'bao-activation',
-    icon: 'mdi:people'
-  },
-  {
-    title: 'Account Top-Up',
-    path: '/bao/topup',
-    action: 'read',
-    subject: 'bao-topup',
-    icon: 'mdi:people'
-  },
-  {
-    title: 'Visitor Management',
-    path: '/visitor/management',
-    action: 'read',
-    subject: 'visitor-management',
-    icon: 'mdi:account-convert'
+    icon: 'mdi:account-badge'
   },
   {
     title: 'Admin Management',
@@ -56,11 +35,32 @@ const navigation = () => [
     icon: 'mdi:account-cash'
   },
   {
+    title: 'Activations',
+    path: '/bao/activation',
+    action: 'read',
+    subject: 'bao-activation',
+    icon: 'mdi:account-check'
+  },
+  {
+    title: 'Account Top-Up',
+    path: '/bao/topup',
+    action: 'read',
+    subject: 'bao-topup',
+    icon: 'mdi:account-cash'
+  },
+  {
     title: 'Guard Management',
     path: '/guard/management',
     action: 'read',
     subject: 'guard-management',
     icon: 'mdi:account-tie-hat'
+  },
+  {
+    title: 'Visitor Management',
+    path: '/visitor/management',
+    action: 'read',
+    subject: 'visitor-management',
+    icon: 'mdi:account-convert'
   },
   {
     title: 'User Logs',
