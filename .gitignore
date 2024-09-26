@@ -33,5 +33,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# next
+.next
+
 # misc
-/uploads
+
+# Ignore everything in uploads folder
+uploads/*
+
+# Allow the folder to be pushed
+!uploads/
+
+# Allow the default.png file
+!uploads/default.png
