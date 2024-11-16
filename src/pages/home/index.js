@@ -13,7 +13,6 @@ import axios from 'axios'
 const Home = () => {
   const [studentCount, setStudentCount] = useState(0)
   const [staffCount, setStaffCount] = useState(0)
-  const [guardianCount, setGuardianCount] = useState(0)
   const [premiumCount, setPremiumCount] = useState(0)
   const [visitorCount, setVisitorCount] = useState(0)
   const [adminCount, setAdminCount] = useState(0)
@@ -36,15 +35,6 @@ const Home = () => {
       .get('/api/user/count/staff')
       .then(response => {
         setStaffCount(response.data)
-      })
-      .catch(error => console.error('Error fetching data', error))
-  }
-
-  const fetchGuardians = () => {
-    axios
-      .get('/api/guardian/count')
-      .then(response => {
-        setGuardianCount(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
   }
@@ -116,7 +106,6 @@ const Home = () => {
   useEffect(() => {
     fetchStudents()
     fetchStaffs()
-    fetchGuardians()
     fetchPremiums()
     fetchVisitors()
     fetchAdmins()
@@ -149,14 +138,6 @@ const Home = () => {
           </Grid>
           <Grid item xs={12} sm={2}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={staffCount} title='Total Staffs' />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <UserDetails
-              icon='mdi:account-group-outline'
-              color='primary'
-              count={guardianCount}
-              title='Total Guardians'
-            />
           </Grid>
           <Grid item xs={12} sm={2}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={premiumCount} title='Total Premiums' />
