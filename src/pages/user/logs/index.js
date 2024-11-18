@@ -17,15 +17,16 @@ import {
 } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 
-function CustomToolbar(props) {
-  const { setLogsRow } = props
+function StudentToolbar(props) {
+  const { setStudentRows } = props
 
   // Refresh list of logs
-  const fetchLogs = () => {
+  const fetchStudentLogs = () => {
+    const userType = 'Student'
     axios
-      .get('/api/user/logs')
+      .get(`/api/user/logs/${userType}`)
       .then(response => {
-        setLogsRow(response.data)
+        setStudentRows(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
   }
@@ -40,7 +41,41 @@ function CustomToolbar(props) {
           size='small'
           variant='outlined'
           style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
-          onClick={() => fetchLogs()}
+          onClick={() => fetchStudentLogs()}
+        >
+          Refresh
+        </Button>
+        <GridToolbarQuickFilter style={{ marginBottom: '8px' }} />
+      </div>
+    </GridToolbarContainer>
+  )
+}
+
+function StaffToolbar(props) {
+  const { setStaffRows } = props
+
+  // Refresh list of logs
+  const fetchStaffLogs = () => {
+    const userType = 'Staff'
+    axios
+      .get(`/api/user/logs/${userType}`)
+      .then(response => {
+        setStaffRows(response.data)
+      })
+      .catch(error => console.error('Error fetching data', error))
+  }
+
+  return (
+    <GridToolbarContainer style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>
+        <GridToolbarFilterButton style={{ marginRight: '8px', marginBottom: '8px' }} />
+      </div>
+      <div>
+        <Button
+          size='small'
+          variant='outlined'
+          style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
+          onClick={() => fetchStaffLogs()}
         >
           Refresh
         </Button>
@@ -52,28 +87,43 @@ function CustomToolbar(props) {
 
 const UserLogs = () => {
   // ** States
-  const [logPaginationModel, setLogPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const [logsRow, setLogsRow] = useState([])
+  const [studentPaginationModel, setStudentPaginationModel] = useState({ page: 0, pageSize: 10 })
+  const [studentRows, setStudentRows] = useState([])
+  const [staffPaginationModel, setStaffPaginationModel] = useState({ page: 0, pageSize: 10 })
+  const [staffRows, setStaffRows] = useState([])
 
-  // Refresh list of logs
-  const fetchLogs = () => {
+  // Refresh list of Student logs
+  const fetchStudentLogs = () => {
+    const userType = 'Student'
     axios
-      .get('/api/user/logs')
+      .get(`/api/user/logs/${userType}`)
       .then(response => {
-        setLogsRow(response.data)
+        setStudentRows(response.data)
+      })
+      .catch(error => console.error('Error fetching data', error))
+  }
+
+  // Refresh list of Staff logs
+  const fetchStaffLogs = () => {
+    const userType = 'Staff'
+    axios
+      .get(`/api/user/logs/${userType}`)
+      .then(response => {
+        setStaffRows(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
   }
 
   // Fetch data on component mount
   useEffect(() => {
-    fetchLogs()
+    fetchStudentLogs()
+    fetchStaffLogs()
   }, [])
 
-  const logsColumn = [
+  const studentColumns = [
     {
-      flex: 0.2,
-      minWidth: 200,
+      flex: 0.15,
+      minWidth: 175,
       field: 'fullName',
       headerName: 'User',
       valueGetter: params => params.row.user_full_name,
@@ -84,8 +134,8 @@ const UserLogs = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 200,
+      flex: 0.15,
+      minWidth: 175,
       field: 'guard_name',
       headerName: 'Security Guard on Duty',
       valueGetter: params => params.row.guard_full_name,
@@ -120,8 +170,71 @@ const UserLogs = () => {
       )
     },
     {
-      flex: 0.2,
+      flex: 0.15,
       minWidth: 150,
+      field: 'duration',
+      headerName: 'Duration',
+      valueGetter: params => params.row.duration,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.duration}
+        </Typography>
+      )
+    }
+  ]
+
+  const staffColumns = [
+    {
+      flex: 0.15,
+      minWidth: 175,
+      field: 'fullName',
+      headerName: 'User',
+      valueGetter: params => params.row.user_full_name,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.user_full_name}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      minWidth: 175,
+      field: 'guard_name',
+      headerName: 'Security Guard on Duty',
+      valueGetter: params => params.row.guard_full_name,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.guard_full_name}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.2,
+      minWidth: 175,
+      field: 'timestamp_in',
+      headerName: 'Time In',
+      valueGetter: params => params.row.timestamp_in,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.timestamp_in}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.2,
+      minWidth: 175,
+      field: 'timestamp_out',
+      headerName: 'Time Out',
+      valueGetter: params => params.row.timestamp_out,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.timestamp_out}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      minWidth: 100,
       field: 'duration',
       headerName: 'Duration',
       valueGetter: params => params.row.duration,
@@ -137,22 +250,43 @@ const UserLogs = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='User RFID Logs' />
+          <CardHeader title='Student Logs' />
           <DataGrid
             autoHeight
-            columns={logsColumn}
-            rows={logsRow}
-            getRowId={row => row.log_id}
+            columns={studentColumns}
+            rows={studentRows}
             pageSizeOptions={[10, 25, 50, 100]}
-            paginationModel={logPaginationModel}
-            slots={{ toolbar: CustomToolbar }}
-            onPaginationModelChange={setLogPaginationModel}
+            paginationModel={studentPaginationModel}
+            slots={{ toolbar: StudentToolbar }}
+            onPaginationModelChange={setStudentPaginationModel}
             slotProps={{
               baseButton: {
                 variant: 'outlined'
               },
               toolbar: {
-                setLogsRow
+                setStudentRows
+              }
+            }}
+          />
+        </Card>
+      </Grid>
+      <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
+        <Card>
+          <CardHeader title='Staff Logs' />
+          <DataGrid
+            autoHeight
+            columns={staffColumns}
+            rows={staffRows}
+            pageSizeOptions={[10, 25, 50, 100]}
+            paginationModel={staffPaginationModel}
+            slots={{ toolbar: StaffToolbar }}
+            onPaginationModelChange={setStaffPaginationModel}
+            slotProps={{
+              baseButton: {
+                variant: 'outlined'
+              },
+              toolbar: {
+                setStaffRows
               }
             }}
           />
