@@ -14,9 +14,6 @@ const topupAcount = async ({ id, load_amount, account_type }) => {
     case 'Premium':
       rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE premium_id = ?'
       break
-    case 'Guardian':
-      rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE guardian_id = ?'
-      break
     default:
       throw new Error('Invalid account type')
   }
