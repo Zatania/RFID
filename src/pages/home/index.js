@@ -145,7 +145,7 @@ const Home = () => {
           <Grid item xs={12} sm={2}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={visitorCount} title='Total Visitors' />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:car-back' color='primary' count={visitorCount} title='Total Vehicles' />
           </Grid>
         </Grid>
