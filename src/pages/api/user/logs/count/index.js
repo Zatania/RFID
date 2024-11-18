@@ -1,8 +1,8 @@
 import db from '../../../db'
 
-const fetchLogCount = async () => {
+const fetchUserLogsCount = async () => {
   try {
-    const [result] = await db.query('SELECT COUNT(*) AS count FROM logs')
+    const [result] = await db.query('SELECT COUNT(*) AS count FROM user_parking_logs')
 
     return result[0].count
   } catch (error) {
@@ -14,7 +14,7 @@ const fetchLogCount = async () => {
 const handler = async (req, res) => {
   if (req.method === 'GET') {
     try {
-      const userCount = await fetchLogCount()
+      const userCount = await fetchUserLogsCount()
 
       res.status(200).json(userCount)
     } catch (error) {

@@ -19,7 +19,7 @@ const Home = () => {
   const [baoCount, setBaoCount] = useState(0)
   const [guardCount, setGuardCount] = useState(0)
   const [violationCount, setViolationCount] = useState(0)
-  const [rfidCount, setRfidCount] = useState(0)
+  const [userRFIDCount, setUserRFIDCount] = useState(0)
 
   const fetchStudents = () => {
     axios
@@ -91,16 +91,16 @@ const Home = () => {
         setViolationCount(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
-  }
+  } */
 
-  const fetchRFID = () => {
+  const fetchUserRFIDCount = () => {
     axios
       .get('/api/user/logs/count')
       .then(response => {
-        setRfidCount(response.data)
+        setUserRFIDCount(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
-  } */
+  }
 
   // Fetch data on component mount
   useEffect(() => {
@@ -112,8 +112,8 @@ const Home = () => {
     fetchBAOs()
     fetchGuards()
 
-    /* fetchViolations()
-    fetchRFID() */
+    /* fetchViolations() */
+    fetchUserRFIDCount()
   }, [])
 
   return (
@@ -129,32 +129,33 @@ const Home = () => {
           <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:account-tie-hat' color='primary' count={guardCount} title='Total Security Guards' />
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={studentCount} title='Total Users' />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={staffCount} title='Total Staffs' />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={premiumCount} title='Total Premiums' />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:account-group-outline' color='primary' count={visitorCount} title='Total Visitors' />
           </Grid>
           <Grid item xs={12} sm={4}>
             <UserDetails icon='mdi:car-back' color='primary' count={visitorCount} title='Total Vehicles' />
           </Grid>
+          <Grid item xs={12} md={4}>
+            <UserDetails
+              icon='mdi:card-multiple-outline'
+              color='success'
+              count={userRFIDCount}
+              title='Total Student/Staff RFID Scanned'
+            />
+          </Grid>
         </Grid>
       </Grid>
       {/* <Grid item xs={12} md={3}>
         <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <UserDetails icon='mdi:card-multiple-outline' color='success' count={rfidCount} title='Total RFID Scanned' />
       </Grid> */}
     </Grid>
   )
