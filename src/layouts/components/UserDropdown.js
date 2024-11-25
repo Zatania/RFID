@@ -119,6 +119,10 @@ const UserDropdown = props => {
                   ? 'BAO'
                   : session?.user.role === 'security_guard'
                   ? 'Security Guard'
+                  : session?.user.role === 'user'
+                  ? 'User'
+                  : session?.user.role === 'premium'
+                  ? 'Premium'
                   : session?.user.role}
               </Typography>
             </Box>
