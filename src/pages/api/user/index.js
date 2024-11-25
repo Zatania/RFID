@@ -89,7 +89,7 @@ const addUser = async data => {
   try {
     const [userResult] = await db.query(
       'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, 'Missing Details']
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, 'Pending']
     )
 
     const userID = userResult.insertId
