@@ -6,8 +6,8 @@ const getHomeRoute = role => {
   else if (role === 'super_admin') return '/home'
   else if (role === 'admin') return '/home'
   else if (role === 'bao') return '/home'
-  else if (role === 'user') return '/home'
-  else if (role === 'premium') return '/home'
+  else if (role === 'user') return '/user/profile'
+  else if (role === 'premium') return '/user/profile'
   else return '/login'
 }
 

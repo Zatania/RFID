@@ -84,6 +84,15 @@ const navigation = () => [
     action: 'read',
     subject: 'dashboard',
     icon: 'mdi:visibility'
+  },
+
+  // Profile Page
+  {
+    title: 'Profile',
+    path: '/user/profile',
+    action: 'read',
+    subject: 'profile-page',
+    icon: 'mdi:account-outline'
   }
 ]
 
