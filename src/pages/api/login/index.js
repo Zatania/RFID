@@ -28,22 +28,44 @@ const findUserInTable = async (username, password, tableName, role) => {
 const findUser = async (username, password) => {
   let user
 
+  // Super Admin Login
+
   user = await findUserInTable(username, password, 'superadmin', 'super_admin')
   if (user) {
     return user
   }
+
+  // Admin Login
 
   user = await findUserInTable(username, password, 'admins', 'admin')
   if (user) {
     return user
   }
 
+  // BAO Login
+
   user = await findUserInTable(username, password, 'baos', 'bao')
   if (user) {
     return user
   }
 
+  // Security Guard Login
+
   user = await findUserInTable(username, password, 'security_guards', 'security_guard')
+  if (user) {
+    return user
+  }
+
+  // Student/Staff Login
+
+  user = await findUserInTable(username, password, 'users', 'user')
+  if (user) {
+    return user
+  }
+
+  // Premium Login
+
+  user = await findUserInTable(username, password, 'premiums', 'premium')
   if (user) {
     return user
   }
