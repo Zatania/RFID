@@ -20,7 +20,6 @@ import Input from '@mui/material/Input'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -147,279 +146,277 @@ const DialogAddPremium = ({ refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Card>
-        <Button
-          size='small'
-          onClick={() => setShow(true)}
-          startIcon={<AddIcon />}
-          variant='outlined'
-          style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
-        >
-          Add Premium User
-        </Button>
-        <Dialog
-          fullWidth
-          open={show}
-          maxWidth='md'
-          scroll='body'
-          onClose={handleClose}
-          TransitionComponent={Transition}
-          onBackdropClick={handleClose}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogContent
-              sx={{
-                position: 'relative',
-                pb: theme => `${theme.spacing(8)} !important`,
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-                <Icon icon='mdi:close' />
-              </IconButton>
-              <Box sx={{ mb: 8, textAlign: 'center' }}>
-                <Typography variant='h5' sx={{ mb: 3 }}>
-                  Add Premium User
-                </Typography>
-                <Typography variant='body2'>Fill Premium User Information</Typography>
-              </Box>
-              <Grid container spacing={6}>
-                <Grid item sm={12} xs={12}>
-                  <Typography variant='body1'>Premium User Information</Typography>
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <Controller
-                    name='last_name'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Last Name'
-                        error={!!errors.last_name}
-                        helperText={errors.last_name?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <Controller
-                    name='first_name'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='First Name'
-                        error={!!errors.first_name}
-                        helperText={errors.first_name?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <Controller
-                    name='middle_name'
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Middle Name'
-                        error={!!errors.middle_name}
-                        helperText={errors.middle_name?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <Controller
-                    name='phone_number'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Phone Number (09xxxxxxxxx)'
-                        error={!!errors.phone_number}
-                        helperText={errors.phone_number?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <Controller
-                    name='email_address'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Email Address'
-                        error={!!errors.email_address}
-                        helperText={errors.email_address?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={8} xs={12}>
-                  <Controller
-                    name='address'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Address'
-                        error={!!errors.address}
-                        helperText={errors.address?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={4} xs={12}>
-                  <Controller
-                    name='rfid'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='RFID Number'
-                        error={!!errors.rfid}
-                        helperText={errors.rfid?.message}
-                        inputRef={rfidRef}
-                        value={rfid}
-                        onChange={e => {
-                          setRfid(e.target.value)
-                          setValue('rfid', e.target.value)
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position='end'>
-                              {rfidScanning ? (
-                                <CircularProgress size={24} />
-                              ) : (
-                                <Button
-                                  size='small'
-                                  startIcon={<EditIcon />}
-                                  onClick={() => handleUpdateRfid()}
-                                  variant='text'
-                                >
-                                  Change
-                                </Button>
-                              )}
-                            </InputAdornment>
-                          )
-                        }}
-                        disabled
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Grid
-                    container
-                    spacing={6}
-                    sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
-                  >
-                    <Grid item sm={12} xs={12}>
-                      <Typography variant='body1'>Upload Premium User Profile Image</Typography>
-                    </Grid>
-                    <Grid item sm={12} xs={12}>
-                      <FormControl>
-                        <Input
-                          type='file'
-                          id='premium-image-upload'
-                          style={{ display: 'none' }}
-                          onChange={async ({ target }) => {
-                            if (target.files && target.files.length > 0) {
-                              const file = target.files[0]
-                              const imagePath = await handleImageUpload(file)
-                              if (imagePath) {
-                                setPremiumImageUploaded(true)
-                                setPremiumImagePath(imagePath)
-                              }
+      <Button
+        size='small'
+        onClick={() => setShow(true)}
+        startIcon={<AddIcon />}
+        variant='outlined'
+        style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
+      >
+        Add Premium User
+      </Button>
+      <Dialog
+        fullWidth
+        open={show}
+        maxWidth='md'
+        scroll='body'
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        onBackdropClick={handleClose}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogContent
+            sx={{
+              position: 'relative',
+              pb: theme => `${theme.spacing(8)} !important`,
+              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+              pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+            }}
+          >
+            <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
+              <Icon icon='mdi:close' />
+            </IconButton>
+            <Box sx={{ mb: 8, textAlign: 'center' }}>
+              <Typography variant='h5' sx={{ mb: 3 }}>
+                Add Premium User
+              </Typography>
+              <Typography variant='body2'>Fill Premium User Information</Typography>
+            </Box>
+            <Grid container spacing={6}>
+              <Grid item sm={12} xs={12}>
+                <Typography variant='body1'>Premium User Information</Typography>
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='last_name'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Last Name'
+                      error={!!errors.last_name}
+                      helperText={errors.last_name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='first_name'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='First Name'
+                      error={!!errors.first_name}
+                      helperText={errors.first_name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='middle_name'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Middle Name'
+                      error={!!errors.middle_name}
+                      helperText={errors.middle_name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='phone_number'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Phone Number (09xxxxxxxxx)'
+                      error={!!errors.phone_number}
+                      helperText={errors.phone_number?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='email_address'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Email Address'
+                      error={!!errors.email_address}
+                      helperText={errors.email_address?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={8} xs={12}>
+                <Controller
+                  name='address'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Address'
+                      error={!!errors.address}
+                      helperText={errors.address?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Controller
+                  name='rfid'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='RFID Number'
+                      error={!!errors.rfid}
+                      helperText={errors.rfid?.message}
+                      inputRef={rfidRef}
+                      value={rfid}
+                      onChange={e => {
+                        setRfid(e.target.value)
+                        setValue('rfid', e.target.value)
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            {rfidScanning ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              <Button
+                                size='small'
+                                startIcon={<EditIcon />}
+                                onClick={() => handleUpdateRfid()}
+                                variant='text'
+                              >
+                                Change
+                              </Button>
+                            )}
+                          </InputAdornment>
+                        )
+                      }}
+                      disabled
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Grid
+                  container
+                  spacing={6}
+                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <Grid item sm={12} xs={12}>
+                    <Typography variant='body1'>Upload Premium User Profile Image</Typography>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <FormControl>
+                      <Input
+                        type='file'
+                        id='premium-image-upload'
+                        style={{ display: 'none' }}
+                        onChange={async ({ target }) => {
+                          if (target.files && target.files.length > 0) {
+                            const file = target.files[0]
+                            const imagePath = await handleImageUpload(file)
+                            if (imagePath) {
+                              setPremiumImageUploaded(true)
+                              setPremiumImagePath(imagePath)
                             }
-                          }}
-                        />
-                        {premiumImageUploaded ? (
-                          <>
-                            <img
-                              src={`/api/image/${premiumImagePath}`}
-                              alt='Premium User Profile Picture'
-                              style={{ maxWidth: '50%' }}
-                            />
-                            <Typography>Premium Profile Image Successfully Uploaded</Typography>
-                          </>
-                        ) : (
-                          <Button
-                            variant='outlined'
-                            component='label'
-                            htmlFor='premium-image-upload'
-                            className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
-                          >
-                            Select Image
-                          </Button>
-                        )}
-                      </FormControl>
-                    </Grid>
+                          }
+                        }}
+                      />
+                      {premiumImageUploaded ? (
+                        <>
+                          <img
+                            src={`/api/image/${premiumImagePath}`}
+                            alt='Premium User Profile Picture'
+                            style={{ maxWidth: '50%' }}
+                          />
+                          <Typography>Premium Profile Image Successfully Uploaded</Typography>
+                        </>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          component='label'
+                          htmlFor='premium-image-upload'
+                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                        >
+                          Select Image
+                        </Button>
+                      )}
+                    </FormControl>
                   </Grid>
                 </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Typography variant='body1'>Driver's License Information</Typography>
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <Controller
-                    name='license_number'
-                    control={control}
-                    rules={{ required: 'This field is required' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='License Number'
-                        error={!!errors.license_number}
-                        helperText={errors.license_number?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <FormControl fullWidth sx={{ mb: 4 }}>
-                    <Controller
-                      name='expiration'
-                      control={control}
-                      render={({ field }) => <DatePicker label='Expiration Date' {...field} />}
-                    />
-                  </FormControl>
-                </Grid>
               </Grid>
-            </DialogContent>
-            <DialogActions
-              sx={{
-                justifyContent: 'center',
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              <Button variant='contained' sx={{ mr: 1 }} type='submit'>
-                Submit
-              </Button>
-              <Button variant='outlined' color='secondary' onClick={handleClose}>
-                Cancel
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
-      </Card>
+              <Grid item sm={12} xs={12}>
+                <Typography variant='body1'>Driver's License Information</Typography>
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='license_number'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='License Number'
+                      error={!!errors.license_number}
+                      helperText={errors.license_number?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <FormControl fullWidth sx={{ mb: 4 }}>
+                  <Controller
+                    name='expiration'
+                    control={control}
+                    render={({ field }) => <DatePicker label='Expiration Date' {...field} />}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions
+            sx={{
+              justifyContent: 'center',
+              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+              pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+            }}
+          >
+            <Button variant='contained' sx={{ mr: 1 }} type='submit'>
+              Submit
+            </Button>
+            <Button variant='outlined' color='secondary' onClick={handleClose}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </LocalizationProvider>
   )
 }
