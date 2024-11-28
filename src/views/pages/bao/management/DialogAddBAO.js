@@ -17,6 +17,7 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
 import InputAdornment from '@mui/material/InputAdornment'
+import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -119,7 +120,7 @@ const DialogAddBAO = ({ refreshData }) => {
   }
 
   return (
-    <>
+    <Card>
       <Button
         size='small'
         onClick={() => setShow(true)}
@@ -314,7 +315,7 @@ const DialogAddBAO = ({ refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </>
+    </Card>
   )
 }
 

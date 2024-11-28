@@ -27,6 +27,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import FormHelperText from '@mui/material/FormHelperText'
+import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -190,355 +191,362 @@ const DialogViewUser = ({ user, refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
-        View Info
-      </Button>
-      <Dialog
-        fullWidth
-        open={show}
-        maxWidth='md'
-        scroll='body'
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        onBackdropClick={handleClose}
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent
-            sx={{
-              position: 'relative',
-              pb: theme => `${theme.spacing(8)} !important`,
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
-            <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-              <Icon icon='mdi:close' />
-            </IconButton>
-            <Box sx={{ mb: 8, textAlign: 'center' }}>
-              <Typography variant='h5' sx={{ mb: 3 }}>
-                {isEditing ? 'Edit User' : 'View User'}
-              </Typography>
-              <Typography variant='body2'>{isEditing ? 'Edit User Information' : 'View User Information'}</Typography>
-            </Box>
-            <Grid container spacing={6}>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>User Information</Typography>
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='last_name'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Last Name'
-                      error={!!errors.last_name}
-                      helperText={errors.last_name?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='first_name'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='First Name'
-                      error={!!errors.first_name}
-                      helperText={errors.first_name?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='middle_name'
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Middle Name'
-                      error={!!errors.middle_name}
-                      helperText={errors.middle_name?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='phone_number'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Phone Number (09xxxxxxxxx)'
-                      error={!!errors.phone_number}
-                      helperText={errors.phone_number?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='email_address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Email Address'
-                      error={!!errors.email_address}
-                      helperText={errors.email_address?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={2} xs={12}>
-                <FormControl fullWidth error={!!errors.type}>
-                  <InputLabel htmlFor='type-select'>Type</InputLabel>
+      <Card>
+        <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
+          View Info
+        </Button>
+        <Dialog
+          fullWidth
+          open={show}
+          maxWidth='md'
+          scroll='body'
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          onBackdropClick={handleClose}
+        >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent
+              sx={{
+                position: 'relative',
+                pb: theme => `${theme.spacing(8)} !important`,
+                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+              }}
+            >
+              <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
+                <Icon icon='mdi:close' />
+              </IconButton>
+              <Box sx={{ mb: 8, textAlign: 'center' }}>
+                <Typography variant='h5' sx={{ mb: 3 }}>
+                  {isEditing ? 'Edit User' : 'View User'}
+                </Typography>
+                <Typography variant='body2'>{isEditing ? 'Edit User Information' : 'View User Information'}</Typography>
+              </Box>
+              <Grid container spacing={6}>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>User Information</Typography>
+                </Grid>
+                <Grid item sm={4} xs={12}>
                   <Controller
-                    name='type'
+                    name='last_name'
                     control={control}
                     rules={{ required: 'This field is required' }}
                     render={({ field }) => (
-                      <Select
+                      <TextField
                         {...field}
-                        id='type-select'
-                        label='Type'
-                        disabled={!isEditing}
-                        onChange={e => {
-                          field.onChange(e)
-                        }}
-                      >
-                        <MenuItem value='Student'>Student</MenuItem>
-                        <MenuItem value='Staff'>Staff</MenuItem>
-                      </Select>
+                        fullWidth
+                        label='Last Name'
+                        error={!!errors.last_name}
+                        helperText={errors.last_name?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
                     )}
                   />
-                  {errors.type && <FormHelperText>{errors.type.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
-              <Grid item sm={8} xs={12}>
-                <Controller
-                  name='address'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Address'
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='rfid'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='RFID Number'
-                      error={!!errors.rfid}
-                      helperText={errors.rfid?.message}
-                      inputRef={rfidRef}
-                      value={rfid}
-                      onChange={e => {
-                        setRfid(e.target.value)
-                        setValue('rfid', e.target.value)
-                      }}
-                      InputProps={{
-                        readOnly: true,
-                        endAdornment: isEditing ? (
-                          <InputAdornment position='end'>
-                            {rfidScanning ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              <Button
-                                size='small'
-                                startIcon={<EditIcon />}
-                                onClick={() => handleUpdateRfid()}
-                                disabled={!isEditing}
-                                variant='text'
-                              >
-                                Change
-                              </Button>
-                            )}
-                          </InputAdornment>
-                        ) : null
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Grid
-                  container
-                  spacing={6}
-                  sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
-                >
-                  <Grid item sm={12} xs={12}>
-                    <Typography variant='body1'>User Image</Typography>
-                  </Grid>
-                  <Grid item sm={12} xs={12}>
-                    <FormControl>
-                      <Input
-                        type='file'
-                        id='user-image-upload'
-                        style={{ display: 'none' }}
-                        onChange={async ({ target }) => {
-                          if (target.files && target.files.length > 0) {
-                            const file = target.files[0]
-                            const imagePath = await handleImageUpload(file)
-                            if (imagePath) {
-                              setUserImageUploaded(true)
-                              setImagePath(imagePath)
-                            }
-                          }
-                        }}
-                      />
-                      {userImage ? (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                          {userImageUploaded ? (
-                            <>
-                              <img
-                                src={`/api/image/${userImagePath}`}
-                                alt='User Profile Picture'
-                                style={{ maxWidth: '50%' }}
-                              />
-                              <Typography>User Image Successfully Uploaded</Typography>
-                            </>
-                          ) : (
-                            <>
-                              <img
-                                src={`/api/image/${userImage}`}
-                                alt='User Profile Picture'
-                                style={{ maxWidth: '50%' }}
-                              />
-                              {isEditing && (
-                                <Button variant='outlined' component='label' htmlFor='user-image-upload' sx={{ mt: 2 }}>
-                                  Change Image
-                                </Button>
-                              )}
-                            </>
-                          )}
-                        </Box>
-                      ) : (
-                        <Button
-                          variant='outlined'
-                          component='label'
-                          htmlFor='user-image-upload'
-                          className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
-                        >
-                          Select Image
-                        </Button>
-                      )}
-                    </FormControl>
-                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>Driver's License Information</Typography>
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='license_number'
-                  control={control}
-                  rules={{ required: 'This field is required' }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='License Number'
-                      error={!!errors.license_number}
-                      helperText={errors.license_number?.message}
-                      InputProps={{ readOnly: !isEditing }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth sx={{ mb: 4 }}>
+                <Grid item sm={4} xs={12}>
                   <Controller
-                    name='expiration'
+                    name='first_name'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='First Name'
+                        error={!!errors.first_name}
+                        helperText={errors.first_name?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='middle_name'
                     control={control}
                     render={({ field }) => (
-                      <DatePicker
-                        label='Expiration Date'
-                        value={field.value ? dayjs(field.value) : null}
-                        onChange={field.onChange}
-                        readOnly={!isEditing}
-                        renderInput={params => <TextField {...params} />}
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Middle Name'
+                        error={!!errors.middle_name}
+                        helperText={errors.middle_name?.message}
+                        InputProps={{ readOnly: !isEditing }}
                       />
                     )}
                   />
-                </FormControl>
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='phone_number'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Phone Number (09xxxxxxxxx)'
+                        error={!!errors.phone_number}
+                        helperText={errors.phone_number?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Controller
+                    name='email_address'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Email Address'
+                        error={!!errors.email_address}
+                        helperText={errors.email_address?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={2} xs={12}>
+                  <FormControl fullWidth error={!!errors.type}>
+                    <InputLabel htmlFor='type-select'>Type</InputLabel>
+                    <Controller
+                      name='type'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          id='type-select'
+                          label='Type'
+                          disabled={!isEditing}
+                          onChange={e => {
+                            field.onChange(e)
+                          }}
+                        >
+                          <MenuItem value='Student'>Student</MenuItem>
+                          <MenuItem value='Staff'>Staff</MenuItem>
+                        </Select>
+                      )}
+                    />
+                    {errors.type && <FormHelperText>{errors.type.message}</FormHelperText>}
+                  </FormControl>
+                </Grid>
+                <Grid item sm={8} xs={12}>
+                  <Controller
+                    name='address'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Address'
+                        error={!!errors.address}
+                        helperText={errors.address?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='rfid'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='RFID Number'
+                        error={!!errors.rfid}
+                        helperText={errors.rfid?.message}
+                        inputRef={rfidRef}
+                        value={rfid}
+                        onChange={e => {
+                          setRfid(e.target.value)
+                          setValue('rfid', e.target.value)
+                        }}
+                        InputProps={{
+                          readOnly: true,
+                          endAdornment: isEditing ? (
+                            <InputAdornment position='end'>
+                              {rfidScanning ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                <Button
+                                  size='small'
+                                  startIcon={<EditIcon />}
+                                  onClick={() => handleUpdateRfid()}
+                                  disabled={!isEditing}
+                                  variant='text'
+                                >
+                                  Change
+                                </Button>
+                              )}
+                            </InputAdornment>
+                          ) : null
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Grid
+                    container
+                    spacing={6}
+                    sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                  >
+                    <Grid item sm={12} xs={12}>
+                      <Typography variant='body1'>User Image</Typography>
+                    </Grid>
+                    <Grid item sm={12} xs={12}>
+                      <FormControl>
+                        <Input
+                          type='file'
+                          id='user-image-upload'
+                          style={{ display: 'none' }}
+                          onChange={async ({ target }) => {
+                            if (target.files && target.files.length > 0) {
+                              const file = target.files[0]
+                              const imagePath = await handleImageUpload(file)
+                              if (imagePath) {
+                                setUserImageUploaded(true)
+                                setImagePath(imagePath)
+                              }
+                            }
+                          }}
+                        />
+                        {userImage ? (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            {userImageUploaded ? (
+                              <>
+                                <img
+                                  src={`/api/image/${userImagePath}`}
+                                  alt='User Profile Picture'
+                                  style={{ maxWidth: '50%' }}
+                                />
+                                <Typography>User Image Successfully Uploaded</Typography>
+                              </>
+                            ) : (
+                              <>
+                                <img
+                                  src={`/api/image/${userImage}`}
+                                  alt='User Profile Picture'
+                                  style={{ maxWidth: '50%' }}
+                                />
+                                {isEditing && (
+                                  <Button
+                                    variant='outlined'
+                                    component='label'
+                                    htmlFor='user-image-upload'
+                                    sx={{ mt: 2 }}
+                                  >
+                                    Change Image
+                                  </Button>
+                                )}
+                              </>
+                            )}
+                          </Box>
+                        ) : (
+                          <Button
+                            variant='outlined'
+                            component='label'
+                            htmlFor='user-image-upload'
+                            className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                          >
+                            Select Image
+                          </Button>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>Driver's License Information</Typography>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Controller
+                    name='license_number'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='License Number'
+                        error={!!errors.license_number}
+                        helperText={errors.license_number?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name='expiration'
+                      control={control}
+                      render={({ field }) => (
+                        <DatePicker
+                          label='Expiration Date'
+                          value={field.value ? dayjs(field.value) : null}
+                          onChange={field.onChange}
+                          readOnly={!isEditing}
+                          renderInput={params => <TextField {...params} />}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions
-            sx={{
-              justifyContent: 'center',
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
-            {isEditing ? (
-              <>
-                <Button type='submit' variant='contained'>
-                  Save
-                </Button>
-                <Button
-                  variant='outlined'
-                  color='secondary'
-                  onClick={() => {
-                    setIsEditing(false)
-                    setRfidScanning(false)
-                  }}
-                >
-                  Cancel
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    e.preventDefault()
-                    setIsEditing(true)
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button variant='outlined' color='secondary' onClick={handleClose}>
-                  Close
-                </Button>
-              </>
-            )}
-          </DialogActions>
-        </form>
-      </Dialog>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                justifyContent: 'center',
+                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+              }}
+            >
+              {isEditing ? (
+                <>
+                  <Button type='submit' variant='contained'>
+                    Save
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    color='secondary'
+                    onClick={() => {
+                      setIsEditing(false)
+                      setRfidScanning(false)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant='contained'
+                    onClick={e => {
+                      e.preventDefault()
+                      setIsEditing(true)
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button variant='outlined' color='secondary' onClick={handleClose}>
+                    Close
+                  </Button>
+                </>
+              )}
+            </DialogActions>
+          </form>
+        </Dialog>
+      </Card>
     </LocalizationProvider>
   )
 }

@@ -27,6 +27,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import FormHelperText from '@mui/material/FormHelperText'
+import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -99,235 +100,240 @@ const DialogEditProfile = ({ user, fetchUser }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Button size='small' sx={{ mr: 3 }} startIcon={<EditIcon />} variant='outlined' onClick={() => setShow(true)}>
-        Edit Profile
-      </Button>
-      <Dialog
-        fullWidth
-        open={show}
-        maxWidth='md'
-        scroll='body'
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        onBackdropClick={handleClose}
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent
-            sx={{
-              position: 'relative',
-              pb: theme => `${theme.spacing(8)} !important`,
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
-            <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-              <Icon icon='mdi:close' />
-            </IconButton>
-            <Box sx={{ mb: 8, textAlign: 'center' }}>
-              <Typography variant='h5' sx={{ mb: 3 }}>
-                Edit User
-              </Typography>
-              <Typography variant='body2'>Edit User Information</Typography>
-              {user?.user_info?.status !== 'Active' && (
-                <Typography variant='body2' sx={{ color: 'error.main', mt: 2 }}>
-                  Note: You cannot edit user information because the account is not yet activated.
+      <Card>
+        <Button size='small' sx={{ mr: 3 }} startIcon={<EditIcon />} variant='outlined' onClick={() => setShow(true)}>
+          Edit Profile
+        </Button>
+        <Dialog
+          fullWidth
+          open={show}
+          maxWidth='md'
+          scroll='body'
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          onBackdropClick={handleClose}
+        >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent
+              sx={{
+                position: 'relative',
+                pb: theme => `${theme.spacing(8)} !important`,
+                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+              }}
+            >
+              <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
+                <Icon icon='mdi:close' />
+              </IconButton>
+              <Box sx={{ mb: 8, textAlign: 'center' }}>
+                <Typography variant='h5' sx={{ mb: 3 }}>
+                  Edit User
                 </Typography>
-              )}
-            </Box>
-            <Grid container spacing={6}>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>User Information</Typography>
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='last_name'
-                  control={control}
-                  rules={{
-                    required: user?.user_info?.status === 'Active' ? 'This field is required' : false
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Last Name'
-                      error={!!errors.last_name}
-                      helperText={errors.last_name?.message}
-                      InputProps={{
-                        readOnly: user?.user_info?.status !== 'Active'
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='first_name'
-                  control={control}
-                  rules={{
-                    required: user?.user_info?.status === 'Active' ? 'This field is required' : false
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='First Name'
-                      error={!!errors.first_name}
-                      helperText={errors.first_name?.message}
-                      InputProps={{
-                        readOnly: user?.user_info?.status !== 'Active'
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='middle_name'
-                  control={control}
-                  rules={{
-                    required: user?.user_info?.status === 'Active' ? 'This field is required' : false
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Middle Name'
-                      error={!!errors.middle_name}
-                      helperText={errors.middle_name?.message}
-                      InputProps={{
-                        readOnly: user?.user_info?.status !== 'Active'
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>Account Information</Typography>
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
-                  name='username'
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Username'
-                      error={!!errors.username}
-                      helperText={errors.username?.message}
-                      InputProps={{ readOnly: true }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Typography variant='body1'>Change Account Password</Typography>
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth sx={{ mb: 4 }}>
-                  <InputLabel htmlFor='current_password' error={Boolean(errors.current_password)}>
-                    Current Password
-                  </InputLabel>
+                <Typography variant='body2'>Edit User Information</Typography>
+                {user?.user_info?.status !== 'Active' && (
+                  <Typography variant='body2' sx={{ color: 'error.main', mt: 2 }}>
+                    Note: You cannot edit user information because the account is not yet activated.
+                  </Typography>
+                )}
+              </Box>
+              <Grid container spacing={6}>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>User Information</Typography>
+                </Grid>
+                <Grid item sm={4} xs={12}>
                   <Controller
-                    name='current_password'
-                    control={control}
-                    render={({ field: { value, onChange, onBlur } }) => (
-                      <OutlinedInput
-                        value={value}
-                        onBlur={onBlur}
-                        label='Current Password'
-                        onChange={onChange}
-                        id='current_password'
-                        error={Boolean(errors.current_password)}
-                        type={showCurrentPassword ? 'text' : 'password'}
-                        disabled={user?.user_info?.status !== 'Active'}
-                        endAdornment={
-                          <InputAdornment position='end'>
-                            <IconButton
-                              edge='end'
-                              onMouseDown={e => e.preventDefault()}
-                              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                            >
-                              <Icon
-                                icon={showCurrentPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'}
-                                fontSize={20}
-                              />
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                    )}
-                  />
-                  {errors.current_password && (
-                    <FormHelperText sx={{ color: 'error.main' }} id=''>
-                      {errors.current_password.message}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth sx={{ mb: 4 }}>
-                  <InputLabel htmlFor='new_password' error={Boolean(errors.new_password)}>
-                    New Password
-                  </InputLabel>
-                  <Controller
-                    name='new_password'
+                    name='last_name'
                     control={control}
                     rules={{
-                      validate: value =>
-                        (!value && !getValues('current_password')) ||
-                        (!!getValues('current_password') && !!value) ||
-                        'New Password is required when changing Current Password'
+                      required: user?.user_info?.status === 'Active' ? 'This field is required' : false
                     }}
-                    render={({ field: { value, onChange, onBlur } }) => (
-                      <OutlinedInput
-                        value={value}
-                        onBlur={onBlur}
-                        label='New Password'
-                        onChange={onChange}
-                        id='new_password'
-                        error={Boolean(errors.new_password)}
-                        type={showNewPassword ? 'text' : 'password'}
-                        disabled={user?.user_info?.status !== 'Active'}
-                        endAdornment={
-                          <InputAdornment position='end'>
-                            <IconButton
-                              edge='end'
-                              onMouseDown={e => e.preventDefault()}
-                              onClick={() => setShowNewPassword(!showNewPassword)}
-                            >
-                              <Icon icon={showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
-                            </IconButton>
-                          </InputAdornment>
-                        }
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Last Name'
+                        error={!!errors.last_name}
+                        helperText={errors.last_name?.message}
+                        InputProps={{
+                          readOnly: user?.user_info?.status !== 'Active'
+                        }}
                       />
                     )}
                   />
-                  {errors.new_password && (
-                    <FormHelperText sx={{ color: 'error.main' }} id=''>
-                      {errors.new_password.message}
-                    </FormHelperText>
-                  )}
-                </FormControl>
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='first_name'
+                    control={control}
+                    rules={{
+                      required: user?.user_info?.status === 'Active' ? 'This field is required' : false
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='First Name'
+                        error={!!errors.first_name}
+                        helperText={errors.first_name?.message}
+                        InputProps={{
+                          readOnly: user?.user_info?.status !== 'Active'
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='middle_name'
+                    control={control}
+                    rules={{
+                      required: user?.user_info?.status === 'Active' ? 'This field is required' : false
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Middle Name'
+                        error={!!errors.middle_name}
+                        helperText={errors.middle_name?.message}
+                        InputProps={{
+                          readOnly: user?.user_info?.status !== 'Active'
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>Account Information</Typography>
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                  <Controller
+                    name='username'
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Username'
+                        error={!!errors.username}
+                        helperText={errors.username?.message}
+                        InputProps={{ readOnly: true }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>Change Account Password</Typography>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='current_password' error={Boolean(errors.current_password)}>
+                      Current Password
+                    </InputLabel>
+                    <Controller
+                      name='current_password'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          label='Current Password'
+                          onChange={onChange}
+                          id='current_password'
+                          error={Boolean(errors.current_password)}
+                          type={showCurrentPassword ? 'text' : 'password'}
+                          disabled={user?.user_info?.status !== 'Active'}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                              >
+                                <Icon
+                                  icon={showCurrentPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'}
+                                  fontSize={20}
+                                />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
+                    />
+                    {errors.current_password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.current_password.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='new_password' error={Boolean(errors.new_password)}>
+                      New Password
+                    </InputLabel>
+                    <Controller
+                      name='new_password'
+                      control={control}
+                      rules={{
+                        validate: value =>
+                          (!value && !getValues('current_password')) ||
+                          (!!getValues('current_password') && !!value) ||
+                          'New Password is required when changing Current Password'
+                      }}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          label='New Password'
+                          onChange={onChange}
+                          id='new_password'
+                          error={Boolean(errors.new_password)}
+                          type={showNewPassword ? 'text' : 'password'}
+                          disabled={user?.user_info?.status !== 'Active'}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                              >
+                                <Icon
+                                  icon={showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'}
+                                  fontSize={20}
+                                />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
+                    />
+                    {errors.new_password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.new_password.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions
-            sx={{
-              justifyContent: 'center',
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
-            <Button type='submit' variant='contained'>
-              Save
-            </Button>
-            <Button variant='outlined' color='secondary' onClick={() => handleClose()}>
-              Close
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                justifyContent: 'center',
+                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+              }}
+            >
+              <Button type='submit' variant='contained'>
+                Save
+              </Button>
+              <Button variant='outlined' color='secondary' onClick={() => handleClose()}>
+                Close
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      </Card>
     </LocalizationProvider>
   )
 }

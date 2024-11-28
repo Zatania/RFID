@@ -18,6 +18,7 @@ import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
+import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -136,7 +137,7 @@ const DialogEditBAO = ({ bao, refreshData }) => {
   }, [setValue, bao])
 
   return (
-    <>
+    <Card>
       <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined' sx={{ mr: 5 }}>
         Edit
       </Button>
@@ -330,7 +331,7 @@ const DialogEditBAO = ({ bao, refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </>
+    </Card>
   )
 }
 
