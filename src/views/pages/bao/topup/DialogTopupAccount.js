@@ -96,7 +96,7 @@ const DialogTopupAccount = ({ account, refreshData }) => {
   }
 
   return (
-    <Card>
+    <Box>
       <Button size='small' startIcon={<ViewIcon />} onClick={() => setShow(true)} variant='outlined'>
         Top Up Account
       </Button>
@@ -255,7 +255,7 @@ const DialogTopupAccount = ({ account, refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

@@ -3,7 +3,6 @@ import { Ref, useEffect, useState, forwardRef, ReactElement } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -47,7 +46,7 @@ const DialogDeleteVisitor = ({ visitor_id, refreshData }) => {
   }
 
   return (
-    <Card>
+    <Box>
       <Button size='small' startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
         Delete
       </Button>
@@ -91,7 +90,7 @@ const DialogDeleteVisitor = ({ visitor_id, refreshData }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

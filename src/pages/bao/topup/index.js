@@ -70,7 +70,7 @@ const BAOTopUp = () => {
   const activeColumn = [
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 150,
       field: 'full_name',
       headerName: 'Full Name',
       valueGetter: params => params.row.first_name,
@@ -81,8 +81,8 @@ const BAOTopUp = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 200,
+      flex: 0.1,
+      minWidth: 100,
       field: 'load_balance',
       headerName: 'Load Balance',
       valueGetter: params => params.row.load_balance,
@@ -93,8 +93,8 @@ const BAOTopUp = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 200,
+      flex: 0.1,
+      minWidth: 50,
       field: 'status',
       headerName: 'Status',
       valueGetter: params => params.row.status,
@@ -106,7 +106,7 @@ const BAOTopUp = () => {
     },
     {
       flex: 0.2,
-      minWidth: 250,
+      minWidth: 200,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {

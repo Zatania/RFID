@@ -70,7 +70,7 @@ const DialogViewVehicles = ({ premium_id, refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Card>
+      <Box>
         <Button
           size='small'
           sx={{ mr: 3 }}
@@ -188,7 +188,7 @@ const DialogViewVehicles = ({ premium_id, refreshData }) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Card>
+      </Box>
     </LocalizationProvider>
   )
 }

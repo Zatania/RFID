@@ -15,7 +15,6 @@ import AddIcon from '@mui/icons-material/Add'
 import InputAdornment from '@mui/material/InputAdornment'
 import CircularProgress from '@mui/material/CircularProgress'
 import EditIcon from '@mui/icons-material/Edit'
-import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -103,7 +102,7 @@ const DialogAddVisitor = ({ refreshData }) => {
   }
 
   return (
-    <Card>
+    <>
       <Button
         size='small'
         onClick={() => setShow(true)}
@@ -333,7 +332,7 @@ const DialogAddVisitor = ({ refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </Card>
+    </>
   )
 }
 

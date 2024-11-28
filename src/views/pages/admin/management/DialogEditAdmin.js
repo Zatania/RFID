@@ -137,8 +137,8 @@ const DialogEditAdmin = ({ admin, refreshData }) => {
   }, [setValue, admin])
 
   return (
-    <Card>
-      <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined' sx={{ mr: 5 }}>
+    <Box sx={{ mr: 3 }}>
+      <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined'>
         Edit
       </Button>
 
@@ -331,7 +331,7 @@ const DialogEditAdmin = ({ admin, refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

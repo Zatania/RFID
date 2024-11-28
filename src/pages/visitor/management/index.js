@@ -70,7 +70,7 @@ const VisitorManagement = () => {
 
   const visitorColumn = [
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 150,
       field: 'fullName',
       headerName: 'Full Name',
@@ -84,7 +84,7 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 150,
       field: 'purpose',
       headerName: 'Purpose',
@@ -98,7 +98,7 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 150,
       field: 'vehicle_maker',
       headerName: 'Vehicle Maker',
@@ -112,7 +112,7 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 150,
       field: 'vehicle_model',
       headerName: 'Vehicle Model',
@@ -126,7 +126,7 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 150,
       field: 'vehicle_color',
       headerName: 'Vehicle Color',
@@ -140,7 +140,7 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.1,
+      flex: 0.2,
       minWidth: 200,
       field: 'vehicle_plate_number',
       headerName: 'Vehicle Plate Number',
@@ -155,7 +155,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.1,
-      minWidth: 150,
+      minWidth: 100,
       field: 'status',
       headerName: 'Status',
       valueGetter: params => params.row.status,
@@ -168,16 +168,12 @@ const VisitorManagement = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 150,
+      flex: 0.3,
+      minWidth: 100,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {
-        return (
-          <>
-            <DialogDeleteVisitor visitor_id={params.row.id} refreshData={fetchVisitors} />
-          </>
-        )
+        return <DialogDeleteVisitor visitor_id={params.row.id} refreshData={fetchVisitors} />
       }
     }
   ]

@@ -191,8 +191,8 @@ const DialogViewUser = ({ user, refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Card>
-        <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Box sx={{ mr: 3 }}>
+        <Button size='small' startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
           View Info
         </Button>
         <Dialog
@@ -546,7 +546,7 @@ const DialogViewUser = ({ user, refreshData }) => {
             </DialogActions>
           </form>
         </Dialog>
-      </Card>
+      </Box>
     </LocalizationProvider>
   )
 }

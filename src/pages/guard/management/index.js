@@ -73,7 +73,7 @@ const GuardManagement = () => {
   const guardColumn = [
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 150,
       field: 'firstName',
       headerName: 'First Name',
       valueGetter: params => params.row.first_name,
@@ -85,7 +85,7 @@ const GuardManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 150,
       field: 'middleName',
       headerName: 'Middle Name',
       valueGetter: params => params.row.middle_name,
@@ -97,7 +97,7 @@ const GuardManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 150,
       field: 'lastName',
       headerName: 'Last Name',
       valueGetter: params => params.row.last_name,
@@ -109,7 +109,7 @@ const GuardManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 100,
       field: 'username',
       headerName: 'Username',
       valueGetter: params => params.row.username,
@@ -120,8 +120,8 @@ const GuardManagement = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 250,
+      flex: 0.3,
+      minWidth: 300,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {

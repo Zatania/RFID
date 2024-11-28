@@ -100,8 +100,8 @@ const DialogEditProfile = ({ user, fetchUser }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Card>
-        <Button size='small' sx={{ mr: 3 }} startIcon={<EditIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Box>
+        <Button size='small' startIcon={<EditIcon />} variant='outlined' onClick={() => setShow(true)}>
           Edit Profile
         </Button>
         <Dialog
@@ -333,7 +333,7 @@ const DialogEditProfile = ({ user, fetchUser }) => {
             </DialogActions>
           </form>
         </Dialog>
-      </Card>
+      </Box>
     </LocalizationProvider>
   )
 }

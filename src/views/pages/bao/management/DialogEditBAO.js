@@ -137,11 +137,10 @@ const DialogEditBAO = ({ bao, refreshData }) => {
   }, [setValue, bao])
 
   return (
-    <Card>
-      <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined' sx={{ mr: 5 }}>
+    <Box sx={{ mr: 3 }}>
+      <Button size='small' startIcon={<EditIcon />} onClick={() => setShow(true)} variant='outlined'>
         Edit
       </Button>
-
       <Dialog
         fullWidth
         open={show}
@@ -331,7 +330,7 @@ const DialogEditBAO = ({ bao, refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

@@ -47,7 +47,7 @@ const DialogDeleteAdmin = ({ admin_id, refreshData }) => {
   }
 
   return (
-    <Card>
+    <Box>
       <Button size='small' startIcon={<DeleteIcon />} variant='outlined' onClick={() => setShow(true)}>
         Delete
       </Button>
@@ -91,7 +91,7 @@ const DialogDeleteAdmin = ({ admin_id, refreshData }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

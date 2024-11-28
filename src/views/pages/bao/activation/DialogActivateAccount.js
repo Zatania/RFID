@@ -95,7 +95,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
   }
 
   return (
-    <Card>
+    <Box>
       <Button size='small' startIcon={<ViewIcon />} onClick={() => setShow(true)} variant='outlined'>
         Activate Account
       </Button>
@@ -241,7 +241,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
           </DialogActions>
         </form>
       </Dialog>
-    </Card>
+    </Box>
   )
 }
 

@@ -9,6 +9,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
+import Divider from '@mui/material/Divider'
 
 // ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
@@ -65,36 +66,62 @@ const DashboardPage = () => {
   }, [])
 
   useEffect(() => {
-    // Only proceed if both RFID values are available
-    if (vehicle_rfid) {
-      // Fetch vehicle data based on vehicle RFID
+    if (rfid) {
+      // Fetch user account data based on RFID
       axios
-        .get(`/api/attendance/vehicle/${vehicle_rfid}`)
+        .get(`/api/attendance/user/${rfid}`)
         .then(response => {
-          setVehicle(response.data)
+          const accountData = response.data
+          setAccount(accountData) // Set account data
+          const account_id = accountData.id
 
-          if (rfid) {
-            axios.get(`/api/attendance/user/${rfid}`).then(response => {
-              setAccount(response.data)
-            })
-
-            /*
-            // Proceed to post attendance only if the user RFID is valid
+          // Check if the account type is Visitor
+          if (accountData.type === 'Visitor') {
+            // If it's a Visitor, proceed directly to post attendance
             axios
-              .post(`/api/attendance/${rfid}`, { guard_id: session.user.id })
-              .then(response => {
-                setAccount(response.data.account)
-                setMessage(response.data.message)
-                fetchLogs()
+              .post(`/api/attendance/${account_id}`, {
+                guard_id: session.user.id,
+                account_type: accountData.type // Add account type here
               })
-              .catch(error => console.error('Error posting attendance data', error))
- */
-            // Reset RFID states after processing
-            setRfid('')
-            setVehicleRfid('')
+              .then(response => {
+                setMessage(response.data.message)
+                fetchLogs() // Fetch updated logs
+              })
+              .catch(error => console.error('Error posting attendance data for Visitor', error))
+          } else if (vehicle_rfid) {
+            // Fetch vehicle data based on vehicle RFID
+            axios
+              .get(`/api/attendance/vehicle/${vehicle_rfid}`)
+              .then(response => {
+                const vehicleData = response.data
+                setVehicle(vehicleData)
+
+                // Check if user ID, premium ID matches account ID
+                if (vehicleData.user_id === accountData.id || vehicleData.premium_id === accountData.id) {
+                  // Proceed to post attendance if the user RFID is valid
+                  axios
+                    .post(`/api/attendance/${account_id}`, {
+                      guard_id: session.user.id,
+                      account_type: accountData.type // Add account type here
+                    })
+                    .then(response => {
+                      setMessage(response.data.message)
+                      fetchLogs()
+                    })
+                    .catch(error => console.error('Error posting attendance data', error))
+                } else {
+                  // Handle case where there is no match
+                  console.error('No matching account ID found for vehicle')
+                }
+              })
+              .catch(error => console.error('Error fetching vehicle data', error))
           }
         })
-        .catch(error => console.error('Error fetching vehicle data', error))
+        .catch(error => console.error('Error fetching account data', error))
+
+      // Reset RFID states after processing
+      setRfid('')
+      setVehicleRfid('')
     }
   }, [rfid, vehicle_rfid, session])
 
@@ -122,7 +149,7 @@ const DashboardPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        bgcolor: '#804BDF'
+        bgcolor: '#79BAEC'
       }}
     >
       <Container maxWidth='lg'>
@@ -132,26 +159,33 @@ const DashboardPage = () => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '8px',
-            bgcolor: '#9E69FD',
+            bgcolor: '#73C2FB',
             padding: '20px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #9E69FD'
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
           }}
         >
           <Grid container spacing={6} sx={{ marginLeft: '20px', marginRight: '20px' }}>
             <Grid item sm={12} xs={12}>
-              <Typography variant='h4' align='center' sx={{ fontWeight: 'bold' }}>
-                PIYUCHECKPOINT
-              </Typography>
-              <Typography variant='h6' align='center' sx={{ color: 'red' }}>
-                Please Scan Your Card
-              </Typography>
-              <Typography variant='h6' align='center'>
-                {currentDateTime}
-              </Typography>
+              <Grid container spacing={1}>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='h4' align='center' sx={{ color: '#252324', fontWeight: 'bold' }}>
+                    PIYUCHECKPOINT
+                  </Typography>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='h6' align='center' sx={{ color: '#DD0004', fontWeight: 'bold' }}>
+                    Please Scan Your Card
+                  </Typography>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='h6' align='center' sx={{ color: '#252324' }}>
+                    {currentDateTime}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item sm={12} xs={12}>
-              <Grid container spacing={6}>
+              <Grid container spacing={12}>
                 <Grid item sm={6} xs={12}>
                   <Grid container spacing={6}>
                     <Grid item sm={12} xs={12}>
@@ -159,12 +193,18 @@ const DashboardPage = () => {
                         <img
                           src={account ? `/api/image/${account.image}` : '/images/avatars/placeholder.png'}
                           alt='Account Image'
-                          style={{ width: '150px', height: '150px', borderRadius: '8px', marginBottom: '10px' }}
+                          style={{
+                            width: '150px',
+                            height: '150px',
+                            borderRadius: '8px',
+                            marginBottom: '10px',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                          }}
                         />
                       </Box>
                     </Grid>
                     <Grid item sm={12} xs={12}>
-                      <Typography variant='h5' align='center' gutterBottom sx={{ fontWeight: 'bold' }}>
+                      <Typography variant='h5' align='center' sx={{ color: '#252324' }} gutterBottom>
                         Welcome to LSPU {account ? `"${account.first_name} ${account.last_name}"` : ''}
                       </Typography>
                       <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
@@ -178,126 +218,177 @@ const DashboardPage = () => {
                         )}
                       </Box>
                     </Grid>
-                    <Grid item sm={12} xs={12}>
-                      <Grid container spacing={2} sx={{ marginTop: '5px' }}>
-                        <Grid item sm={6} xs={12}>
-                          <Typography variant='h5' gutterBottom>
-                            Vehicle Information
-                          </Typography>
-                          <Typography>Maker: {vehicle ? vehicle.maker : 'Unknown'}</Typography>
-                          <Typography>Model: {vehicle ? vehicle.model : 'Unknown'}</Typography>
-                          <Typography>Color: {vehicle ? vehicle.color : 'Unknown'}</Typography>
-                          <Typography>Plate Number: {vehicle ? vehicle.plate_number : 'Unknown'}</Typography>
-                        </Grid>
-                        <Grid item sm={6} xs={12}>
-                          <Box display='flex' flexDirection='column' alignItems='center'>
-                            <img
-                              src={vehicle ? `/api/image/${vehicle.image}` : '/images/avatars/placeholder.png'}
-                              alt='Vehicle'
-                              style={{ width: '150px', height: '150px', borderRadius: '8px' }}
-                            />
-                          </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        textAlign: 'left',
+                        borderRadius: '8px',
+                        bgcolor: '#4682B4',
+                        padding: '20px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                      }}
+                    >
+                      <Grid item sm={12} xs={12}>
+                        <Grid container spacing={2} sx={{ marginTop: '5px' }}>
+                          <Grid item sm={12} xs={12}>
+                            <Typography variant='h5' sx={{ color: '#252324' }} gutterBottom>
+                              Vehicle Information
+                            </Typography>
+                            <Divider variant='middle' />
+                          </Grid>
+                          <Grid item sm={6} xs={12}>
+                            <Typography sx={{ color: '#252324' }}>
+                              Maker: {vehicle ? vehicle.maker : 'Unknown'}
+                            </Typography>
+                            <Typography sx={{ color: '#252324' }}>
+                              Model: {vehicle ? vehicle.model : 'Unknown'}
+                            </Typography>
+                            <Typography sx={{ color: '#252324' }}>
+                              Color: {vehicle ? vehicle.color : 'Unknown'}
+                            </Typography>
+                            <Typography sx={{ color: '#252324' }}>
+                              Plate Number: {vehicle ? vehicle.plate_number : 'Unknown'}
+                            </Typography>
+                          </Grid>
+                          <Grid item sm={6} xs={12}>
+                            <Box display='flex' flexDirection='column' alignItems='center'>
+                              <img
+                                src={vehicle ? `/api/image/${vehicle.image}` : '/images/avatars/placeholder.png'}
+                                alt='Vehicle'
+                                style={{
+                                  width: '150px',
+                                  height: '150px',
+                                  borderRadius: '8px',
+                                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                                }}
+                              />
+                            </Box>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
+                    </Box>
                   </Grid>
                 </Grid>
                 <Grid item sm={6} xs={12}>
-                  <Grid container spacing={3}>
+                  <Grid container spacing={6}>
                     <Grid item sm={12} xs={12}>
-                      <Box>
-                        <Typography variant='h6' align='center' gutterBottom sx={{ fontWeight: 'bold' }}>
-                          Currently Parked Vehicles
-                        </Typography>
-                        <Paper
-                          sx={{
-                            height: '150px',
-                            overflowY: 'scroll',
-                            padding: '10px',
-                            border: '1px solid #fff',
-                            bgcolor: '#f5f5f5'
-                          }}
-                        >
-                          {logs.length > 0 ? (
-                            logs.map((log, index) => (
-                              <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={6}>
-                                    <Typography variant='body2'>{log.user_full_name}</Typography>
-                                    <Typography variant='caption' color='textSecondary'>
-                                      {log.daily_timestamp}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={6}>
-                                    {log.daily_status === 'TIME IN' ? (
-                                      <Typography variant='h6' color='primary'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    ) : log.status === 'TIME OUT' ? (
-                                      <Typography variant='h6' color='secondary'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    ) : (
-                                      <Typography variant='h6' color='error'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    )}
-                                  </Grid>
-                                </Grid>
-                              </Box>
-                            ))
-                          ) : (
-                            <Typography>No logs available</Typography>
-                          )}
-                        </Paper>
+                      <Box
+                        sx={{
+                          borderRadius: '8px',
+                          bgcolor: '#4682B4',
+                          padding: '20px',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                        }}
+                      >
+                        <Grid container spacing={3}>
+                          <Grid item sm={12} xs={12}>
+                            <Typography variant='h5' align='center' sx={{ color: '#252324' }} gutterBottom>
+                              Currently Parked Vehicles
+                            </Typography>
+                          </Grid>
+                          <Grid item sm={12} xs={12}>
+                            <Paper
+                              sx={{
+                                height: '150px',
+                                overflowY: 'scroll',
+                                padding: '10px',
+                                bgcolor: '#73C2FB'
+                              }}
+                            >
+                              {logs.length > 0 ? (
+                                logs.map((log, index) => (
+                                  <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
+                                    <Grid container spacing={3}>
+                                      <Grid item xs={6}>
+                                        <Typography variant='body2'>{log.user_full_name}</Typography>
+                                        <Typography variant='caption' color='textSecondary'>
+                                          {log.daily_timestamp}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={6}>
+                                        {log.daily_status === 'TIME IN' ? (
+                                          <Typography variant='h6' color='primary'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        ) : log.status === 'TIME OUT' ? (
+                                          <Typography variant='h6' color='secondary'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        ) : (
+                                          <Typography variant='h6' color='error'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        )}
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                ))
+                              ) : (
+                                <Typography sx={{ color: '#252324' }}>No logs available</Typography>
+                              )}
+                            </Paper>
+                          </Grid>
+                        </Grid>
                       </Box>
                     </Grid>
                     <Grid item sm={12} xs={12}>
-                      <Box>
-                        <Typography variant='h6' align='center' gutterBottom sx={{ fontWeight: 'bold' }}>
-                          Logs
-                        </Typography>
-                        <Paper
-                          sx={{
-                            height: '150px',
-                            overflowY: 'scroll',
-                            padding: '10px',
-                            border: '1px solid #fff',
-                            bgcolor: '#f5f5f5'
-                          }}
-                        >
-                          {logs.length > 0 ? (
-                            logs.map((log, index) => (
-                              <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={6}>
-                                    <Typography variant='body2'>{log.user_full_name}</Typography>
-                                    <Typography variant='caption' color='textSecondary'>
-                                      {log.daily_timestamp}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={6}>
-                                    {log.daily_status === 'TIME IN' ? (
-                                      <Typography variant='h6' color='primary'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    ) : log.status === 'TIME OUT' ? (
-                                      <Typography variant='h6' color='secondary'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    ) : (
-                                      <Typography variant='h6' color='error'>
-                                        {log.daily_status}
-                                      </Typography>
-                                    )}
-                                  </Grid>
-                                </Grid>
-                              </Box>
-                            ))
-                          ) : (
-                            <Typography>No logs available</Typography>
-                          )}
-                        </Paper>
+                      <Box
+                        sx={{
+                          borderRadius: '8px',
+                          bgcolor: '#4682b4',
+                          padding: '20px',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                        }}
+                      >
+                        <Grid container spacing={3}>
+                          <Grid item sm={12} xs={12}>
+                            <Typography variant='h5' align='center' sx={{ color: '#252324' }} gutterBottom>
+                              Logs
+                            </Typography>
+                          </Grid>
+                          <Grid item sm={12} xs={12}>
+                            <Paper
+                              sx={{
+                                height: '150px',
+                                overflowY: 'scroll',
+                                padding: '10px',
+                                bgcolor: '#73C2FB'
+                              }}
+                            >
+                              {logs.length > 0 ? (
+                                logs.map((log, index) => (
+                                  <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
+                                    <Grid container spacing={3}>
+                                      <Grid item xs={6}>
+                                        <Typography variant='body2'>{log.user_full_name}</Typography>
+                                        <Typography variant='caption' color='textSecondary'>
+                                          {log.daily_timestamp}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={6}>
+                                        {log.daily_status === 'TIME IN' ? (
+                                          <Typography variant='h6' color='primary'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        ) : log.status === 'TIME OUT' ? (
+                                          <Typography variant='h6' color='secondary'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        ) : (
+                                          <Typography variant='h6' color='error'>
+                                            {log.daily_status}
+                                          </Typography>
+                                        )}
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                ))
+                              ) : (
+                                <Typography sx={{ color: '#252324' }}>No logs available</Typography>
+                              )}
+                            </Paper>
+                          </Grid>
+                        </Grid>
                       </Box>
                     </Grid>
                   </Grid>

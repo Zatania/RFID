@@ -24,7 +24,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import Card from '@mui/material/Card'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -175,8 +174,8 @@ const DialogViewVehicle = ({ vehicle, refreshData }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Card>
-        <Button size='small' sx={{ mr: 3 }} startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
+      <Box sx={{ mr: 3 }}>
+        <Button size='small' startIcon={<ViewIcon />} variant='outlined' onClick={() => setShow(true)}>
           View
         </Button>
         <Dialog
@@ -488,7 +487,7 @@ const DialogViewVehicle = ({ vehicle, refreshData }) => {
             </DialogActions>
           </form>
         </Dialog>
-      </Card>
+      </Box>
     </LocalizationProvider>
   )
 }

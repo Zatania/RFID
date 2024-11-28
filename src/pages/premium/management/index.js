@@ -73,7 +73,7 @@ const PremiumManagement = () => {
   const premiumColumns = [
     {
       flex: 0.1,
-      minWidth: 250,
+      minWidth: 100,
       field: 'fullName',
       headerName: 'Full Name',
       valueGetter: params => params.row.first_name + ' ' + params.row.last_name,
@@ -87,7 +87,7 @@ const PremiumManagement = () => {
     },
     {
       flex: 0.1,
-      minWidth: 250,
+      minWidth: 100,
       field: 'load_balance',
       headerName: 'Load Balance',
       valueGetter: params => params.row.load_balance,
@@ -114,8 +114,8 @@ const PremiumManagement = () => {
       )
     },
     {
-      flex: 0.2,
-      minWidth: 100,
+      flex: 0.3,
+      minWidth: 300,
       field: 'action',
       headerName: 'Actions',
       renderCell: params => {
