@@ -16,7 +16,7 @@ import Icon from 'src/@core/components/icon'
 import dayjs from 'dayjs'
 
 // ** Views Imports
-/* import DialogEditProfile from 'src/views/pages/profile/EditProfile' */
+import DialogEditProfile from 'src/views/pages/user/profile/DialogEditProfile'
 
 // ** Third Party Imports
 import axios from 'axios'
@@ -59,7 +59,7 @@ const ProfilePage = () => {
     fullName: session?.user.fullname,
     designation: capitalizeFirstLetter(session?.user.role),
     profileImg: `/api/image/${session?.user.image}`,
-    designationIcon: 'mdi:cash'
+    loadIcon: 'mdi:cash'
   }
 
   const fetchUser = useCallback(async () => {
@@ -174,7 +174,7 @@ const ProfilePage = () => {
     }, {})
   }
 
-  const designationIcon = data?.designationIcon || 'mdi:briefcase-outline'
+  const loadIcon = data?.loadIcon || 'mdi:briefcase-outline'
 
   const renderList = arr => {
     if (arr && arr.length) {
@@ -243,7 +243,7 @@ const ProfilePage = () => {
             >
               <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
                 <Typography variant='h5' sx={{ mb: 4 }}>
-                  {data.fullName}
+                  {loading ? 'Loading...' : `${user?.user_info?.first_name || ''} ${user?.user_info?.last_name || ''}`}
                 </Typography>
                 <Box
                   sx={{
@@ -255,19 +255,37 @@ const ProfilePage = () => {
                   <Box
                     sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}
                   >
-                    <Icon icon={designationIcon} />
+                    <Icon icon={loadIcon} />
                     <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                      Php {loading ? 'Loading...' : user?.rfid?.load_balance}
+                      {loading ? 'Loading...' : 'Php ' + user?.rfid?.load_balance}
                     </Typography>
                   </Box>
                 </Box>
               </Box>
+              <DialogEditProfile user={user} fetchUser={fetchUser} />
             </Box>
           </CardContent>
         </Card>
       </Grid>
       {loading ? (
-        <CircularProgress />
+        <Grid item xs={12}>
+          <Card>
+            <CardContent
+              sx={{
+                pt: 0,
+                mt: 5,
+                display: 'flex',
+                alignItems: 'flex-end',
+                flexWrap: { xs: 'wrap', md: 'nowrap' },
+                justifyContent: { xs: 'center', md: 'flex-start' }
+              }}
+            >
+              <Box sx={{ mb: 6 }}>
+                <CircularProgress />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
       ) : (
         <>
           <Grid item xs={6}>
