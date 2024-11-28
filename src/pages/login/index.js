@@ -82,8 +82,8 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  username: yup.string().required(),
-  password: yup.string().min(5).required()
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required')
 })
 
 const LoginPage = () => {
