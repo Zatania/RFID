@@ -1,4 +1,4 @@
-import db from '../../db'
+import db from '../db'
 
 const handler = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ const handler = async (req, res) => {
           `
           UPDATE violations
           SET status = ?
-          WHERE violation_id = ?
+          WHERE id = ?
         `,
           [status, violation_id]
         )

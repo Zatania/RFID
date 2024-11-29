@@ -71,10 +71,10 @@ const navigation = () => {
       icon: 'mdi:note-multiple-outline'
     },
     {
-      title: 'User Violations',
-      path: '/user/violations',
+      title: 'Violations',
+      path: '/violations',
       action: 'read',
-      subject: 'user-violations',
+      subject: 'violations',
       icon: 'mdi:note-alert-outline'
     },
 

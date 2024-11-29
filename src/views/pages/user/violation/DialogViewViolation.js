@@ -45,7 +45,7 @@ const DialogViewViolation = ({ violation, refreshData }) => {
     const newStatus = event.target.value
     setStatus(newStatus)
     try {
-      await axios.put(`/api/user/violations/${violation.violation_id}`, { status: newStatus })
+      await axios.put(`/api/violations/${violation.id}`, { status: newStatus })
       toast.success('Violation status updated successfully.')
       handleClose()
     } catch (error) {
@@ -90,7 +90,7 @@ const DialogViewViolation = ({ violation, refreshData }) => {
                 User:
               </Typography>
               <Typography variant='body2' sx={{ fontSize: '16px', marginBottom: '4px' }}>
-                {violation.user_full_name}
+                {violation.full_name}
               </Typography>
             </Grid>
             <Grid item sm={6} xs={12}>

@@ -16,6 +16,7 @@ import {
   GridToolbarQuickFilter
 } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
+import Tooltip from '@mui/material/Tooltip'
 
 import DialogViewViolation from 'src/views/pages/user/violation/DialogViewViolation'
 
@@ -25,7 +26,7 @@ function CustomToolbar(props) {
   // Refresh list of violations
   const fetchViolations = () => {
     axios
-      .get('/api/user/violations')
+      .get('/api/violations')
       .then(response => {
         setViolationRows(response.data)
       })
@@ -60,7 +61,7 @@ const UserViolations = () => {
   // Refresh list
   const fetchViolations = () => {
     axios
-      .get('/api/user/violations')
+      .get('/api/violations')
       .then(response => {
         setViolationRows(response.data)
       })
@@ -76,12 +77,15 @@ const UserViolations = () => {
     {
       flex: 0.2,
       minWidth: 200,
-      field: 'fullName',
+      field: 'full_name',
       headerName: 'User',
+      valueGetter: params => `${params.row.full_name}`,
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.user_full_name}
-        </Typography>
+        <Tooltip title={params.full_name}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.full_name}
+          </Typography>
+        </Tooltip>
       )
     },
     {
@@ -89,6 +93,7 @@ const UserViolations = () => {
       minWidth: 150,
       field: 'timestamp',
       headerName: 'Date & Time of Violation',
+      valueGetter: params => `${params.row.timestamp}`,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.timestamp}
@@ -100,6 +105,7 @@ const UserViolations = () => {
       minWidth: 150,
       field: 'status',
       headerName: 'Status',
+      valueGetter: params => `${params.row.status}`,
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.status}
@@ -125,12 +131,12 @@ const UserViolations = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='User Violations' />
+          <CardHeader title='Violations' />
           <DataGrid
             autoHeight
             columns={violationsColumn}
             rows={violationsRow}
-            getRowId={row => row.violation_id}
+            getRowId={row => row.id}
             pageSizeOptions={[10, 25, 50, 100]}
             paginationModel={violationPaginationModel}
             slots={{ toolbar: CustomToolbar }}
