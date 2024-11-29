@@ -16,6 +16,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'home')
     can(['read'], 'user-management')
     can(['read'], 'premium-management')
+    can(['read'], 'logs')
   } else if (role === 'bao') {
     can(['read'], 'home')
     can(['read'], 'bao-activation')
@@ -25,7 +26,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'home')
     can(['read'], 'visitor-management')
     can(['read'], 'dashboard')
-    can(['read'], 'user-logs')
+    can(['read'], 'logs')
   } else if (role === 'user') {
     can(['read'], 'profile-page')
   } else if (role === 'premium') {

@@ -64,10 +64,10 @@ const navigation = () => {
       icon: 'mdi:account-convert'
     },
     {
-      title: 'User Logs',
-      path: '/user/logs',
+      title: 'Logs',
+      path: '/logs',
       action: 'read',
-      subject: 'user-logs',
+      subject: 'logs',
       icon: 'mdi:note-multiple-outline'
     },
     {
