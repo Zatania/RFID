@@ -84,14 +84,14 @@ const Home = () => {
       .catch(error => console.error('Error fetching data', error))
   }
 
-  /* const fetchViolations = () => {
+  const fetchViolations = () => {
     axios
-      .get('/api/user/violations/count')
+      .get('/api/violations/count')
       .then(response => {
         setViolationCount(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
-  } */
+  }
 
   const fetchUserRFIDCount = () => {
     axios
@@ -112,7 +112,7 @@ const Home = () => {
     fetchBAOs()
     fetchGuards()
 
-    /* fetchViolations() */
+    fetchViolations()
     fetchUserRFIDCount()
   }, [])
 
@@ -152,11 +152,11 @@ const Home = () => {
               title='Total Student/Staff RFID Scanned'
             />
           </Grid>
+          <Grid item xs={12} md={3}>
+            <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
+          </Grid>
         </Grid>
       </Grid>
-      {/* <Grid item xs={12} md={3}>
-        <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
-      </Grid> */}
     </Grid>
   )
 }
