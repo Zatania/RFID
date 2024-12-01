@@ -94,6 +94,15 @@ const navigation = () => {
       action: 'read',
       subject: 'profile-page',
       icon: 'mdi:account-outline'
+    },
+
+    // Settings Page
+    {
+      title: 'Settings',
+      path: '/settings',
+      action: 'read',
+      subject: 'system-settings',
+      icon: 'mdi:cog'
     }
   ]
 }
