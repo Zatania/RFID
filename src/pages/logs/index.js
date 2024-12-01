@@ -35,6 +35,7 @@ function StudentToolbar(props) {
     <GridToolbarContainer style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <GridToolbarFilterButton style={{ marginRight: '8px', marginBottom: '8px' }} />
+        <GridToolbarExport style={{ marginRight: '8px', marginBottom: '8px' }} />
       </div>
       <div>
         <Button
@@ -69,6 +70,7 @@ function StaffToolbar(props) {
     <GridToolbarContainer style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <GridToolbarFilterButton style={{ marginRight: '8px', marginBottom: '8px' }} />
+        <GridToolbarExport style={{ marginRight: '8px', marginBottom: '8px' }} />
       </div>
       <div>
         <Button
@@ -103,6 +105,7 @@ function PremiumToolbar(props) {
     <GridToolbarContainer style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <GridToolbarFilterButton style={{ marginRight: '8px', marginBottom: '8px' }} />
+        <GridToolbarExport style={{ marginRight: '8px', marginBottom: '8px' }} />
       </div>
       <div>
         <Button
@@ -137,6 +140,7 @@ function VisitorToolbar(props) {
     <GridToolbarContainer style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>
         <GridToolbarFilterButton style={{ marginRight: '8px', marginBottom: '8px' }} />
+        <GridToolbarExport style={{ marginRight: '8px', marginBottom: '8px' }} />
       </div>
       <div>
         <Button
@@ -243,7 +247,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_in',
       headerName: 'Time In',
       valueGetter: params => params.row.timestamp_in,
@@ -255,7 +259,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_out',
       headerName: 'Time Out',
       valueGetter: params => params.row.timestamp_out,
@@ -267,7 +271,7 @@ const Logs = () => {
     },
     {
       flex: 0.1,
-      minWidth: 50,
+      minWidth: 100,
       field: 'duration',
       headerName: 'Duration',
       valueGetter: params => params.row.duration,
@@ -306,7 +310,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_in',
       headerName: 'Time In',
       valueGetter: params => params.row.timestamp_in,
@@ -318,7 +322,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_out',
       headerName: 'Time Out',
       valueGetter: params => params.row.timestamp_out,
@@ -330,7 +334,7 @@ const Logs = () => {
     },
     {
       flex: 0.1,
-      minWidth: 50,
+      minWidth: 100,
       field: 'duration',
       headerName: 'Duration',
       valueGetter: params => params.row.duration,
@@ -369,7 +373,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_in',
       headerName: 'Time In',
       valueGetter: params => params.row.timestamp_in,
@@ -381,7 +385,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_out',
       headerName: 'Time Out',
       valueGetter: params => params.row.timestamp_out,
@@ -393,7 +397,7 @@ const Logs = () => {
     },
     {
       flex: 0.1,
-      minWidth: 50,
+      minWidth: 100,
       field: 'duration',
       headerName: 'Duration',
       valueGetter: params => params.row.duration,
@@ -432,7 +436,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_in',
       headerName: 'Time In',
       valueGetter: params => params.row.timestamp_in,
@@ -444,7 +448,7 @@ const Logs = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 250,
       field: 'timestamp_out',
       headerName: 'Time Out',
       valueGetter: params => params.row.timestamp_out,
@@ -456,7 +460,7 @@ const Logs = () => {
     },
     {
       flex: 0.1,
-      minWidth: 50,
+      minWidth: 100,
       field: 'duration',
       headerName: 'Duration',
       valueGetter: params => params.row.duration,
