@@ -199,12 +199,6 @@ const DialogTopupAccount = ({ account, refreshData }) => {
                 <Controller
                   name='load_balance'
                   control={control}
-                  rules={{
-                    required: 'This field is required',
-                    validate: {
-                      positive: value => value > 0 || 'Load balance must be greater than 0'
-                    }
-                  }}
                   render={({ field }) => (
                     <TextField
                       {...field}
