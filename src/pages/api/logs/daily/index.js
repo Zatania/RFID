@@ -1,24 +1,51 @@
-import db from '../../../db'
+import db from '../../db'
 import dayjs from 'dayjs'
 
 const fetchLogs = async () => {
   try {
     const [rows] = await db.query(`
+      -- UNION to combine results from different parking log types
       SELECT
-        daily_logs.*,
-        CONCAT(users.first_name, ' ',  users.last_name) AS user_full_name,
-        CONCAT(security_guards.first_name, ' ', COALESCE(CONCAT(security_guards.middle_name, ' '), ''), security_guards.last_name) AS guard_full_name
-      FROM daily_logs
-      LEFT JOIN users ON daily_logs.daily_user_id = users.user_id
-      LEFT JOIN security_guards ON daily_logs.daily_guard_id = security_guards.guard_id
-      WHERE DATE(daily_logs.daily_timestamp) = CURDATE()
-      ORDER BY daily_logs.daily_timestamp DESC
+          pl.id AS log_id,
+          ph.id AS history_id,
+          CONCAT(a.first_name, ' ',  a.last_name) as account_name,
+          pl.action,
+          pl.created_at
+      FROM user_parking_logs pl
+      JOIN user_parking_history ph ON pl.history_id = ph.id
+      JOIN users a ON ph.user_id = a.id
+
+      UNION ALL
+
+      SELECT
+          pl.id AS log_id,
+          ph.id AS history_id,
+          CONCAT(a.first_name, ' ',  a.last_name) AS account_name,
+          pl.action,
+          pl.created_at
+      FROM premium_parking_logs pl
+      JOIN premium_parking_history ph ON pl.history_id = ph.id
+      JOIN premiums a ON ph.premium_id = a.id
+
+      UNION ALL
+
+      SELECT
+          pl.id AS log_id,
+          ph.id AS history_id,
+          CONCAT(a.first_name, ' ',  a.last_name) AS account_name,
+          pl.action,
+          pl.created_at
+      FROM visitor_parking_logs pl
+      JOIN visitor_parking_history ph ON pl.history_id = ph.id
+      JOIN visitors a ON ph.visitor_id = a.id
+      WHERE DATE(pl.created_at) = CURDATE()
+      ORDER BY created_at DESC;
     `)
 
     const formattedRows = rows.map(row => {
       return {
         ...row,
-        daily_timestamp: row.daily_timestamp ? dayjs(row.daily_timestamp).format('MMMM D, YYYY hh:mm:ss A') : ''
+        created_at: row.created_at ? dayjs(row.created_at).format('MM/DD/YY hh:mm A') : ''
       }
     })
 
