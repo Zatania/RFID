@@ -174,9 +174,6 @@ const editUser = async data => {
     // If the user_id does not exist in the 'rfids' table, insert a new record
     if (rfidExists.length === 0) {
       await db.query('INSERT INTO rfids (user_id, value) VALUES (?, ?)', [user_id, rfid])
-
-      // update user status
-      await db.query('UPDATE users SET status = ? WHERE id = ?', ['Inactive', user_id])
     } else {
       // If the user_id exists, update the existing record
       await db.query('UPDATE rfids SET value = ? WHERE user_id = ?', [rfid, user_id])
