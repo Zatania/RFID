@@ -92,7 +92,7 @@ const addPremium = async data => {
     // Insert into Premiums table
     const [premiumResult] = await db.query(
       'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Pending']
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Inactive']
     )
 
     // Get the premium_id from the last insert
@@ -176,8 +176,19 @@ const editPremium = async data => {
       [last_name, first_name, middle_name, phone_number, email_address, address, image, premium_id]
     )
 
-    // Update RFID table
-    await db.query('UPDATE rfids SET value = ? WHERE premium_id = ?', [rfid, premium_id])
+    // Check if the premium_id exists in the 'rfids' table
+    const [rfidExists] = await db.query('SELECT 1 FROM rfids WHERE premium_id = ?', [premium_id])
+
+    // If the premium_id does not exist in the 'rfids' table, insert a new record
+    if (rfidExists.length === 0) {
+      await db.query('INSERT INTO rfids (premium_id, value) VALUES (?, ?)', [premium_id, rfid])
+
+      // update premium status
+      await db.query('UPDATE premiums SET status = ? WHERE id = ?', ['Inactive', premium_id])
+    } else {
+      // If the premium_id exists, update the existing record
+      await db.query('UPDATE rfids SET value = ? WHERE premium_id = ?', [rfid, premium_id])
+    }
 
     // Update Driver's Licenses table
     await db.query('UPDATE drivers_licenses SET license_number = ?, expiration = ? WHERE premium_id = ?', [
