@@ -168,7 +168,16 @@ const editUser = async data => {
       [last_name, first_name, middle_name, phone_number, email_address, address, image, type, user_id]
     )
 
-    await db.query('UPDATE rfids SET value = ? WHERE user_id = ?', [rfid, user_id])
+    // Check if the user_id exists in the 'rfids' table
+    const [rfidExists] = await db.query('SELECT 1 FROM rfids WHERE user_id = ?', [user_id])
+
+    // If the user_id does not exist in the 'rfids' table, insert a new record
+    if (rfidExists.length === 0) {
+      await db.query('INSERT INTO rfids (user_id, value) VALUES (?, ?)', [user_id, rfid])
+    } else {
+      // If the user_id exists, update the existing record
+      await db.query('UPDATE rfids SET value = ? WHERE user_id = ?', [rfid, user_id])
+    }
 
     await db.query('UPDATE drivers_licenses SET license_number = ?, expiration = ? WHERE user_id = ?', [
       license_number,
