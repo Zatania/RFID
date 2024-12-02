@@ -71,7 +71,7 @@ const VisitorManagement = () => {
   const visitorColumn = [
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 120,
       field: 'fullName',
       headerName: 'Full Name',
       valueGetter: params => params.row.first_name + ' ' + params.row.last_name,
@@ -85,7 +85,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 120,
       field: 'purpose',
       headerName: 'Purpose',
       valueGetter: params => params.row.purpose,
@@ -99,7 +99,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 120,
       field: 'vehicle_maker',
       headerName: 'Vehicle Maker',
       valueGetter: params => params.row.vehicle_maker,
@@ -113,7 +113,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 120,
       field: 'vehicle_model',
       headerName: 'Vehicle Model',
       valueGetter: params => params.row.vehicle_model,
@@ -127,7 +127,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 150,
+      minWidth: 120,
       field: 'vehicle_color',
       headerName: 'Vehicle Color',
       valueGetter: params => params.row.vehicle_color,
@@ -141,7 +141,7 @@ const VisitorManagement = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 120,
       field: 'vehicle_plate_number',
       headerName: 'Vehicle Plate Number',
       valueGetter: params => params.row.vehicle_plate_number,
