@@ -166,7 +166,6 @@ const DialogTopupAccount = ({ account, refreshData }) => {
                 <Controller
                   name='middle_name'
                   control={control}
-                  rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
