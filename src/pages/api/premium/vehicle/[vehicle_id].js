@@ -15,7 +15,7 @@ const deleteVehicle = async vehicle_id => {
     const [countResult] = await db.query('SELECT COUNT(*) as count FROM vehicles WHERE premium_id = ?', [premium_id])
 
     if (countResult[0].count <= 1) {
-      await db.query('UPDATE premiums SET status = ? WHERE id = ?', ['Pending', premium_id])
+      await db.query('UPDATE premiums SET status = ? WHERE id = ?', ['Inactive', premium_id])
     }
 
     return true
