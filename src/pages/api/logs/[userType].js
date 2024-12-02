@@ -20,9 +20,9 @@ const fetchUserLogs = async userType => {
       )
 
       const formattedRows = rows.map(row => {
-        const durationInMinutes = row.duration
-        const hours = Math.floor(durationInMinutes / 60)
-        const minutes = durationInMinutes % 60
+        const elapsedSeconds = row.duration
+        const hours = Math.floor(elapsedSeconds / 3600) // Convert seconds to hours
+        const minutes = Math.floor((elapsedSeconds % 3600) / 60) // Get remaining minutes
         const formattedDuration = `${hours}h ${minutes}m`
 
         return {
