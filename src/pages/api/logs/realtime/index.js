@@ -10,8 +10,7 @@ const fetchParkedVehicles = async () => {
         vehicles.plate_number AS plate_number,
         TIMESTAMPDIFF(SECOND, timestamp_in, NOW()) AS elapsed_time_seconds
       FROM user_parking_history ph
-      JOIN users ON ph.user_id = users.id
-      JOIN vehicles ON users.id = vehicles.user_id
+      JOIN vehicles ON ph.vehicle_id = vehicles.id
       WHERE ph.timestamp_out IS NULL
 
       UNION ALL
@@ -22,8 +21,7 @@ const fetchParkedVehicles = async () => {
         vehicles.plate_number AS plate_number,
         TIMESTAMPDIFF(SECOND, timestamp_in, NOW()) AS elapsed_time_seconds
       FROM premium_parking_history ph
-      JOIN premiums ON ph.premium_id = premiums.id
-      JOIN vehicles ON premiums.id = vehicles.premium_id
+      JOIN vehicles ON ph.vehicle_id = vehicles.id
       WHERE ph.timestamp_out IS NULL
 
       UNION all
