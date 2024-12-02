@@ -31,12 +31,14 @@ const fetchActives = async () => {
 }
 
 const activateAccount = async ({ id, load_balance, account_type }) => {
-  let accountQuery
-  let rfidQuery
+  if (typeof load_balance === 'string') load_balance = parseFloat(load_balance)
 
   if (load_balance <= 0) {
     throw new Error('Load balance must be greater than 0')
   }
+
+  let accountQuery
+  let rfidQuery
 
   switch (account_type) {
     case 'User':
@@ -52,10 +54,20 @@ const activateAccount = async ({ id, load_balance, account_type }) => {
   rfidQuery = 'UPDATE rfids SET load_balance = ? WHERE user_id = ? OR premium_id = ?'
 
   const [accountResult] = await db.query(accountQuery, [id])
+  console.log('accountQuery result:', accountResult)
 
-  const [rfidResult] = await db.query(rfidQuery, [load_balance, id, id, id])
+  const [rfidResult] = await db.query(rfidQuery, [load_balance, id, id])
+  console.log('rfidQuery result:', rfidResult)
 
-  return accountResult.affectedRows > 0 && rfidResult.affectedRows > 0
+  if (!accountResult.affectedRows) {
+    throw new Error('Account not found or already active')
+  }
+
+  if (!rfidResult.affectedRows) {
+    throw new Error('RFID record not updated')
+  }
+
+  return true
 }
 
 const handler = async (req, res) => {
