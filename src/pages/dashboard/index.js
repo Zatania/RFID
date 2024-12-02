@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -18,17 +18,99 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import dayjs from 'dayjs'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
+import toast from 'react-hot-toast'
 
 const DashboardPage = () => {
   const [currentDateTime, setCurrentDateTime] = useState(dayjs().format('MMMM DD, YYYY hh:mm:ss A'))
   const [rfid, setRfid] = useState('')
-  const [vehicle_rfid, setVehicleRfid] = useState('')
+  const [vehicleRfid, setVehicleRfid] = useState('')
+  const [accountType, setAccountType] = useState(null)
   const [account, setAccount] = useState(null)
   const [vehicle, setVehicle] = useState(null)
+  const [vehicleID, setVehicleID] = useState(null)
   const [message, setMessage] = useState('')
   const [logs, setLogs] = useState([])
-
+  const [parkedVehicles, setParkedVehicles] = useState([])
   const { data: session } = useSession()
+
+  const guard_id = session.user.id
+
+  const fetchUserData = useCallback(async rfid => {
+    try {
+      const response = await axios.get(`/api/attendance/user/${rfid}`)
+      if (response.data) {
+        if (response.data.type === 'Visitor') {
+          const accountData = {
+            id: response.data.id,
+            first_name: response.data.first_name,
+            last_name: response.data.last_name,
+            type: response.data.type
+          }
+
+          const vehicleData = {
+            maker: response.data.vehicle_maker,
+            model: response.data.vehicle_model,
+            color: response.data.vehicle_color,
+            plate_number: response.data.vehicle_plate_number
+          }
+
+          setAccount(accountData)
+          setAccountType(accountData.type)
+          setVehicle(vehicleData)
+        } else {
+          setAccount(response.data)
+          setAccountType(response.data.type)
+        }
+      } else {
+        toast.error(response.data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+      toast.error('Error fetching user data.')
+    }
+  }, [])
+
+  const fetchVehicleData = useCallback(async vehicleRfid => {
+    try {
+      const response = await axios.get(`/api/attendance/vehicle/${vehicleRfid}`)
+      if (response.data) {
+        setVehicle(response.data)
+        setVehicleID(response.data.id)
+      } else {
+        toast.error(response.data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+      toast.error('Error fetching user data.')
+    }
+  }, [])
+
+  const parkingAttendance = useCallback(
+    async (rfid, vehicleRfid) => {
+      const payload = { account, vehicleID, guard_id, rfid, vehicleRfid }
+      try {
+        const response = await axios.post('/api/attendance', payload)
+
+        // Clean up the RFID values after logging the entry
+        setRfid('') // Reset user RFID
+        setVehicleRfid('') // Reset vehicle RFID
+        setAccountType(null) // Reset account data
+        setVehicleID(null) // Reset vehicle ID
+
+        setMessage(response.data)
+      } catch (error) {
+        console.error('Error while logging entry:', error)
+        setMessage('Error while logging entry.')
+
+        // Clean up the RFID values after logging the entry
+        setRfid('') // Reset user RFID
+        setVehicleRfid('') // Reset vehicle RFID
+        setAccountType(null) // Reset account data
+        setVehicleID(null) // Reset vehicle ID
+      }
+    },
+    [account, vehicleID, guard_id]
+  )
 
   useEffect(() => {
     // WebSocket for user RFID
@@ -38,6 +120,9 @@ const DashboardPage = () => {
       const message = event.data
       console.log('User RFID:', message)
       setRfid(message) // Set user RFID from WebSocket
+
+      // Fetch user data when RFID is scanned
+      fetchUserData(message)
     })
 
     // WebSocket for vehicle RFID
@@ -47,14 +132,51 @@ const DashboardPage = () => {
       const vehicleMessage = event.data
       console.log('Vehicle RFID:', vehicleMessage)
       setVehicleRfid(vehicleMessage) // Set vehicle RFID from WebSocket
+
+      // Fetch vehicle data when RFID is scanned
+      fetchVehicleData(vehicleMessage)
     })
 
-    // Ensure proper cleanup
+    // WebSocket for logs
+    const logsSocket = new WebSocket('ws://localhost:4000/logs') // Assuming this is your WebSocket endpoint for logs
+    logsSocket.addEventListener('message', event => {
+      const logData = JSON.parse(event.data) // Assuming logs are sent as JSON
+
+      const filteredLogs = logData.filter(log => {
+        const logDate = dayjs(log.create_at) // Convert the log date to a dayjs object
+
+        return logDate.format('MM/DD/YY hh:mm A') // Compare the log date with the start of today
+      })
+      setLogs(filteredLogs)
+    })
+
+    // WebSocket for parked vehicles
+    const realtimeSocket = new WebSocket('ws://localhost:4000/realtime') // Assuming this is your WebSocket endpoint for parked vehicles
+    realtimeSocket.addEventListener('message', event => {
+      const realtimeData = JSON.parse(event.data) // Assuming logs are sent as JSON
+
+      setParkedVehicles(realtimeData)
+    })
+
+    // Cleanup WebSocket connections on component unmount
     return () => {
       userSocket.close()
       vehicleSocket.close()
+      logsSocket.close()
     }
-  }, [])
+  }, [rfid, vehicleRfid, fetchUserData, fetchVehicleData, parkingAttendance])
+
+  useEffect(() => {
+    if (accountType === 'Visitor') {
+      parkingAttendance(rfid)
+    }
+  }, [accountType, rfid, parkingAttendance])
+
+  useEffect(() => {
+    if (rfid && vehicleRfid && vehicleID) {
+      parkingAttendance(rfid, vehicleRfid)
+    }
+  }, [rfid, vehicleRfid, vehicleID, parkingAttendance])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,74 +187,22 @@ const DashboardPage = () => {
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    if (rfid) {
-      // Fetch user account data based on RFID
-      axios
-        .get(`/api/attendance/user/${rfid}`)
-        .then(response => {
-          const accountData = response.data
-          setAccount(accountData) // Set account data
-          const account_id = accountData.id
-
-          // Check if the account type is Visitor
-          if (accountData.type === 'Visitor') {
-            // If it's a Visitor, proceed directly to post attendance
-            axios
-              .post(`/api/attendance/${account_id}`, {
-                guard_id: session.user.id,
-                account_type: accountData.type // Add account type here
-              })
-              .then(response => {
-                setMessage(response.data.message)
-                fetchLogs() // Fetch updated logs
-              })
-              .catch(error => console.error('Error posting attendance data for Visitor', error))
-          } else if (vehicle_rfid) {
-            // Fetch vehicle data based on vehicle RFID
-            axios
-              .get(`/api/attendance/vehicle/${vehicle_rfid}`)
-              .then(response => {
-                const vehicleData = response.data
-                setVehicle(vehicleData)
-
-                // Check if user ID, premium ID matches account ID
-                if (vehicleData.user_id === accountData.id || vehicleData.premium_id === accountData.id) {
-                  // Proceed to post attendance if the user RFID is valid
-                  axios
-                    .post(`/api/attendance/${account_id}`, {
-                      guard_id: session.user.id,
-                      account_type: accountData.type // Add account type here
-                    })
-                    .then(response => {
-                      setMessage(response.data.message)
-                      fetchLogs()
-                    })
-                    .catch(error => console.error('Error posting attendance data', error))
-                } else {
-                  // Handle case where there is no match
-                  console.error('No matching account ID found for vehicle')
-                }
-              })
-              .catch(error => console.error('Error fetching vehicle data', error))
-          }
-        })
-        .catch(error => console.error('Error fetching account data', error))
-
-      // Reset RFID states after processing
-      setRfid('')
-      setVehicleRfid('')
-    }
-  }, [rfid, vehicle_rfid, session])
-
   // Refresh list of logs
   const fetchLogs = () => {
     axios
-      .get('/api/user/logs/daily')
+      .get('/api/logs/daily')
       .then(response => {
-        const currentDay = dayjs().startOf('day')
-        const filteredLogs = response.data.filter(log => dayjs(log.daily_timestamp).isAfter(currentDay))
-        setLogs(filteredLogs)
+        setLogs(response.data)
+      })
+      .catch(error => console.error('Error fetching data', error))
+  }
+
+  // Refresh list of parked vehicles
+  const fetchParkedVehicles = () => {
+    axios
+      .get('/api/logs/realtime')
+      .then(response => {
+        setParkedVehicles(response.data)
       })
       .catch(error => console.error('Error fetching data', error))
   }
@@ -140,19 +210,21 @@ const DashboardPage = () => {
   // Fetch data on component mount
   useEffect(() => {
     fetchLogs()
+    fetchParkedVehicles()
   }, [])
 
   return (
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
         bgcolor: '#79BAEC'
       }}
     >
-      <Container maxWidth='lg'>
+      <Container>
         <Box
           sx={{
             display: 'flex',
@@ -191,7 +263,7 @@ const DashboardPage = () => {
                     <Grid item sm={12} xs={12}>
                       <Box display='flex' flexDirection='column' alignItems='center'>
                         <img
-                          src={account ? `/api/image/${account.image}` : '/images/avatars/placeholder.png'}
+                          src={account?.image ? `/api/image/${account.image}` : '/images/default.png'}
                           alt='Account Image'
                           style={{
                             width: '150px',
@@ -211,7 +283,7 @@ const DashboardPage = () => {
                         {message && (
                           <Typography
                             variant='body1'
-                            sx={{ textAlign: 'center', color: 'red', marginBottom: '10px', marginTop: '30px' }}
+                            sx={{ textAlign: 'center', color: 'red', marginBottom: '10px', marginTop: '10px' }}
                           >
                             {message}
                           </Typography>
@@ -253,7 +325,7 @@ const DashboardPage = () => {
                           <Grid item sm={6} xs={12}>
                             <Box display='flex' flexDirection='column' alignItems='center'>
                               <img
-                                src={vehicle ? `/api/image/${vehicle.image}` : '/images/avatars/placeholder.png'}
+                                src={vehicle?.image ? `/api/image/${vehicle?.image}` : '/images/vehicle.png'}
                                 alt='Vehicle'
                                 style={{
                                   width: '150px',
@@ -295,30 +367,20 @@ const DashboardPage = () => {
                                 bgcolor: '#73C2FB'
                               }}
                             >
-                              {logs.length > 0 ? (
-                                logs.map((log, index) => (
+                              {parkedVehicles.length > 0 ? (
+                                parkedVehicles.map((vh, index) => (
                                   <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
                                     <Grid container spacing={3}>
                                       <Grid item xs={6}>
-                                        <Typography variant='body2'>{log.user_full_name}</Typography>
+                                        <Typography variant='body1'>{vh.plate_number}</Typography>
                                         <Typography variant='caption' color='textSecondary'>
-                                          {log.daily_timestamp}
+                                          {vh.time_in}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={6}>
-                                        {log.daily_status === 'TIME IN' ? (
-                                          <Typography variant='h6' color='primary'>
-                                            {log.daily_status}
-                                          </Typography>
-                                        ) : log.status === 'TIME OUT' ? (
-                                          <Typography variant='h6' color='secondary'>
-                                            {log.daily_status}
-                                          </Typography>
-                                        ) : (
-                                          <Typography variant='h6' color='error'>
-                                            {log.daily_status}
-                                          </Typography>
-                                        )}
+                                        <Typography variant='h6' color='primary'>
+                                          {vh.elapsed_time}
+                                        </Typography>
                                       </Grid>
                                     </Grid>
                                   </Box>
@@ -360,23 +422,23 @@ const DashboardPage = () => {
                                   <Box key={index} sx={{ marginBottom: '10px' }} align='center'>
                                     <Grid container spacing={3}>
                                       <Grid item xs={6}>
-                                        <Typography variant='body2'>{log.user_full_name}</Typography>
+                                        <Typography variant='body2'>{log.account_name}</Typography>
                                         <Typography variant='caption' color='textSecondary'>
-                                          {log.daily_timestamp}
+                                          {log.created_at}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={6}>
-                                        {log.daily_status === 'TIME IN' ? (
+                                        {log.action === 'TIME IN' ? (
                                           <Typography variant='h6' color='primary'>
-                                            {log.daily_status}
+                                            {log.action}
                                           </Typography>
                                         ) : log.status === 'TIME OUT' ? (
-                                          <Typography variant='h6' color='secondary'>
-                                            {log.daily_status}
+                                          <Typography variant='h6' color='primary'>
+                                            {log.action}
                                           </Typography>
                                         ) : (
                                           <Typography variant='h6' color='error'>
-                                            {log.daily_status}
+                                            {log.action}
                                           </Typography>
                                         )}
                                       </Grid>
