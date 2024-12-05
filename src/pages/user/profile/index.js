@@ -257,7 +257,7 @@ const ProfilePage = () => {
                   >
                     <Icon icon={loadIcon} />
                     <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                      {loading ? 'Loading...' : 'Php ' + user?.rfid?.load_balance}
+                      {loading ? 'Loading...' : 'Php ' + (user?.rfid?.load_balance || 0)}
                     </Typography>
                   </Box>
                 </Box>
