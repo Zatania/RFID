@@ -168,9 +168,9 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (accountType === 'Visitor') {
-      parkingAttendance(rfid, vehicleRfid, vehicleID)
+      parkingAttendance(rfid, vehicleID)
     }
-  }, [accountType, rfid, vehicleRfid, vehicleID, parkingAttendance])
+  }, [accountType, rfid, vehicleID, parkingAttendance])
 
   useEffect(() => {
     if (rfid && vehicleRfid && vehicleID) {
