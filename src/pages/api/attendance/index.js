@@ -279,37 +279,28 @@ const checkIfVehicleBelongsToUser = async (vehicleRfid, userId) => {
 }
 
 const deductBalance = async rfid => {
-  console.log('Deduct balance called for RFID:', rfid)
-
   // Fetch parking fee
   const [parkingFeeResult] = await db.query('SELECT setting_value FROM system_settings WHERE setting_key = ?', [
     'Parking Fee'
   ])
-  console.log('Parking fee result:', parkingFeeResult)
 
   if (parkingFeeResult.length === 0) {
     throw new Error('Parking fee not set')
   }
 
   const parkingFee = parseFloat(parkingFeeResult[0].setting_value)
-  console.log('Parking fee:', parkingFee)
 
   const [user] = await db.query('SELECT * FROM rfids WHERE value = ?', [rfid])
-  console.log('User RFID query result:', user)
 
   if (user.length > 0) {
     const currentBalance = parseFloat(user[0].load_balance)
-    console.log('Current balance:', currentBalance)
 
     if (currentBalance >= parkingFee) {
       const newBalance = currentBalance - parkingFee
       await db.query('UPDATE rfids SET load_balance = ? WHERE value = ?', [newBalance, rfid])
-      console.log('New balance after deduction:', newBalance)
 
       return newBalance
     } else {
-      console.log('Insufficient balance, returning false')
-
       return false
     }
   } else {

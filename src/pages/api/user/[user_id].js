@@ -34,7 +34,6 @@ const handler = async (req, res) => {
   try {
     if (req.method === 'DELETE') {
       const { user_id } = req.query
-      console.log('user_id:', user_id)
       try {
         const user = await deleteUser(user_id)
 

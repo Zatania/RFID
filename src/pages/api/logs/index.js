@@ -42,7 +42,6 @@ const fetchUserLogs = async userType => {
 const handler = async (req, res) => {
   if (req.method === 'GET') {
     const { userType } = req.query
-    console.log('userType:', userType)
 
     try {
       const logs = await fetchUserLogs(userType)

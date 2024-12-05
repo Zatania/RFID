@@ -70,7 +70,6 @@ const handler = async (req, res) => {
   const { account_id } = req.query
   const { guard_id, account_type } = req.body
 
-  console.log(req.body)
   try {
     if (req.method === 'POST') {
       try {

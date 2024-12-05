@@ -54,10 +54,8 @@ const activateAccount = async ({ id, load_balance, account_type }) => {
   rfidQuery = 'UPDATE rfids SET load_balance = ? WHERE user_id = ? OR premium_id = ?'
 
   const [accountResult] = await db.query(accountQuery, [id])
-  console.log('accountQuery result:', accountResult)
 
   const [rfidResult] = await db.query(rfidQuery, [load_balance, id, id])
-  console.log('rfidQuery result:', rfidResult)
 
   if (!accountResult.affectedRows) {
     throw new Error('Account not found or already active')
