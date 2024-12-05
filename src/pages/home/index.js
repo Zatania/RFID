@@ -1,8 +1,11 @@
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+
+// ** Context Imports
+import { AbilityContext } from 'src/layouts/components/acl/Can'
 
 // ** Views Imports
 import UserDetails from 'src/views/pages/home/UserDetails'
@@ -20,6 +23,9 @@ const Home = () => {
   const [guardCount, setGuardCount] = useState(0)
   const [violationCount, setViolationCount] = useState(0)
   const [userRFIDCount, setUserRFIDCount] = useState(0)
+
+  // ** Hooks
+  const ability = useContext(AbilityContext)
 
   const fetchStudents = () => {
     axios
@@ -120,41 +126,85 @@ const Home = () => {
     <Grid container spacing={3}>
       <Grid item xs={12} sm={12}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-eye' color='primary' count={adminCount} title='Total Admins' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-cash' color='primary' count={baoCount} title='Total BAOs' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-tie-hat' color='primary' count={guardCount} title='Total Security Guards' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-group-outline' color='primary' count={studentCount} title='Total Users' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-group-outline' color='primary' count={staffCount} title='Total Staffs' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-group-outline' color='primary' count={premiumCount} title='Total Premiums' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:account-group-outline' color='primary' count={visitorCount} title='Total Visitors' />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <UserDetails icon='mdi:car-back' color='primary' count={visitorCount} title='Total Vehicles' />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <UserDetails
-              icon='mdi:card-multiple-outline'
-              color='success'
-              count={userRFIDCount}
-              title='Total Student/Staff RFID Scanned'
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
-          </Grid>
+          {ability?.can('read', 'total_admins') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails icon='mdi:account-eye' color='primary' count={adminCount} title='Total Admins' />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_baos') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails icon='mdi:account-cash' color='primary' count={baoCount} title='Total BAOs' />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_guards') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails
+                icon='mdi:account-tie-hat'
+                color='primary'
+                count={guardCount}
+                title='Total Security Guards'
+              />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_users') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails icon='mdi:account-group-outline' color='primary' count={studentCount} title='Total Users' />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_staffs') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails icon='mdi:account-group-outline' color='primary' count={staffCount} title='Total Staffs' />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_premiums') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails
+                icon='mdi:account-group-outline'
+                color='primary'
+                count={premiumCount}
+                title='Total Premiums'
+              />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_visitors') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails
+                icon='mdi:account-group-outline'
+                color='primary'
+                count={visitorCount}
+                title='Total Visitors'
+              />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_vehicles') ? (
+            <Grid item xs={12} sm={4}>
+              <UserDetails icon='mdi:car-back' color='primary' count={visitorCount} title='Total Vehicles' />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_scans') ? (
+            <Grid item xs={12} md={4}>
+              <UserDetails
+                icon='mdi:card-multiple-outline'
+                color='success'
+                count={userRFIDCount}
+                title='Total Student/Staff RFID Scanned'
+              />
+            </Grid>
+          ) : null}
+
+          {ability?.can('read', 'total_violations') ? (
+            <Grid item xs={12} md={3}>
+              <UserDetails icon='mdi:alert-outline' color='warning' count={violationCount} title='Total Violations' />
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
     </Grid>

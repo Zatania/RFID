@@ -17,16 +17,26 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'user-management')
     can(['read'], 'premium-management')
     can(['read'], 'logs')
+    can(['read'], 'total_users')
+    can(['read'], 'total_staffs')
+    can(['read'], 'total_premiums')
+    can(['read'], 'total_scans')
   } else if (role === 'bao') {
     can(['read'], 'home')
     can(['read'], 'bao-activation')
     can(['read'], 'bao-topup')
     can(['read'], 'violations')
+    can(['read'], 'total_users')
+    can(['read'], 'total_staffs')
+    can(['read'], 'total_premiums')
+    can(['read'], 'total_violations')
   } else if (role === 'security_guard') {
     can(['read'], 'home')
     can(['read'], 'visitor-management')
     can(['read'], 'dashboard')
     can(['read'], 'logs')
+    can(['read'], 'total_visitors')
+    can(['read'], 'total_scans')
   } else if (role === 'user') {
     can(['read'], 'profile-page')
   } else if (role === 'premium') {
