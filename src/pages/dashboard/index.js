@@ -86,7 +86,7 @@ const DashboardPage = () => {
   }, [])
 
   const parkingAttendance = useCallback(
-    async (rfid, vehicleRfid) => {
+    async (rfid, vehicleRfid, vehicleID) => {
       const payload = { account, vehicleID, guard_id, rfid, vehicleRfid }
       try {
         const response = await axios.post('/api/attendance', payload)
@@ -109,7 +109,7 @@ const DashboardPage = () => {
         setVehicleID(null) // Reset vehicle ID
       }
     },
-    [account, vehicleID, guard_id]
+    [account, guard_id]
   )
 
   useEffect(() => {
@@ -168,9 +168,9 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (accountType === 'Visitor') {
-      parkingAttendance(rfid)
+      parkingAttendance(rfid, vehicleRfid, vehicleID)
     }
-  }, [accountType, rfid, parkingAttendance])
+  }, [accountType, rfid, vehicleRfid, vehicleID, parkingAttendance])
 
   useEffect(() => {
     if (rfid && vehicleRfid && vehicleID) {
