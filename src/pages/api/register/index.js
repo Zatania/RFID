@@ -15,6 +15,26 @@ const checkLicenseNumberUnique = async (license_number, userID = null, currentLi
   return result[0].count === 0
 }
 
+const checkUnique = async (value, vehicleID = null, currentUserValue = null, type = null) => {
+  if (!type) {
+    throw new Error('Type must be specified: or_number, cr_number, or plate_number')
+  }
+
+  let column = type === 'cr_number' ? 'cr_number' : type === 'plate_number' ? 'plate_number' : 'or_number'
+
+  let query = `SELECT COUNT(*) as count FROM vehicles WHERE ${column} = ?`
+  const params = [value]
+
+  if (vehicleID && currentUserValue !== value) {
+    query += ` AND id != ?`
+    params.push(vehicleID)
+  }
+
+  const [result] = await db.query(query, params)
+
+  return result[0].count === 0
+}
+
 const addUser = async data => {
   const {
     last_name,
@@ -27,14 +47,36 @@ const addUser = async data => {
     type,
     license_number,
     expiration,
+    maker,
+    model,
+    color,
+    plate_number,
+    or_number,
+    cr_number,
+    registration_expiration,
     username,
     password
   } = data
 
   const isLicenseNumberUnique = await checkLicenseNumberUnique(license_number)
+  const isCR_NUMBERUnique = await checkUnique(cr_number, null, null, 'cr_number')
+  const isOR_NUMBERUnique = await checkUnique(or_number, null, null, 'or_number')
+  const isPlateNumberUnique = await checkUnique(plate_number, null, null, 'plate_number')
 
   if (!isLicenseNumberUnique) {
     throw new Error('License number already exists')
+  }
+
+  if (!isCR_NUMBERUnique) {
+    throw new Error('CR number already exists')
+  }
+
+  if (!isOR_NUMBERUnique) {
+    throw new Error('OR number already exists')
+  }
+
+  if (!isPlateNumberUnique) {
+    throw new Error('Plate number already exists')
   }
 
   const today = dayjs()
@@ -60,6 +102,21 @@ const addUser = async data => {
         license_number,
         expirationDate.format('YYYY-MM-DD')
       ])
+
+      await db.query(
+        'INSERT INTO vehicles (premium_id, maker, model, color, plate_number, image, cr_number, or_number, registration_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+          premiumID,
+          maker,
+          model,
+          color,
+          plate_number,
+          'default.png',
+          cr_number,
+          or_number,
+          dayjs(registration_expiration).format('YYYY-MM-DD')
+        ]
+      )
 
       return true
     } else {
@@ -87,6 +144,21 @@ const addUser = async data => {
         license_number,
         expirationDate.format('YYYY-MM-DD')
       ])
+
+      await db.query(
+        'INSERT INTO vehicles (user_id, maker, model, color, plate_number, image, cr_number, or_number, registration_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+          userID,
+          maker,
+          model,
+          color,
+          plate_number,
+          'default.png',
+          cr_number,
+          or_number,
+          dayjs(registration_expiration).format('YYYY-MM-DD')
+        ]
+      )
 
       return true
     }

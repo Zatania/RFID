@@ -36,6 +36,7 @@ import Icon from 'src/@core/components/icon'
 import { useForm, Controller } from 'react-hook-form'
 import * as bcrypt from 'bcryptjs'
 import toast from 'react-hot-toast'
+import dayjs from 'dayjs'
 
 // ** Hooks
 import useBgColor from 'src/@core/hooks/useBgColor'
@@ -345,6 +346,125 @@ const RegisterPage = () => {
                         name='expiration'
                         control={control}
                         render={({ field }) => <DatePicker label='Expiration Date' {...field} />}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Typography variant='body1'>Vehicle Information</Typography>
+                  </Grid>
+                  <Grid item sm={4} xs={12}>
+                    <Controller
+                      name='maker'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='Maker'
+                          error={!!errors.maker}
+                          helperText={errors.maker?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={4} xs={12}>
+                    <Controller
+                      name='model'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='Model'
+                          error={!!errors.model}
+                          helperText={errors.model?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={4} xs={12}>
+                    <Controller
+                      name='color'
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='Color'
+                          error={!!errors.color}
+                          helperText={errors.color?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Controller
+                      name='plate_number'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='Plate Number (ABC-1234)'
+                          error={!!errors.plate_number}
+                          helperText={errors.plate_number?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Typography variant='body1'>
+                      Vehicle Official Receipt and Certifcate of Registration Information
+                    </Typography>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Controller
+                      name='or_number'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='OR Number'
+                          error={!!errors.or_number}
+                          helperText={errors.or_number?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Controller
+                      name='cr_number'
+                      control={control}
+                      rules={{ required: 'This field is required' }}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label='CR Number'
+                          error={!!errors.cr_number}
+                          helperText={errors.cr_number?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <FormControl fullWidth sx={{ mb: 4 }}>
+                      <Controller
+                        name='registration_expiration'
+                        control={control}
+                        render={({ field }) => (
+                          <DatePicker
+                            label='Expiration Date'
+                            value={field.value ? dayjs(field.value) : null}
+                            onChange={field.onChange}
+                            renderInput={params => <TextField {...params} />}
+                          />
+                        )}
                       />
                     </FormControl>
                   </Grid>
