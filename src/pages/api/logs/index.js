@@ -1,4 +1,4 @@
-import db from '../../db'
+import db from '../db'
 import dayjs from 'dayjs'
 
 const fetchUserLogs = async userType => {
