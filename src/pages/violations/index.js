@@ -158,7 +158,7 @@ const UserViolations = () => {
 
 UserViolations.acl = {
   action: 'read',
-  subject: 'user-violations'
+  subject: 'violations'
 }
 
 export default UserViolations
