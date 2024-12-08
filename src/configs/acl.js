@@ -35,6 +35,8 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'visitor-management')
     can(['read'], 'dashboard')
     can(['read'], 'logs')
+    can(['read'], 'parking-logs')
+    can(['read'], 'parking-monitoring')
     can(['read'], 'total_visitors')
     can(['read'], 'total_scans')
   } else if (role === 'user') {

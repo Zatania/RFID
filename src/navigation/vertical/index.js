@@ -71,6 +71,20 @@ const navigation = () => {
       icon: 'mdi:note-multiple-outline'
     },
     {
+      title: 'Parking Logs',
+      path: '/parking/logs',
+      action: 'read',
+      subject: 'parking-logs',
+      icon: 'mdi:note-multiple-outline'
+    },
+    {
+      title: 'Parking Monitoring',
+      path: '/parking/monitoring',
+      action: 'read',
+      subject: 'parking-monitoring',
+      icon: 'mdi:note-multiple-outline'
+    },
+    {
       title: 'Violations',
       path: '/violations',
       action: 'read',
