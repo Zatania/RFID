@@ -167,16 +167,19 @@ const DashboardPage = () => {
   }, [rfid, vehicleRfid, fetchUserData, fetchVehicleData, parkingAttendance])
 
   useEffect(() => {
-    if (accountType === 'Visitor') {
-      parkingAttendance(rfid)
-    }
-  }, [accountType, rfid, parkingAttendance])
+    // Only proceed when the necessary data is available
+    if (rfid && accountType) {
+      // If Visitor, no need to check for vehicle tag
+      if (accountType === 'Visitor' && account) {
+        parkingAttendance(rfid)
+      }
 
-  useEffect(() => {
-    if (rfid && vehicleRfid && vehicleID) {
-      parkingAttendance(rfid, vehicleRfid)
+      // If not Visitor, ensure both vehicle and user RFIDs are present
+      else if (accountType !== 'Visitor' && account && vehicleID && vehicleRfid) {
+        parkingAttendance(rfid, vehicleRfid)
+      }
     }
-  }, [rfid, vehicleRfid, vehicleID, parkingAttendance])
+  }, [rfid, vehicleRfid, accountType, account, vehicleID, parkingAttendance])
 
   useEffect(() => {
     const interval = setInterval(() => {
