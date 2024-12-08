@@ -200,7 +200,7 @@ const Home = () => {
                 icon='mdi:card-multiple-outline'
                 color='success'
                 count={userRFIDCount}
-                title='Total Student/Staff RFID Scanned'
+                title='Total RFID Scanned'
               />
             </Grid>
           ) : null}
