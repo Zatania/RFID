@@ -14,9 +14,9 @@ const UserThemeOptions = () => {
   return {
     palette: {
       primary: {
-        light: '#9CDE73',
-        main: '#71C948',
-        dark: '#52AC34',
+        light: '#84D070',
+        main: '#52B244',
+        dark: '#369931',
         contrastText: '#FFF'
       },
 
@@ -27,27 +27,27 @@ const UserThemeOptions = () => {
         contrastText: '#FFF'
       }, */
       success: {
-        light: '#78E97D',
-        main: '#4EDB61',
-        dark: '#39BC56',
+        light: '#6CEC80',
+        main: '#3EE067',
+        dark: '#2DC060',
         contrastText: '#FFF'
       },
       error: {
-        light: '#FD8D5E',
-        main: '#FC582A',
-        dark: '#D8391E',
+        light: '#FF8D5C',
+        main: '#FF5826',
+        dark: '#DB3A1B',
         contrastText: '#FFF'
       },
       warning: {
-        light: '#EAEA48',
-        main: '#DDDD11',
-        dark: '#BEBE0C',
+        light: '#F4D942',
+        main: '#EDC607',
+        dark: '#CBA605',
         contrastText: '#FFF'
       },
       info: {
-        light: '#4498F4',
-        main: '#096CED',
-        dark: '#0653CB',
+        light: '#509AF8',
+        main: '#1870F4',
+        dark: '#1156D1',
         contrastText: '#FFF'
       }
     }
