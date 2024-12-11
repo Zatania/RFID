@@ -62,6 +62,7 @@ const DashboardPage = () => {
           setAccountType(response.data.type)
         }
       } else {
+        setMessage(response.data.message)
         toast.error(response.data.message)
       }
     } catch (error) {
@@ -77,6 +78,7 @@ const DashboardPage = () => {
         setVehicle(response.data)
         setVehicleID(response.data.id)
       } else {
+        setMessage(response.data.message)
         toast.error(response.data.message)
       }
     } catch (error) {
@@ -90,6 +92,7 @@ const DashboardPage = () => {
       const payload = { account, vehicleID, guard_id, rfid, vehicleRfid }
       try {
         const response = await axios.post('/api/attendance', payload)
+        const audio = new Audio('/sounds/alert.mp3')
 
         // Clean up the RFID values after logging the entry
         setRfid('') // Reset user RFID
@@ -100,7 +103,16 @@ const DashboardPage = () => {
         setMessage(response.data)
       } catch (error) {
         console.error('Error while logging entry:', error)
-        setMessage('Error while logging entry.')
+
+        if (error.response) {
+          setMessage(error.response.data.message)
+          if (error.response.data.message === 'Vehicle does not belong to the user') {
+            toast.error('Vehicle does not belong to the user')
+            audio.play().catch(err => {
+              console.error('Error playing sound:', err)
+            })
+          }
+        }
 
         // Clean up the RFID values after logging the entry
         setRfid('') // Reset user RFID
