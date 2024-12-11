@@ -4,41 +4,43 @@ import dayjs from 'dayjs'
 const fetchLogs = async () => {
   try {
     const [rows] = await db.query(`
-      -- UNION to combine results from different parking log types
       SELECT
-          pl.id AS log_id,
-          ph.id AS history_id,
-          CONCAT(a.first_name, ' ',  a.last_name) as account_name,
-          pl.action,
-          pl.created_at
+        pl.id AS log_id,
+        ph.id AS history_id,
+        CONCAT(a.first_name, ' ', a.last_name) as account_name,
+        pl.action,
+        pl.created_at
       FROM user_parking_logs pl
       JOIN user_parking_history ph ON pl.history_id = ph.id
       JOIN users a ON ph.user_id = a.id
+      WHERE DATE(pl.created_at) = CURDATE()
 
       UNION ALL
 
       SELECT
-          pl.id AS log_id,
-          ph.id AS history_id,
-          CONCAT(a.first_name, ' ',  a.last_name) AS account_name,
-          pl.action,
-          pl.created_at
+        pl.id AS log_id,
+        ph.id AS history_id,
+        CONCAT(a.first_name, ' ', a.last_name) AS account_name,
+        pl.action,
+        pl.created_at
       FROM premium_parking_logs pl
       JOIN premium_parking_history ph ON pl.history_id = ph.id
       JOIN premiums a ON ph.premium_id = a.id
+      WHERE DATE(pl.created_at) = CURDATE()
 
       UNION ALL
 
       SELECT
-          pl.id AS log_id,
-          ph.id AS history_id,
-          CONCAT(a.first_name, ' ',  a.last_name) AS account_name,
-          pl.action,
-          pl.created_at
+        pl.id AS log_id,
+        ph.id AS history_id,
+        CONCAT(a.first_name, ' ', a.last_name) AS account_name,
+        pl.action,
+        pl.created_at
       FROM visitor_parking_logs pl
       JOIN visitor_parking_history ph ON pl.history_id = ph.id
       JOIN visitors a ON ph.visitor_id = a.id
       WHERE DATE(pl.created_at) = CURDATE()
+
       ORDER BY created_at DESC;
     `)
 
