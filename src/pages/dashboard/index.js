@@ -235,8 +235,9 @@ const DashboardPage = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
-        bgcolor: '#79BAEC'
+        minHeight: '100vh'
+
+        /*bgcolor: '#79BAEC'*/
       }}
     >
       <Container>
@@ -246,7 +247,7 @@ const DashboardPage = () => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '8px',
-            bgcolor: '#73C2FB',
+            bgcolor: '#52B244',
             padding: '20px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
           }}
@@ -310,7 +311,8 @@ const DashboardPage = () => {
                         display: 'flex',
                         textAlign: 'left',
                         borderRadius: '8px',
-                        bgcolor: '#4682B4',
+
+                        /*bgcolor: '#4682B4',*/
                         padding: '20px',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
                       }}
@@ -362,7 +364,8 @@ const DashboardPage = () => {
                       <Box
                         sx={{
                           borderRadius: '8px',
-                          bgcolor: '#4682B4',
+
+                          /*bgcolor: '#4682B4',*/
                           padding: '20px',
                           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
                         }}
@@ -378,8 +381,9 @@ const DashboardPage = () => {
                               sx={{
                                 height: '150px',
                                 overflowY: 'scroll',
-                                padding: '10px',
-                                bgcolor: '#73C2FB'
+                                padding: '10px'
+
+                                /*bgcolor: '#73C2FB'*/
                               }}
                             >
                               {parkedVehicles.length > 0 ? (
@@ -412,7 +416,8 @@ const DashboardPage = () => {
                       <Box
                         sx={{
                           borderRadius: '8px',
-                          bgcolor: '#4682b4',
+
+                          /*bgcolor: '#4682b4',*/
                           padding: '20px',
                           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
                         }}
@@ -428,8 +433,9 @@ const DashboardPage = () => {
                               sx={{
                                 height: '150px',
                                 overflowY: 'scroll',
-                                padding: '10px',
-                                bgcolor: '#73C2FB'
+                                padding: '10px'
+
+                                /*bgcolor: '#73C2FB'*/
                               }}
                             >
                               {logs.length > 0 ? (
