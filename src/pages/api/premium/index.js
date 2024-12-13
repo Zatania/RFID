@@ -92,7 +92,7 @@ const addPremium = async data => {
     // Insert into Premiums table
     const [premiumResult] = await db.query(
       'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Pending']
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Inactive']
     )
 
     // Get the premium_id from the last insert

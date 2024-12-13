@@ -92,7 +92,18 @@ const addUser = async data => {
     if (type === 'Outsider') {
       const [premiumUser] = await db.query(
         'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, username, password, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [last_name, first_name, middle_name, phone_number, email_address, address, image, username, password, 'Pending']
+        [
+          last_name,
+          first_name,
+          middle_name,
+          phone_number,
+          email_address,
+          address,
+          image,
+          username,
+          password,
+          'Inactive'
+        ]
       )
 
       const premiumID = premiumUser.insertId
@@ -133,7 +144,7 @@ const addUser = async data => {
           type,
           username,
           password,
-          'Pending'
+          'Inactive'
         ]
       )
 

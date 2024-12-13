@@ -204,14 +204,14 @@ const ProfilePage = () => {
 
   return (
     <Grid container spacing={6}>
-      {user?.user_info?.status === 'Pending' && (
+      {user?.user_info?.status === 'Inactive' && (
         <Grid item xs={12}>
           <Card>
             <CardContent>
               <Box sx={{ mb: 6 }}>
                 <Typography sx={{ mb: 5, display: 'block', textTransform: 'uppercase' }}>ANNOUNCEMENT</Typography>
                 <Typography variant='caption' sx={{ ml: 1, color: 'red', fontWeight: 600 }}>
-                  Your account is still pending. Please visit the admin office for further verification.
+                  Your account is still inactive. Please visit the admin office for further verification.
                 </Typography>
               </Box>
             </CardContent>
