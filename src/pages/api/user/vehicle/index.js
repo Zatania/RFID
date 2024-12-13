@@ -171,7 +171,15 @@ const editVehicle = async data => {
       ]
     )
 
-    await db.query('UPDATE rfids SET value = ? WHERE vehicle_id = ?', [rfid, vehicle_id])
+    const [existingRFID] = await db.query('SELECT * FROM rfids WHERE value = ?', [rfid])
+
+    if (!existingRFID.length) {
+      // Insert RFID if not found
+      await db.query('INSERT INTO rfids (vehicle_id, value) VALUES (?, ?)', [vehicle_id, rfid])
+    } else if (existingRFID[0].vehicle_id !== vehicle_id) {
+      // Update RFID if associated with a different vehicle
+      await db.query('UPDATE rfids SET vehicle_id = ? WHERE value = ?', [vehicle_id, rfid])
+    }
 
     return true
   } catch (error) {
