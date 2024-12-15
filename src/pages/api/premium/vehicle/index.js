@@ -62,12 +62,19 @@ const addVehicle = async data => {
 
   // Check if the expiration date is not today or already expired
   const today = dayjs().startOf('day')
-  const expirationDate = dayjs(registration_expiration).startOf('day')
+  const driversLicenseExpiration = dayjs(registration_expiration).startOf('day')
+  const registrationExpiration = dayjs(registration_expiration).startOf('day')
 
-  if (expirationDate.isBefore(today)) {
-    throw new Error(`The Registration is already expired.`)
-  } else if (expirationDate.isSame(today)) {
-    throw new Error(`The Registration is expiring today.`)
+  if (driversLicenseExpiration.isBefore(today)) {
+    throw new Error(`The Driver's License is already expired.`)
+  } else if (driversLicenseExpiration.isSame(today)) {
+    throw new Error(`The Driver's License is expiring today.`)
+  }
+
+  if (registrationExpiration.isBefore(today, 'day')) {
+    throw new Error(`The Vehicle Registration is already expired.`)
+  } else if (registrationExpiration.isSame(today, 'day')) {
+    throw new Error(`The Vehicle Registration is expiring today.`)
   }
 
   try {
@@ -149,12 +156,19 @@ const editVehicle = async data => {
 
   // Check if the expiration date is not today or already expired
   const today = dayjs().startOf('day')
-  const expirationDate = dayjs(registration_expiration).startOf('day')
+  const driversLicenseExpiration = dayjs(registration_expiration).startOf('day')
+  const registrationExpiration = dayjs(registration_expiration).startOf('day')
 
-  if (expirationDate.isBefore(today)) {
-    throw new Error(`The Registration is already expired.`)
-  } else if (expirationDate.isSame(today)) {
-    throw new Error(`The Registration is expiring today.`)
+  if (driversLicenseExpiration.isBefore(today)) {
+    throw new Error(`The Driver's License is already expired.`)
+  } else if (driversLicenseExpiration.isSame(today)) {
+    throw new Error(`The Driver's License is expiring today.`)
+  }
+
+  if (registrationExpiration.isBefore(today, 'day')) {
+    throw new Error(`The Vehicle Registration is already expired.`)
+  } else if (registrationExpiration.isSame(today, 'day')) {
+    throw new Error(`The Vehicle Registration is expiring today.`)
   }
 
   try {

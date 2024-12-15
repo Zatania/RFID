@@ -59,19 +59,19 @@ const addUser = async data => {
   } = data
 
   const isLicenseNumberUnique = await checkLicenseNumberUnique(license_number)
-  const isCR_NUMBERUnique = await checkUnique(cr_number, null, null, 'cr_number')
-  const isOR_NUMBERUnique = await checkUnique(or_number, null, null, 'or_number')
+  const isCRNumberUnique = await checkUnique(cr_number, null, null, 'cr_number')
+  const isORNumberUnique = await checkUnique(or_number, null, null, 'or_number')
   const isPlateNumberUnique = await checkUnique(plate_number, null, null, 'plate_number')
 
   if (!isLicenseNumberUnique) {
     throw new Error('License number already exists')
   }
 
-  if (!isCR_NUMBERUnique) {
+  if (!isCRNumberUnique) {
     throw new Error('CR number already exists')
   }
 
-  if (!isOR_NUMBERUnique) {
+  if (!isORNumberUnique) {
     throw new Error('OR number already exists')
   }
 
@@ -80,12 +80,19 @@ const addUser = async data => {
   }
 
   const today = dayjs()
-  const expirationDate = dayjs(expiration)
+  const driversLicenseExpiration = dayjs(expiration)
+  const registrationExpiration = dayjs(registration_expiration)
 
-  if (expirationDate.isBefore(today, 'day')) {
+  if (driversLicenseExpiration.isBefore(today, 'day')) {
     throw new Error(`The Driver's License is already expired.`)
-  } else if (expirationDate.isSame(today, 'day')) {
+  } else if (driversLicenseExpiration.isSame(today, 'day')) {
     throw new Error(`The Driver's License is expiring today.`)
+  }
+
+  if (registrationExpiration.isBefore(today, 'day')) {
+    throw new Error(`The Vehicle Registration is already expired.`)
+  } else if (registrationExpiration.isSame(today, 'day')) {
+    throw new Error(`The Vehicle Registration is expiring today.`)
   }
 
   try {
@@ -111,7 +118,7 @@ const addUser = async data => {
       await db.query('INSERT INTO drivers_licenses (premium_id, license_number, expiration) VALUES (?, ?, ?)', [
         premiumID,
         license_number,
-        expirationDate.format('YYYY-MM-DD')
+        driversLicenseExpiration.format('YYYY-MM-DD')
       ])
 
       await db.query(
@@ -153,7 +160,7 @@ const addUser = async data => {
       await db.query('INSERT INTO drivers_licenses (user_id, license_number, expiration) VALUES (?, ?, ?)', [
         userID,
         license_number,
-        expirationDate.format('YYYY-MM-DD')
+        driversLicenseExpiration.format('YYYY-MM-DD')
       ])
 
       await db.query(
