@@ -88,13 +88,27 @@ const ParkingMonitoring = () => {
       field: 'parkingTime',
       headerName: 'Parking Time',
       valueGetter: params => params.row.elapsed_time,
-      renderCell: params => {
-        ;<Tooltip title={params.row.time_in}>
+      renderCell: params => (
+        <Tooltip title={params.row.elapsed_time}>
           <Typography variant='body2' sx={{ color: 'text.primary' }}>
             {params.row.elapsed_time}
           </Typography>
         </Tooltip>
-      }
+      )
+    },
+    {
+      flex: 0.2,
+      minWidth: 120,
+      field: 'currentStatus',
+      headerName: 'Status',
+      valueGetter: params => params.row.status,
+      renderCell: params => (
+        <Tooltip title={params.row.status}>
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {params.row.status}
+          </Typography>
+        </Tooltip>
+      )
     }
   ]
 
