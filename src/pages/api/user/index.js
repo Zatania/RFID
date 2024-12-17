@@ -63,7 +63,9 @@ const addUser = async data => {
     type,
     rfid,
     license_number,
-    expiration
+    expiration,
+    username,
+    password
   } = data
 
   const isRfidUnique = await checkRFIDUnique(rfid)
@@ -88,8 +90,20 @@ const addUser = async data => {
 
   try {
     const [userResult] = await db.query(
-      'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, 'Inactive']
+      'INSERT INTO users (last_name, first_name, middle_name, phone_number, email_address, address, image, type, status, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        last_name,
+        first_name,
+        middle_name,
+        phone_number,
+        email_address,
+        address,
+        image,
+        type,
+        'Inactive',
+        username,
+        password
+      ]
     )
 
     const userID = userResult.insertId
@@ -122,7 +136,9 @@ const editUser = async data => {
     type,
     rfid,
     license_number,
-    expiration
+    expiration,
+    username,
+    password
   } = data
 
   const currentUser = await db.query(
@@ -164,9 +180,13 @@ const editUser = async data => {
 
   try {
     await db.query(
-      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ?, type =? WHERE id = ?',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, user_id]
+      'UPDATE users SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ?, type =?, username = ? WHERE id = ?',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, type, username, user_id]
     )
+
+    if (password) {
+      await db.query('UPDATE users SET password = ? WHERE id = ?', [password, user_id])
+    }
 
     // Check if the user_id exists in the 'rfids' table
     const [rfidExists] = await db.query('SELECT 1 FROM rfids WHERE user_id = ?', [user_id])

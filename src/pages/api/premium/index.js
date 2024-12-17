@@ -64,7 +64,9 @@ const addPremium = async data => {
     image,
     rfid,
     license_number,
-    expiration
+    expiration,
+    username,
+    password
   } = data
 
   const isRfidUnique = await checkRFIDUnique(rfid)
@@ -91,8 +93,8 @@ const addPremium = async data => {
   try {
     // Insert into Premiums table
     const [premiumResult] = await db.query(
-      'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Inactive']
+      'INSERT INTO premiums (last_name, first_name, middle_name, phone_number, email_address, address, image, status, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, 'Inactive', username, password]
     )
 
     // Get the premium_id from the last insert
@@ -127,7 +129,9 @@ const editPremium = async data => {
     image,
     rfid,
     license_number,
-    expiration
+    expiration,
+    username,
+    password
   } = data
 
   // Check RFID and License Number uniqueness excluding the current premium's RFID and License Number
@@ -172,9 +176,13 @@ const editPremium = async data => {
   try {
     // Update Premiums table
     await db.query(
-      'UPDATE premiums SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ? WHERE id = ?',
-      [last_name, first_name, middle_name, phone_number, email_address, address, image, premium_id]
+      'UPDATE premiums SET last_name = ?, first_name = ?, middle_name = ?, phone_number = ?, email_address = ?, address = ?, image = ?, username = ? WHERE id = ?',
+      [last_name, first_name, middle_name, phone_number, email_address, address, image, username, premium_id]
     )
+
+    if (password) {
+      await db.query('UPDATE premiums SET password = ? WHERE id = ?', [password, premium_id])
+    }
 
     // Check if the premium_id exists in the 'rfids' table
     const [rfidExists] = await db.query('SELECT 1 FROM rfids WHERE premium_id = ?', [premium_id])

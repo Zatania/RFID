@@ -37,6 +37,7 @@ import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import * as bcrypt from 'bcryptjs'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -52,6 +53,8 @@ const DialogViewUser = ({ user, refreshData }) => {
   const [rfidScanning, setRfidScanning] = useState(false)
   const [rfid, setRfid] = useState('')
   const rfidRef = useRef()
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     control,
@@ -135,6 +138,16 @@ const DialogViewUser = ({ user, refreshData }) => {
   }
 
   const onSubmit = async data => {
+    if (data.password) {
+      const password = data.password
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      data.password = hashedPassword
+    } else {
+      delete data.password
+    }
+
     const imagePath = userImagePath || 'default.png'
 
     const formData = {
@@ -186,6 +199,7 @@ const DialogViewUser = ({ user, refreshData }) => {
       } else {
         setRfid('')
       }
+      setValue('username', user.username)
     }
   }, [setValue, user])
 
@@ -500,6 +514,65 @@ const DialogViewUser = ({ user, refreshData }) => {
                         />
                       )}
                     />
+                  </FormControl>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Typography variant='body1'>Account Information</Typography>
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <Controller
+                    name='username'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Username'
+                        error={!!errors.username}
+                        helperText={errors.username?.message}
+                        InputProps={{ readOnly: !isEditing }}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='password' error={Boolean(errors.password)}>
+                      Change Password?
+                    </InputLabel>
+                    <Controller
+                      name='password'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          label='Change Password?'
+                          onChange={onChange}
+                          id='password'
+                          error={Boolean(errors.password)}
+                          type={showPassword ? 'text' : 'password'}
+                          readOnly={!isEditing}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
+                    />
+                    {errors.password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.password.message}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>

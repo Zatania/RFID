@@ -20,6 +20,9 @@ import Input from '@mui/material/Input'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import InputLabel from '@mui/material/InputLabel'
+import FormHelperText from '@mui/material/FormHelperText'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,6 +31,7 @@ import Icon from 'src/@core/components/icon'
 import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import * as bcrypt from 'bcryptjs'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -40,6 +44,8 @@ const DialogAddPremium = ({ refreshData }) => {
   const rfidRef = useRef()
   const [premiumImageUploaded, setPremiumImageUploaded] = useState(false)
   const [premiumImagePath, setPremiumImagePath] = useState('')
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     control,
@@ -116,6 +122,12 @@ const DialogAddPremium = ({ refreshData }) => {
   }
 
   const onSubmit = async data => {
+    const password = data.password
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    data.password = hashedPassword
+
     const imagePath = premiumImagePath || 'default.png'
 
     const formData = {
@@ -397,6 +409,64 @@ const DialogAddPremium = ({ refreshData }) => {
                     control={control}
                     render={({ field }) => <DatePicker label='Expiration Date' {...field} />}
                   />
+                </FormControl>
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Typography variant='body1'>Account Information</Typography>
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='username'
+                  control={control}
+                  rules={{ required: 'This field is required' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Username'
+                      error={!!errors.username}
+                      helperText={errors.username?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <FormControl fullWidth sx={{ mb: 4 }}>
+                  <InputLabel htmlFor='password' error={Boolean(errors.password)}>
+                    Password
+                  </InputLabel>
+                  <Controller
+                    name='password'
+                    control={control}
+                    rules={{ required: 'This field is required' }}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <OutlinedInput
+                        value={value}
+                        onBlur={onBlur}
+                        label='Password'
+                        onChange={onChange}
+                        id='password'
+                        error={Boolean(errors.password)}
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                          <InputAdornment position='end'>
+                            <IconButton
+                              edge='end'
+                              onMouseDown={e => e.preventDefault()}
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    )}
+                  />
+                  {errors.password && (
+                    <FormHelperText sx={{ color: 'error.main' }} id=''>
+                      {errors.password.message}
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
             </Grid>
