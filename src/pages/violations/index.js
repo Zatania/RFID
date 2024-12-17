@@ -117,6 +117,7 @@ const UserViolations = () => {
       minWidth: 250,
       field: 'action',
       headerName: 'Actions',
+      filterable: false,
       renderCell: params => {
         return (
           <>

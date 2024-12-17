@@ -172,6 +172,7 @@ const VisitorManagement = () => {
       minWidth: 100,
       field: 'action',
       headerName: 'Actions',
+      filterable: false,
       renderCell: params => {
         return <DialogDeleteVisitor visitor_id={params.row.id} refreshData={fetchVisitors} />
       }

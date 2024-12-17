@@ -118,6 +118,7 @@ const PremiumManagement = () => {
       minWidth: 300,
       field: 'action',
       headerName: 'Actions',
+      filterable: false,
       renderCell: params => {
         return (
           <>

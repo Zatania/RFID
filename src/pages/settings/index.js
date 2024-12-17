@@ -126,6 +126,7 @@ const SystemSettings = () => {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
+      filterable: false,
       width: 100,
       cellClassName: 'actions',
       sortable: false,

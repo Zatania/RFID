@@ -109,6 +109,7 @@ const BAOTopUp = () => {
       minWidth: 200,
       field: 'action',
       headerName: 'Actions',
+      filterable: false,
       renderCell: params => {
         return <DialogTopupAccount account={params.row} refreshData={fetchActive} />
       }

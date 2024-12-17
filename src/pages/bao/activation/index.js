@@ -109,6 +109,7 @@ const BAOActivation = () => {
       minWidth: 200,
       field: 'action',
       headerName: 'Actions',
+      filterable: false,
       renderCell: params => {
         return <DialogActivateAccount account={params.row} refreshData={fetchInactive} />
       }
