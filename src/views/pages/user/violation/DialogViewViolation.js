@@ -72,8 +72,9 @@ const DialogViewViolation = ({ violation, refreshData }) => {
             position: 'relative',
             pb: theme => `${theme.spacing(8)} !important`,
             px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`],
-            textAlign: 'center'
+            pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+
+            //textAlign: 'center'
           }}
         >
           <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
@@ -125,7 +126,7 @@ const DialogViewViolation = ({ violation, refreshData }) => {
                 {violation.duration}
               </Typography>
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={8} xs={12}>
               <Typography variant='body2' sx={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
                 Notes:
               </Typography>
@@ -133,7 +134,7 @@ const DialogViewViolation = ({ violation, refreshData }) => {
                 {violation.notes}
               </Typography>
             </Grid>
-            <Grid item sm={6} xs={12}>
+            <Grid item sm={4} xs={12}>
               <Typography variant='body2' sx={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
                 Status:
               </Typography>
