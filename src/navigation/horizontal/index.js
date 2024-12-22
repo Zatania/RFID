@@ -49,13 +49,6 @@ const navigation = () => [
     icon: 'mdi:account-cash'
   },
   {
-    title: 'Top-Up History',
-    path: '/bao/topup/history',
-    action: 'read',
-    subject: 'topup-history',
-    icon: 'mdi:note-multiple-outline'
-  },
-  {
     title: 'Guard Management',
     path: '/guard/management',
     action: 'read',
@@ -68,6 +61,13 @@ const navigation = () => [
     action: 'read',
     subject: 'visitor-management',
     icon: 'mdi:account-convert'
+  },
+  {
+    title: 'Top-Up History',
+    path: '/bao/topup/history',
+    action: 'read',
+    subject: 'topup-history',
+    icon: 'mdi:note-multiple-outline'
   },
   {
     title: 'Logs',
