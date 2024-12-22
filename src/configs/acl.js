@@ -28,6 +28,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'total_premiums')
     can(['read'], 'total_scans')
   } else if (role === 'bao') {
+    can(['read'], 'account-settingstab')
     can(['read'], 'home')
     can(['read'], 'bao-activation')
     can(['read'], 'bao-topup')

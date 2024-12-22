@@ -144,6 +144,15 @@ const UserDropdown = props => {
           </Box>
         </Box>
         <Divider />
+        {session?.user.role === 'bao' ? (
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/bao/settings/account')}>
+            <Box sx={styles}>
+              <Icon icon='mdi:cog-outline' />
+              Settings
+            </Box>
+          </MenuItem>
+        ) : null}
+        <Divider />
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}

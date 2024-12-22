@@ -55,15 +55,14 @@ const handler = async (req, res) => {
           return res.status(500).json({ message: 'Something went wrong' })
         }
       }
-    }
-    if (req.method === 'GET') {
+    } else if (req.method === 'GET') {
       const { bao_id } = req.query
       try {
         const bao = await fetchBAOInfo(bao_id)
 
         if (!bao) return res.status(400).json({ message: 'Failed to fetch bao information' })
 
-        return res.status(200).json({ bao })
+        return res.status(200).json(bao[0])
       } catch (error) {
         console.log(error)
 
