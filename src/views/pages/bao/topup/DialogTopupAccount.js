@@ -29,6 +29,9 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
+// ** Hooks
+import { useSession } from 'next-auth/react'
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
@@ -38,6 +41,7 @@ const DialogTopupAccount = ({ account, refreshData }) => {
   const [show, setShow] = useState(false)
   const [id, setId] = useState(null)
   const [accountType, setAccountType] = useState(null)
+  const { data: session } = useSession()
 
   const {
     control,
@@ -71,7 +75,8 @@ const DialogTopupAccount = ({ account, refreshData }) => {
     const formData = {
       ...data,
       id: id,
-      account_type: accountType
+      account_type: accountType,
+      bao_id: session.user.id
     }
     try {
       const response = await fetch('/api/bao/topup', {

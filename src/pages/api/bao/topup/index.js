@@ -1,7 +1,7 @@
 import db from '../../db'
 
-const topupAcount = async ({ id, load_amount, account_type }) => {
-  let rfidQuery
+const topupAcount = async ({ id, bao_id, load_amount, account_type }) => {
+  let rfidQuery, historyQuery
 
   if (load_amount <= 0) {
     throw new Error('Load amount must be greater than 0')
@@ -10,17 +10,21 @@ const topupAcount = async ({ id, load_amount, account_type }) => {
   switch (account_type) {
     case 'User':
       rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE user_id = ?'
+      historyQuery = 'INSERT INTO topup_history (user_id, bao_id, load_amount) VALUES (?, ?, ?)'
       break
     case 'Premium':
       rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE premium_id = ?'
+      historyQuery = 'INSERT INTO topup_history (premium_id, bao_id, load_amount) VALUES (?, ?, ?)'
       break
     default:
       throw new Error('Invalid account type')
   }
 
-  const [rfidResult] = await db.query(rfidQuery, [load_amount, id])
+  await db.query(rfidQuery, [load_amount, id])
 
-  return rfidResult.affectedRows > 0
+  await db.query(historyQuery, [id, bao_id, load_amount])
+
+  return true
 }
 
 const handler = async (req, res) => {

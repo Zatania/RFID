@@ -25,6 +25,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'home')
     can(['read'], 'bao-activation')
     can(['read'], 'bao-topup')
+    can(['read'], 'topup-history')
     can(['read'], 'violations')
     can(['read'], 'total_users')
     can(['read'], 'total_staffs')
