@@ -12,7 +12,12 @@ const constructResponse = user => {
     image: user[0].image,
     username: user[0].username,
     password: user[0].password,
-    status: user[0].status
+    status: user[0].status,
+    ...(user[0].duration && {
+      duration: `${user[0].duration} ${user[0].duration === 1 ? 'month' : 'months'}`,
+      start_date: user[0].start_date,
+      end_date: user[0].end_date
+    })
   }
 
   const driversLicenseInfo = {
@@ -67,6 +72,7 @@ const findUserInTable = async (username, tableName) => {
             vehicles.status AS vehicle_status,
             rfids.value AS rfid_number,
             rfids.load_balance AS load_balance
+            ${tableName === 'premiums' ? ', premiums.duration, premiums.start_date, premiums.end_date' : ''}
       FROM ${tableName}
       LEFT JOIN drivers_licenses ON ${tableName}.id = drivers_licenses.${userColumn}
       LEFT JOIN vehicles ON ${tableName}.id = vehicles.${userColumn}

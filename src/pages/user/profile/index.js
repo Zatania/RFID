@@ -116,7 +116,26 @@ const ProfilePage = () => {
         property: 'Home Address: ',
         value: capitalizeFirstLetter(user?.user_info?.address) || '',
         icon: 'mdi:home-outline'
-      }
+      },
+      ...(user?.user_info?.duration
+        ? [
+            {
+              property: 'Subscription Duration: ',
+              value: user?.user_info?.duration || '',
+              icon: 'mdi:timer-outline'
+            },
+            {
+              property: 'Subscription Start Date: ',
+              value: formatDate(user?.user_info?.start_date) || '',
+              icon: 'mdi:calendar-start'
+            },
+            {
+              property: 'Subscription End Date: ',
+              value: formatDate(user?.user_info?.end_date) || '',
+              icon: 'mdi:calendar-end'
+            }
+          ]
+        : [])
     ],
     license_info: [
       {
@@ -218,6 +237,20 @@ const ProfilePage = () => {
           </Card>
         </Grid>
       )}
+      {user?.user_info?.status === 'Expired' && (
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Box sx={{ mb: 6 }}>
+                <Typography sx={{ mb: 5, display: 'block', textTransform: 'uppercase' }}>ANNOUNCEMENT</Typography>
+                <Typography variant='caption' sx={{ ml: 1, color: 'red', fontWeight: 600 }}>
+                  Your account has expired. Please renew your subscription to continue using our services.
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Card>
           <CardContent
@@ -255,9 +288,13 @@ const ProfilePage = () => {
                   <Box
                     sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}
                   >
-                    <Icon icon={loadIcon} />
+                    <Icon icon={user?.user_info?.end_date ? 'mdi:calendar-end' : 'mdi:cash'} />
                     <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                      {loading ? 'Loading...' : 'Php ' + (user?.rfid?.load_balance || 0)}
+                      {loading
+                        ? 'Loading...'
+                        : user?.user_info?.end_date
+                        ? `Subscription Ends: ${formatDate(user?.user_info?.end_date)}`
+                        : `Php ${user?.rfid?.load_balance || 0}`}
                     </Typography>
                   </Box>
                 </Box>
