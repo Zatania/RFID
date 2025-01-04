@@ -19,6 +19,7 @@ const defineRulesFor = (role, subject) => {
     cannot(['read'], 'visitor-management')
     cannot(['read'], 'dashboard')
   } else if (role === 'admin') {
+    can(['read'], 'admin-settingstab')
     can(['read'], 'home')
     can(['read'], 'user-management')
     can(['read'], 'premium-management')

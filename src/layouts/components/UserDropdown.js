@@ -151,6 +151,13 @@ const UserDropdown = props => {
               Settings
             </Box>
           </MenuItem>
+        ) : session?.user.role === 'admin' ? (
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/admin/settings/account')}>
+            <Box sx={styles}>
+              <Icon icon='mdi:cog-outline' />
+              Settings
+            </Box>
+          </MenuItem>
         ) : null}
         <Divider />
         <MenuItem
