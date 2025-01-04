@@ -12,10 +12,6 @@ const topupAcount = async ({ id, bao_id, load_amount, account_type }) => {
       rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE user_id = ?'
       historyQuery = 'INSERT INTO topup_history (user_id, bao_id, load_amount) VALUES (?, ?, ?)'
       break
-    case 'Premium':
-      rfidQuery = 'UPDATE rfids SET load_balance = load_balance + ? WHERE premium_id = ?'
-      historyQuery = 'INSERT INTO topup_history (premium_id, bao_id, load_amount) VALUES (?, ?, ?)'
-      break
     default:
       throw new Error('Invalid account type')
   }
