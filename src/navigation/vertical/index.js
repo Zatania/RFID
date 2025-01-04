@@ -43,10 +43,10 @@ const navigation = () => {
       icon: 'mdi:account-check'
     },
     {
-      title: 'Active Accounts',
-      path: '/bao/active-account',
+      title: 'Accounts',
+      path: '/bao/accounts',
       action: 'read',
-      subject: 'bao-active-account',
+      subject: 'bao-accounts',
       icon: 'mdi:account-cash'
     },
     {
@@ -64,10 +64,10 @@ const navigation = () => {
       icon: 'mdi:account-convert'
     },
     {
-      title: 'Top-Up History',
-      path: '/bao/topup/history',
+      title: 'Accounts History',
+      path: '/bao/accounts/history',
       action: 'read',
-      subject: 'topup-history',
+      subject: 'bao-accounts-history',
       icon: 'mdi:note-multiple-outline'
     },
     {
