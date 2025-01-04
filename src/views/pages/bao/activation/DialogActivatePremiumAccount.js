@@ -60,8 +60,6 @@ const DialogActivateAccount = ({ account, refreshData }) => {
       setValue('first_name', account.first_name)
       setValue('middle_name', account.middle_name)
       setValue('last_name', account.last_name)
-      setValue('load_balance', account.load_balance)
-      setValue('status', account.status)
       setAccountType(account.account_type)
     }
   }, [setValue, account])
@@ -73,7 +71,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
       account_type: accountType
     }
     try {
-      const response = await fetch('/api/bao/active/user', {
+      const response = await fetch('/api/bao/active/premium', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -146,22 +144,6 @@ const DialogActivateAccount = ({ account, refreshData }) => {
               </Grid>
               <Grid item sm={4} xs={12}>
                 <Controller
-                  name='middle_name'
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Middle Name'
-                      error={!!errors.middle_name}
-                      helperText={errors.middle_name?.message}
-                      inputProps={{ readOnly: true }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={4} xs={12}>
-                <Controller
                   name='last_name'
                   control={control}
                   rules={{ required: 'This field is required' }}
@@ -177,43 +159,29 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
-                <Controller
-                  name='load_balance'
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Load Balance'
-                      error={!!errors.load_balance}
-                      helperText={errors.load_balance?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth error={!!errors.status}>
-                  <InputLabel htmlFor='status-select'>Status</InputLabel>
+              <Grid item sm={4} xs={12}>
+                <FormControl fullWidth error={!!errors.duration}>
+                  <InputLabel htmlFor='duration-select'>Duration</InputLabel>
                   <Controller
-                    name='status'
+                    name='duration'
                     control={control}
                     rules={{ required: 'This field is required' }}
                     render={({ field }) => (
                       <Select
-                        id='status-select'
-                        label='Status'
+                        id='duration-select'
+                        label='Duration'
                         {...field}
                         onChange={e => {
                           field.onChange(e)
                         }}
                       >
-                        <MenuItem value='Active'>Active</MenuItem>
-                        <MenuItem value='Inactive'>Inactive</MenuItem>
+                        <MenuItem value='1' selected>
+                          1 Month
+                        </MenuItem>
                       </Select>
                     )}
                   />
-                  {errors.status && <FormHelperText>{errors.status.message}</FormHelperText>}
+                  {errors.duration && <FormHelperText>{errors.duration.message}</FormHelperText>}
                 </FormControl>
               </Grid>
             </Grid>

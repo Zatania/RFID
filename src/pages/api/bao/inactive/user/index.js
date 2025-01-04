@@ -1,4 +1,4 @@
-import db from '../../db'
+import db from '../../../db'
 
 const fetchInactives = async () => {
   try {
@@ -13,22 +13,9 @@ const fetchInactives = async () => {
             'User' AS account_type
         FROM
             users
-        LEFT JOIN RFIDs rfids ON rfids.user_id = users.id
+        LEFT JOIN rfids ON rfids.user_id = users.id
         WHERE
             users.status = 'Inactive'
-        UNION ALL
-        SELECT
-            premiums.id,
-            premiums.first_name,
-            premiums.middle_name,
-            premiums.last_name,
-            premiums.status,
-            rfids.load_balance,
-            'Premium' AS account_type
-        FROM
-            premiums
-        LEFT JOIN RFIDs rfids ON rfids.premium_id = premiums.id
-        WHERE premiums.status = 'Inactive';
       `)
 
     return result

@@ -15,6 +15,14 @@ const fetchPremiums = async () => {
         premium.expiration = dayjs(premium.expiration).format('MM/DD/YYYY')
       }
 
+      if (premium.start_date) {
+        premium.start_date = dayjs(premium.start_date).format('MM/DD/YYYY')
+      }
+
+      if (premium.end_date) {
+        premium.end_date = dayjs(premium.end_date).format('MM/DD/YYYY')
+      }
+
       return premium
     })
   } catch (error) {

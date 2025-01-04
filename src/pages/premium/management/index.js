@@ -88,13 +88,13 @@ const PremiumManagement = () => {
     {
       flex: 0.1,
       minWidth: 100,
-      field: 'load_balance',
-      headerName: 'Load Balance',
-      valueGetter: params => params.row.load_balance,
+      field: 'end_date',
+      headerName: 'Expiration Date',
+      valueGetter: params => params.row.end_date,
       renderCell: params => (
-        <Tooltip title={params.row.load_balance}>
+        <Tooltip title={params.row.end_date}>
           <Typography variant='body2' sx={{ color: 'text.primary' }}>
-            {params.row.load_balance}
+            {params.row.end_date}
           </Typography>
         </Tooltip>
       )
