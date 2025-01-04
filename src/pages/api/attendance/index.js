@@ -149,6 +149,13 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const userId = account.id
     const phone_number = account.phone_number
 
+    // Check if premium status is active
+    const [premiumStatusResult] = await db.query('SELECT status FROM premium_accounts WHERE id = ?', [userId])
+
+    if (premiumStatusResult.length === 0 || premiumStatusResult[0].status !== 'Active') {
+      throw new Error('Premium account status is expired or inactive. Please renew your subscription.')
+    }
+
     // Check if the vehicle belongs to the user
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId)
 
@@ -211,7 +218,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
         return message
       }
     } else {
-      // Deduct the parking fee from the user's RFID
+      /* // Deduct the parking fee from the user's RFID
       const balance = await deductBalance(rfid)
 
       // check if balance is insufficient
@@ -255,7 +262,26 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
         )
 
         return message
-      }
+      } */
+
+      // If there's no existing entry, create a new one
+      const [updateEntry] = await db.query(
+        'INSERT INTO premium_parking_history (premium_id, guard_id, vehicle_id, timestamp_in) VALUES (?, ?, ?, NOW())',
+        [account.id, guard_id, vehicle_id]
+      )
+      const historyId = updateEntry.insertId
+      await db.query('INSERT INTO premium_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME IN'])
+      message = 'User checked in successfully. Thank you for parking with us.'
+
+      // Add to notifications about successful check in
+      notifTitle = 'Time In'
+      notifMessage = 'You checked in successfully. Thank you for parking with us.'
+      await db.query(
+        'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+        [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+      )
+
+      return message
     }
   }
 }
