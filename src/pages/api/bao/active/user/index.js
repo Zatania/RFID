@@ -4,23 +4,21 @@ const fetchActives = async () => {
   try {
     const [result] = await db.query(`
         SELECT
-            COALESCE(users.id, premiums.id) AS id,
-            COALESCE(users.image, premiums.image) AS image,
-            COALESCE(users.first_name, premiums.first_name) AS first_name,
-            COALESCE(users.middle_name, premiums.middle_name) AS middle_name,
-            COALESCE(users.last_name, premiums.last_name) AS last_name,
-            COALESCE(users.status, premiums.status) AS status,
+            users.id AS id,
+            users.image AS image,
+            users.first_name AS first_name,
+            users.middle_name AS middle_name,
+            users.last_name AS last_name,
+            users.status AS status,
             rfids.load_balance AS load_balance,
             CASE
               WHEN users.id IS NOT NULL THEN 'User'
-              WHEN premiums.id IS NOT NULL THEN 'Premium'
               ELSE 'Unknown'
             END AS account_type
         FROM
             RFIDs rfids
         LEFT JOIN Users users ON rfids.user_id = users.id
-        LEFT JOIN Premiums premiums ON rfids.premium_id = premiums.id
-        WHERE COALESCE(users.status, premiums.status) = 'Active';
+        WHERE users.status = 'Active';
       `)
 
     return result
@@ -43,9 +41,6 @@ const activateAccount = async ({ id, load_balance, account_type }) => {
   switch (account_type) {
     case 'User':
       accountQuery = 'UPDATE users SET status = "Active" WHERE id = ?'
-      break
-    case 'Premium':
-      accountQuery = 'UPDATE premiums SET status = "Active" WHERE id = ?'
       break
     default:
       throw new Error('Invalid account type')

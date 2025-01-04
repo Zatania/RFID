@@ -3,28 +3,51 @@ import dayjs from 'dayjs'
 
 const fetchActives = async () => {
   try {
-    const [result] = await db.query(`
+    const [results] = await db.query(`
         SELECT
-            COALESCE(users.id, premiums.id) AS id,
-            COALESCE(users.image, premiums.image) AS image,
-            COALESCE(users.first_name, premiums.first_name) AS first_name,
-            COALESCE(users.middle_name, premiums.middle_name) AS middle_name,
-            COALESCE(users.last_name, premiums.last_name) AS last_name,
-            COALESCE(users.status, premiums.status) AS status,
+            premiums.id AS id,
+            premiums.image AS image,
+            premiums.first_name AS first_name,
+            premiums.middle_name AS middle_name,
+            premiums.last_name AS last_name,
+            premiums.duration AS duration,
+            premiums.start_date AS start_date,
+            premiums.end_date AS end_date,
+            premiums.status AS status,
             rfids.load_balance AS load_balance,
             CASE
-              WHEN users.id IS NOT NULL THEN 'User'
               WHEN premiums.id IS NOT NULL THEN 'Premium'
               ELSE 'Unknown'
             END AS account_type
         FROM
             RFIDs rfids
-        LEFT JOIN Users users ON rfids.user_id = users.id
         LEFT JOIN Premiums premiums ON rfids.premium_id = premiums.id
-        WHERE COALESCE(users.status, premiums.status) = 'Active';
+        WHERE premiums.status = 'Active';
       `)
 
-    return result
+    return results.map(result => {
+      if (result.start_date) {
+        result.start_date = dayjs(result.start_date).format('MM/DD/YYYY')
+      } else {
+        result.start_date = 'N/A'
+      }
+
+      if (result.end_date) {
+        result.end_date = dayjs(result.end_date).format('MM/DD/YYYY')
+      } else {
+        result.end_date = 'N/A'
+      }
+
+      if (result.duration === 1) {
+        result.duration = '1 Month'
+      } else if (!result.duration || result.duration === 'NULL') {
+        result.duration = 'N/A'
+      } else {
+        result.duration = `${result.duration} Months`
+      }
+
+      return result
+    })
   } catch (error) {
     console.error('SQL Error:', error)
     throw error
