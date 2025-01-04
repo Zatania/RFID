@@ -60,6 +60,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
       setValue('first_name', account.first_name)
       setValue('middle_name', account.middle_name)
       setValue('last_name', account.last_name)
+      setValue('status', account.status)
       setAccountType(account.account_type)
     }
   }, [setValue, account])
@@ -129,7 +130,6 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                 <Controller
                   name='first_name'
                   control={control}
-                  rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -144,9 +144,24 @@ const DialogActivateAccount = ({ account, refreshData }) => {
               </Grid>
               <Grid item sm={4} xs={12}>
                 <Controller
+                  name='middle_name'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Middle Name'
+                      error={!!errors.middle_name}
+                      helperText={errors.middle_name?.message}
+                      inputProps={{ readOnly: true }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Controller
                   name='last_name'
                   control={control}
-                  rules={{ required: 'This field is required' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -159,7 +174,23 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                   )}
                 />
               </Grid>
-              <Grid item sm={4} xs={12}>
+              <Grid item sm={6} xs={12}>
+                <Controller
+                  name='status'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Status'
+                      error={!!errors.status}
+                      helperText={errors.status?.message}
+                      inputProps={{ readOnly: true }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
                 <FormControl fullWidth error={!!errors.duration}>
                   <InputLabel htmlFor='duration-select'>Duration</InputLabel>
                   <Controller
