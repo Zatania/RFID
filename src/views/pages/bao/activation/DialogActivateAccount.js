@@ -29,6 +29,9 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 import dayjs from 'dayjs'
 
+// ** Hooks
+import { useSession } from 'next-auth/react'
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
@@ -54,6 +57,10 @@ const DialogActivateAccount = ({ account, refreshData }) => {
     refreshData()
   }
 
+  const { data: session } = useSession()
+
+  const bao_id = session?.user?.id
+
   useEffect(() => {
     if (account) {
       setId(account.id)
@@ -70,6 +77,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
     const formData = {
       ...data,
       id: id,
+      bao_id: bao_id,
       account_type: accountType
     }
     try {

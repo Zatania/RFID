@@ -28,19 +28,19 @@ const fetchActives = async () => {
   }
 }
 
-const activateAccount = async ({ id, load_balance, account_type }) => {
+const activateAccount = async ({ id, bao_id, load_balance, account_type }) => {
   if (typeof load_balance === 'string') load_balance = parseFloat(load_balance)
 
   if (load_balance <= 0) {
     throw new Error('Load balance must be greater than 0')
   }
 
-  let accountQuery
-  let rfidQuery
+  let accountQuery, rfidQuery, historyQuery
 
   switch (account_type) {
     case 'User':
       accountQuery = 'UPDATE users SET status = "Active" WHERE id = ?'
+      historyQuery = 'INSERT INTO topup_history (user_id, bao_id, load_amount) VALUES (?, ?, ?)'
       break
     default:
       throw new Error('Invalid account type')
@@ -52,12 +52,18 @@ const activateAccount = async ({ id, load_balance, account_type }) => {
 
   const [rfidResult] = await db.query(rfidQuery, [load_balance, id, id])
 
+  const [historyResult] = await db.query(historyQuery, [id, bao_id, load_balance])
+
   if (!accountResult.affectedRows) {
     throw new Error('Account not found or already active')
   }
 
   if (!rfidResult.affectedRows) {
     throw new Error('RFID record not updated')
+  }
+
+  if (!historyResult.affectedRows) {
+    throw new Error('Topup history not updated')
   }
 
   return true
