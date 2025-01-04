@@ -31,7 +31,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'account-settingstab')
     can(['read'], 'home')
     can(['read'], 'bao-activation')
-    can(['read'], 'bao-topup')
+    can(['read'], 'bao-active-account')
     can(['read'], 'topup-history')
     can(['read'], 'violations')
     can(['read'], 'total_users')

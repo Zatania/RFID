@@ -42,10 +42,10 @@ const navigation = () => [
     icon: 'mdi:account-check'
   },
   {
-    title: 'Account Top-Up',
-    path: '/bao/topup',
+    title: 'Active Accounts',
+    path: '/bao/active-account',
     action: 'read',
-    subject: 'bao-topup',
+    subject: 'bao-active-account',
     icon: 'mdi:account-cash'
   },
   {
