@@ -266,7 +266,19 @@ const TabAccount = ({ user }) => {
                   <Button type='submit' variant='contained' sx={{ mr: 4 }}>
                     Save Changes
                   </Button>
-                  <Button type='reset' variant='outlined' color='secondary' onClick={() => setFormData(initialData)}>
+                  <Button
+                    type='reset'
+                    variant='outlined'
+                    color='secondary'
+                    onClick={() =>
+                      reset({
+                        last_name: user?.last_name || '',
+                        first_name: user?.first_name || '',
+                        middle_name: user?.middle_name || '',
+                        username: user?.username || ''
+                      })
+                    }
+                  >
                     Reset
                   </Button>
                 </Grid>
