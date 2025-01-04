@@ -158,6 +158,13 @@ const UserDropdown = props => {
               Settings
             </Box>
           </MenuItem>
+        ) : session?.user.role === 'security_guard' ? (
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/guard/settings/account')}>
+            <Box sx={styles}>
+              <Icon icon='mdi:cog-outline' />
+              Settings
+            </Box>
+          </MenuItem>
         ) : null}
         <Divider />
         <MenuItem

@@ -40,6 +40,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'total_premiums')
     can(['read'], 'total_violations')
   } else if (role === 'security_guard') {
+    can(['read'], 'guard-settingstab')
     can(['read'], 'home')
     can(['read'], 'visitor-management')
     can(['read'], 'dashboard')
