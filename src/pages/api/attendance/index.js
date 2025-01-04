@@ -153,6 +153,16 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const [premiumStatusResult] = await db.query('SELECT status FROM premium_accounts WHERE id = ?', [userId])
 
     if (premiumStatusResult.length === 0 || premiumStatusResult[0].status !== 'Active') {
+      // Add a notification for expired or inactive premium account status
+      const notifTitle = 'Premium Account Status Inactive'
+
+      const notifMessage =
+        'Your premium account status is expired or inactive. Please renew your subscription to continue using our service.'
+      await db.query(
+        'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+        [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+      )
+
       throw new Error('Premium account status is expired or inactive. Please renew your subscription.')
     }
 
