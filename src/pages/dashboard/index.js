@@ -101,7 +101,6 @@ const DashboardPage = () => {
 
         setMessage(response.data)
       } catch (error) {
-        const audio = new Audio('/sounds/alert.mp3')
         console.error('Error while logging entry:', error)
 
         /* if (error.response) {
@@ -116,7 +115,7 @@ const DashboardPage = () => {
 
         if (error.response) {
           setMessage(error.response.data.message)
-          const deniedAudio = new Audio('/sounds/access-denied.mp3') // Path to your sound file
+          const deniedAudio = new Audio('/sounds/alert.mp3')
 
           if (
             error.response.data.message ===
