@@ -92,7 +92,6 @@ const DashboardPage = () => {
       const payload = { account, vehicleID, guard_id, rfid, vehicleRfid }
       try {
         const response = await axios.post('/api/attendance', payload)
-        const audio = new Audio('/sounds/alert.mp3')
 
         // Clean up the RFID values after logging the entry
         setRfid('') // Reset user RFID
@@ -102,14 +101,35 @@ const DashboardPage = () => {
 
         setMessage(response.data)
       } catch (error) {
+        const audio = new Audio('/sounds/alert.mp3')
         console.error('Error while logging entry:', error)
 
-        if (error.response) {
+        /* if (error.response) {
           setMessage(error.response.data.message)
           if (error.response.data.message === 'Vehicle does not belong to the user') {
             toast.error('Vehicle does not belong to the user')
             audio.play().catch(err => {
               console.error('Error playing sound:', err)
+            })
+          }
+        } */
+
+        if (error.response) {
+          setMessage(error.response.data.message)
+          const deniedAudio = new Audio('/sounds/access-denied.mp3') // Path to your sound file
+
+          if (
+            error.response.data.message ===
+            'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
+          ) {
+            toast.error('Access denied: Unresolved violations')
+            deniedAudio.play().catch(err => {
+              console.error('Error playing access denied sound:', err)
+            })
+          } else if (error.response.data.message === 'Vehicle does not belong to the user') {
+            toast.error('Vehicle does not belong to the user')
+            deniedAudio.play().catch(err => {
+              console.error('Error playing vehicle denial sound:', err)
             })
           }
         }

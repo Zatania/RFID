@@ -5,6 +5,36 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
   const hours = currentTime.getHours()
   let message
 
+  // Helper function to check violations
+  const hasTooManyViolations = async (accountId, accountType) => {
+    const [violations] = await db.query(
+      'SELECT COUNT(*) AS violation_count FROM violations WHERE ?? = ? AND status = ? AND (account_type = ?)',
+      [accountType === 'User' ? 'user_id' : 'premium_id', accountId, 'Unresolved', accountType]
+    )
+
+    return violations[0].violation_count > 3
+  }
+
+  // Check if the account has unresolved violations
+  const tooManyViolations = await hasTooManyViolations(account.id, account.type)
+
+  if (tooManyViolations) {
+    message =
+      'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
+
+    // Add notification about unresolved violations
+    const notifTitle = 'Unresolved Violations'
+
+    const notifMessage =
+      'You have more than 3 unresolved violations. Please resolve them to continue using our parking services.'
+    await db.query(
+      'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+      [account.phone_number, notifTitle, notifMessage, 'unread', 'pending']
+    )
+
+    return message
+  }
+
   // Check if the account is a visitor or user
   if (account.type === 'Visitor') {
     // For visitors, log into the visitor parking history
