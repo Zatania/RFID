@@ -21,8 +21,23 @@ const checkUnique = async (value, vehicleID = null, currentUserValue = null, typ
   return result[0].count === 0
 }
 
+const findUserInTables = async username => {
+  const tables = ['users', 'premiums']
+
+  for (const table of tables) {
+    const query = `SELECT * FROM ${table} WHERE username = ?`
+    const [result] = await db.query(query, [username])
+
+    if (result.length > 0) {
+      return { user: result[0], table }
+    }
+  }
+
+  return 'User not found'
+}
+
 const addVehicle = async data => {
-  const { user_id, maker, model, color, image, plate_number, cr_number, or_number, registration_expiration } = data
+  const { username, maker, model, color, image, plate_number, cr_number, or_number, registration_expiration } = data
 
   const isCR_NUMBERUnique = await checkUnique(cr_number, null, null, 'cr_number')
   const isOR_NUMBERUnique = await checkUnique(or_number, null, null, 'or_number')
@@ -49,9 +64,19 @@ const addVehicle = async data => {
     throw new Error(`The Vehicle's Registration is expiring today.`)
   }
 
+  const foundUser = await findUserInTables(username)
+
+  if (foundUser === 'User not found') {
+    throw new Error('User not found')
+  }
+
+  const { user, table } = foundUser
+  const userIdColumn = table === 'users' ? 'user_id' : 'premium_id'
+  const user_id = user.id
+
   try {
     const [vehicleResult] = await db.query(
-      'INSERT INTO vehicles (user_id, maker, model, color, image, plate_number, cr_number, or_number, registration_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      `INSERT INTO vehicles (${userIdColumn}, maker, model, color, image, plate_number, cr_number, or_number, registration_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         user_id,
         maker,
@@ -69,7 +94,9 @@ const addVehicle = async data => {
       throw new Error('Failed to add vehicle')
     }
 
-    const [existingVehicles] = await db.query('SELECT COUNT(*) as count FROM vehicles WHERE user_id = ?', [user_id])
+    const [existingVehicles] = await db.query(`SELECT COUNT(*) as count FROM vehicles WHERE ${userIdColumn} = ?`, [
+      user_id
+    ])
 
     if (existingVehicles[0].count > 0) {
       await db.query('UPDATE users SET status = ? WHERE id = ?', ['Inactive', user_id])

@@ -39,7 +39,6 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true)
 
   const username = session?.user.username
-  const user_id = session?.user.id
 
   const capitalizeFirstLetter = string => {
     if (string === null) {
@@ -368,7 +367,7 @@ const ProfilePage = () => {
                     </Box>
                   ))}
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <DialogAddVehicle user_id={user_id} fetchUser={fetchUser} />
+                    <DialogAddVehicle username={username} fetchUser={fetchUser} />
                   </Box>
                 </Box>
               </CardContent>

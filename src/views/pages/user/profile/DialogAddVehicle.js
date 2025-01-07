@@ -38,7 +38,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
 
-const DialogAddVehicle = ({ user_id, fetchUser }) => {
+const DialogAddVehicle = ({ username, fetchUser }) => {
   const [show, setShow] = useState(false)
   const [vehicleImageUploaded, setVehicleImageUploaded] = useState(false)
   const [vehicleImagePath, setVehicleImagePath] = useState('')
@@ -94,7 +94,7 @@ const DialogAddVehicle = ({ user_id, fetchUser }) => {
 
     const formData = {
       ...data,
-      user_id: user_id,
+      username: username,
       image: imagePath
     }
 
