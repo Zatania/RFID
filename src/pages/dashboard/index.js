@@ -35,6 +35,9 @@ const DashboardPage = () => {
 
   const guard_id = session.user.id
 
+  // Test sound example
+  const deniedAudio = new Audio('/sounds/alert.mp3')
+
   const fetchUserData = useCallback(async rfid => {
     try {
       const response = await axios.get(`/api/attendance/user/${rfid}`)
@@ -115,21 +118,34 @@ const DashboardPage = () => {
 
         if (error.response) {
           setMessage(error.response.data.message)
-          const deniedAudio = new Audio('/sounds/alert.mp3')
 
           if (
             error.response.data.message ===
             'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
           ) {
             toast.error('Access denied: Unresolved violations')
-            deniedAudio.play().catch(err => {
-              console.error('Error playing access denied sound:', err)
-            })
+            deniedAudio.muted = true
+            deniedAudio
+              .play()
+              .then(() => {
+                // After autoplay, you can unmute if needed
+                deniedAudio.muted = false
+              })
+              .catch(err => {
+                console.error('Error playing sound:', err)
+              })
           } else if (error.response.data.message === 'Vehicle does not belong to the user') {
             toast.error('Vehicle does not belong to the user')
-            deniedAudio.play().catch(err => {
-              console.error('Error playing vehicle denial sound:', err)
-            })
+            deniedAudio.muted = true
+            deniedAudio
+              .play()
+              .then(() => {
+                // After autoplay, you can unmute if needed
+                deniedAudio.muted = false
+              })
+              .catch(err => {
+                console.error('Error playing sound:', err)
+              })
           }
         }
 
@@ -140,6 +156,7 @@ const DashboardPage = () => {
         setVehicleID(null) // Reset vehicle ID
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [account, vehicleID, guard_id]
   )
 

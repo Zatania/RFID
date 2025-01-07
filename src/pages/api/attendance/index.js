@@ -12,7 +12,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
       [accountType === 'User' ? 'user_id' : 'premium_id', accountId, 'Unresolved', accountType]
     )
 
-    return violations[0].violation_count > 3
+    return violations[0].violation_count >= 1
   }
 
   // Check if the account has unresolved violations
@@ -20,13 +20,12 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 
   if (tooManyViolations) {
     message =
-      'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
+      'Access denied: You have an unresolved violation. Please resolve them to continue using the parking services.'
 
     // Add notification about unresolved violations
-    const notifTitle = 'Unresolved Violations'
+    const notifTitle = 'Unresolved Violation'
 
-    const notifMessage =
-      'You have more than 3 unresolved violations. Please resolve them to continue using our parking services.'
+    const notifMessage = 'You have an unresolved violation. Please resolve them to continue using our parking services.'
     await db.query(
       'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
       [account.phone_number, notifTitle, notifMessage, 'unread', 'pending']
