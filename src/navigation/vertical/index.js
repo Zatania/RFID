@@ -85,7 +85,7 @@ const navigation = () => {
       icon: 'mdi:note-multiple-outline'
     },
     {
-      title: 'Parking Monitoring',
+      title: 'Currently Parked Vehicles',
       path: '/parking/monitoring',
       action: 'read',
       subject: 'parking-monitoring',
