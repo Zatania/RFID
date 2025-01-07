@@ -89,7 +89,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
       handleClose()
     } catch (error) {
       console.error(error)
-      toast.error(error.message || 'Failed to submit form')
+      toast.error(error.message || 'An unexpected error occurred')
     }
   }
 
@@ -208,6 +208,15 @@ const DialogActivateAccount = ({ account, refreshData }) => {
                       >
                         <MenuItem value='1' selected>
                           1 Month
+                        </MenuItem>
+                        <MenuItem value='3' selected>
+                          3 Months
+                        </MenuItem>
+                        <MenuItem value='6' selected>
+                          6 Months
+                        </MenuItem>
+                        <MenuItem value='12' selected>
+                          1 Year
                         </MenuItem>
                       </Select>
                     )}

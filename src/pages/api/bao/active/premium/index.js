@@ -62,6 +62,34 @@ const activateAccount = async ({ id, duration, account_type }) => {
     throw new Error('Duration is required')
   }
 
+  // Check if the user's RFID exists
+  const [premiumRFIDCheck] = await db.query(`SELECT COUNT(*) AS count FROM rfids WHERE premium_id = ?`, [id])
+
+  if (premiumRFIDCheck[0].count === 0) {
+    throw new Error('Premium User RFID does not exist')
+  }
+
+  // Check if the user has a vehicle
+  const [vehicleCheck] = await db.query(
+    `SELECT vehicles.id AS vehicle_id
+     FROM vehicles
+     WHERE vehicles.premium_id = ?`,
+    [id]
+  )
+
+  if (vehicleCheck.length === 0) {
+    throw new Error('Premium User does not have a vehicle added')
+  }
+
+  const vehicleId = vehicleCheck[0].vehicle_id
+
+  // Check if the vehicle's RFID exists
+  const [vehicleRfidCheck] = await db.query(`SELECT COUNT(*) AS count FROM rfids WHERE vehicle_id = ?`, [vehicleId])
+
+  if (vehicleRfidCheck[0].count === 0) {
+    throw new Error("Premium User's vehicle RFID does not exist")
+  }
+
   let accountQuery
 
   switch (account_type) {
