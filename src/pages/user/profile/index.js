@@ -17,6 +17,7 @@ import dayjs from 'dayjs'
 
 // ** Views Imports
 import DialogEditProfile from 'src/views/pages/user/profile/DialogEditProfile'
+import DialogAddVehicle from 'src/views/pages/user/profile/DialogAddVehicle'
 
 // ** Third Party Imports
 import axios from 'axios'
@@ -38,6 +39,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true)
 
   const username = session?.user.username
+  const user_id = session?.user.id
 
   const capitalizeFirstLetter = string => {
     if (string === null) {
@@ -365,6 +367,9 @@ const ProfilePage = () => {
                       <Divider sx={{ mt: 5, mb: 5 }} />
                     </Box>
                   ))}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <DialogAddVehicle user_id={user_id} fetchUser={fetchUser} />
+                  </Box>
                 </Box>
               </CardContent>
             </Card>
