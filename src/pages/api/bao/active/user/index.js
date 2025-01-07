@@ -35,6 +35,34 @@ const activateAccount = async ({ id, bao_id, load_balance, account_type }) => {
     throw new Error('Load balance must be greater than 0')
   }
 
+  // Check if the user's RFID exists
+  const [userRfidCheck] = await db.query(`SELECT COUNT(*) AS count FROM rfids WHERE user_id = ?`, [id])
+
+  if (userRfidCheck[0].count === 0) {
+    throw new Error('User RFID does not exist')
+  }
+
+  // Check if the user has a vehicle
+  const [vehicleCheck] = await db.query(
+    `SELECT vehicles.id AS vehicle_id
+     FROM vehicles
+     WHERE vehicles.user_id = ?`,
+    [id]
+  )
+
+  if (vehicleCheck.length === 0) {
+    throw new Error('User does not have a vehicle added')
+  }
+
+  const vehicleId = vehicleCheck[0].vehicle_id
+
+  // Check if the vehicle's RFID exists
+  const [vehicleRfidCheck] = await db.query(`SELECT COUNT(*) AS count FROM rfids WHERE vehicle_id = ?`, [vehicleId])
+
+  if (vehicleRfidCheck[0].count === 0) {
+    throw new Error("User's vehicle RFID does not exist")
+  }
+
   let accountQuery, rfidQuery, historyQuery
 
   switch (account_type) {
@@ -46,11 +74,11 @@ const activateAccount = async ({ id, bao_id, load_balance, account_type }) => {
       throw new Error('Invalid account type')
   }
 
-  rfidQuery = 'UPDATE rfids SET load_balance = ? WHERE user_id = ? OR premium_id = ?'
+  rfidQuery = 'UPDATE rfids SET load_balance = ? WHERE user_id = ?'
 
   const [accountResult] = await db.query(accountQuery, [id])
 
-  const [rfidResult] = await db.query(rfidQuery, [load_balance, id, id])
+  const [rfidResult] = await db.query(rfidQuery, [load_balance, id])
 
   const [historyResult] = await db.query(historyQuery, [id, bao_id, load_balance])
 

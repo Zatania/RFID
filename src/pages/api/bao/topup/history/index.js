@@ -8,9 +8,9 @@ const fetchTopUpHistory = async () => {
         topup_history.*,
         -- User information (full name)
         CONCAT(
-          COALESCE(users.first_name, premiums.first_name),
+          COALESCE(users.first_name, ''),
           ' ',
-          COALESCE(users.last_name, premiums.last_name)
+          COALESCE(users.last_name, '')
         ) AS full_name,
         -- BAO Information (full name)
         CONCAT(
@@ -20,7 +20,6 @@ const fetchTopUpHistory = async () => {
         ) AS bao
       FROM topup_history
       LEFT JOIN users ON topup_history.user_id = users.id
-      LEFT JOIN premiums ON topup_history.premium_id = premiums.id
       LEFT JOIN baos ON topup_history.bao_id = baos.id
       ORDER BY topup_history.created_by DESC
     `)

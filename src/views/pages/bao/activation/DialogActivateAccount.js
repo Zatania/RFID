@@ -98,7 +98,7 @@ const DialogActivateAccount = ({ account, refreshData }) => {
       handleClose()
     } catch (error) {
       console.error(error)
-      toast.error(error.message || 'Failed to submit form')
+      toast.error(error.message || 'An unexpected error occurred')
     }
   }
 
