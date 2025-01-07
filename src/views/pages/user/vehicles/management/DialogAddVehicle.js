@@ -172,9 +172,9 @@ const DialogAddVehicle = ({ user_id, refreshData }) => {
             </IconButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h5' sx={{ mb: 3 }}>
-                View Vehicle
+                Add Vehicle
               </Typography>
-              <Typography variant='body2'>View Vehicle Information</Typography>
+              <Typography variant='body2'>Add Vehicle Information</Typography>
             </Box>
             <Grid container spacing={6}>
               <Grid item sm={12} xs={12}>
