@@ -325,22 +325,40 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
   }
 }
 
-const checkIfVehicleBelongsToUser = async (vehicleRfid, userId) => {
-  const vehicleData = await db.query(
-    `
-    SELECT
-      vehicles.id,
-      vehicles.user_id,
-      rfids.value AS rfid,
-      rfids.vehicle_id
-    FROM vehicles
-    JOIN rfids ON rfids.vehicle_id = vehicles.id
-    WHERE rfids.value = ? AND (vehicles.user_id = ? OR vehicles.premium_id = ?)
-    `,
-    [vehicleRfid, userId, userId]
-  )
+const checkIfVehicleBelongsToUser = async (vehicleRfid, userId, accountType) => {
+  let query, params
 
-  return vehicleData.length > 0
+  if (accountType === 'User') {
+    // Check ownership for regular users
+    query = `
+      SELECT
+        vehicles.id,
+        vehicles.user_id,
+        rfids.value AS rfid
+      FROM vehicles
+      JOIN rfids ON rfids.vehicle_id = vehicles.id
+      WHERE rfids.value = ? AND vehicles.user_id = ?
+    `
+    params = [vehicleRfid, userId]
+  } else if (accountType === 'Premium') {
+    // Check ownership for premium users
+    query = `
+      SELECT
+        vehicles.id,
+        vehicles.premium_id,
+        rfids.value AS rfid
+      FROM vehicles
+      JOIN rfids ON rfids.vehicle_id = vehicles.id
+      WHERE rfids.value = ? AND vehicles.premium_id = ?
+    `
+    params = [vehicleRfid, userId]
+  } else {
+    throw new Error('Invalid account type')
+  }
+
+  const vehicleData = await db.query(query, params)
+
+  return vehicleData.length > 0 // Returns true if the vehicle belongs to the user or premium account
 }
 
 const deductBalance = async rfid => {
