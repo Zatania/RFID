@@ -70,7 +70,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const phone_number = account.phone_number
 
     // Check if the vehicle belongs to the user
-    const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId)
+    const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
       throw new Error('Vehicle does not belong to the user')
@@ -196,7 +196,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     }
 
     // Check if the vehicle belongs to the user
-    const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId)
+    const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
       throw new Error('Vehicle does not belong to the user')
