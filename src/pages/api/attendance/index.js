@@ -73,7 +73,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
-      message = 'Vehicle does not belong to the user. Please check the RFID and try again.'
+      message = 'Vehicle does not belong to the user'
 
       return message
     }
