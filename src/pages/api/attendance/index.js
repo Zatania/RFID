@@ -31,7 +31,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
       [account.phone_number, notifTitle, notifMessage, 'unread', 'pending']
     )
 
-    return message
+    throw new Error(message)
   }
 
   // Check if the account is a visitor or user
@@ -73,9 +73,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
-      message = 'Vehicle does not belong to the user'
-
-      return message
+      throw new Error('Vehicle does not belong to the user')
     }
 
     // Check if there is an existing entry for the user
@@ -201,9 +199,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
-      message = 'Vehicle does not belong to the user. Please check the RFID and try again.'
-
-      return message
+      throw new Error('Vehicle does not belong to the user')
     }
 
     // Check if there is an existing entry for the user

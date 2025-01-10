@@ -117,10 +117,10 @@ const DashboardPage = () => {
         } */
 
         if (error.response) {
-          setMessage(error.response.data.message)
+          setMessage(error.response.data.error)
 
           if (
-            error.response.data.message ===
+            error.response.data.error ===
             'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
           ) {
             toast.error('Access denied: Unresolved violations')
@@ -134,7 +134,7 @@ const DashboardPage = () => {
               .catch(err => {
                 console.error('Error playing sound:', err)
               })
-          } else if (error.response.data.message === 'Vehicle does not belong to the user') {
+          } else if (error.response.data.error === 'Vehicle does not belong to the user') {
             toast.error('Vehicle does not belong to the user')
             deniedAudio.muted = true
             deniedAudio
