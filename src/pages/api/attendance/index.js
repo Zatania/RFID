@@ -73,7 +73,9 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
-      throw new Error('Vehicle does not belong to the user')
+      message = 'Vehicle does not belong to the user. Please check the RFID and try again.'
+
+      return message
     }
 
     // Check if there is an existing entry for the user
@@ -199,7 +201,9 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const vehicleBelongsToUser = await checkIfVehicleBelongsToUser(vehicleRfid, userId, account.type)
 
     if (!vehicleBelongsToUser) {
-      throw new Error('Vehicle does not belong to the user')
+      message = 'Vehicle does not belong to the user. Please check the RFID and try again.'
+
+      return message
     }
 
     // Check if there is an existing entry for the user
@@ -328,8 +332,6 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 const checkIfVehicleBelongsToUser = async (vehicleRfid, accountId, accountType) => {
   let query
   let params
-
-  console.log(vehicleRfid, accountId, accountType)
 
   if (accountType === 'User') {
     query = `
