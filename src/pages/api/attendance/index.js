@@ -8,8 +8,8 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
   // Helper function to check violations
   const hasTooManyViolations = async (accountId, accountType) => {
     const [violations] = await db.query(
-      'SELECT COUNT(*) AS violation_count FROM violations WHERE ?? = ? AND status = ? AND (account_type = ?)',
-      [accountType === 'User' ? 'user_id' : 'premium_id', accountId, 'Unresolved', accountType]
+      'SELECT COUNT(*) AS violation_count FROM violations WHERE ?? = ? AND status = ?',
+      [accountType === 'User' ? 'user_id' : 'premium_id', accountId, 'Unresolved']
     )
 
     return violations[0].violation_count >= 1
