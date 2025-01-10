@@ -121,7 +121,7 @@ const DashboardPage = () => {
 
           if (
             error.response.data.error ===
-            'Access denied: You have more than 3 unresolved violations. Please resolve them to continue using the parking services.'
+            'Access denied: You have an unresolved violation. Please resolve them to continue using the parking services.'
           ) {
             toast.error('Access denied: Unresolved violations')
             deniedAudio.muted = true
