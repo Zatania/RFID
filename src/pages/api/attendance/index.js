@@ -338,7 +338,6 @@ const checkIfVehicleBelongsToUser = async (vehicleRfid, accountId, accountType) 
       JOIN rfids ON rfids.vehicle_id = vehicles.id
       WHERE rfids.value = ?
         AND vehicles.user_id = ?
-        AND rfids.user_id = ?
     `
     params = [vehicleRfid, accountId, accountId]
   } else if (accountType === 'Premium') {
@@ -350,7 +349,6 @@ const checkIfVehicleBelongsToUser = async (vehicleRfid, accountId, accountType) 
       JOIN rfids ON rfids.vehicle_id = vehicles.id
       WHERE rfids.value = ?
         AND vehicles.premium_id = ?
-        AND rfids.premium_id = ?
     `
     params = [vehicleRfid, accountId, accountId]
   } else {
