@@ -179,7 +179,7 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
     const phone_number = account.phone_number
 
     // Check if premium status is active
-    const [premiumStatusResult] = await db.query('SELECT status FROM premium_accounts WHERE id = ?', [userId])
+    const [premiumStatusResult] = await db.query('SELECT status FROM premiums WHERE id = ?', [userId])
 
     if (premiumStatusResult.length === 0 || premiumStatusResult[0].status !== 'Active') {
       // Add a notification for expired or inactive premium account status
