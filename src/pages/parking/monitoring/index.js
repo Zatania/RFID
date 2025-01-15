@@ -104,7 +104,13 @@ const ParkingMonitoring = () => {
       valueGetter: params => params.row.status,
       renderCell: params => (
         <Tooltip title={params.row.status}>
-          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          <Typography
+            variant='body2'
+            sx={{
+              color: params.row.status === 'Overparked' ? 'red' : 'text.primary',
+              fontWeight: params.row.status === 'Overparked' ? 'bold' : 'normal'
+            }}
+          >
             {params.row.status}
           </Typography>
         </Tooltip>
