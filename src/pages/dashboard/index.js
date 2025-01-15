@@ -102,7 +102,8 @@ const DashboardPage = () => {
         setAccountType(null) // Reset account data
         setVehicleID(null) // Reset vehicle ID
 
-        setMessage(response.data)
+        // Success message
+        setMessage({ text: response.data, type: 'success' })
       } catch (error) {
         console.error('Error while logging entry:', error)
 
@@ -117,7 +118,7 @@ const DashboardPage = () => {
         } */
 
         if (error.response) {
-          setMessage(error.response.data.error)
+          setMessage({ text: errorMessage, type: 'error' })
 
           if (
             error.response.data.error ===
@@ -335,9 +336,21 @@ const DashboardPage = () => {
                         {message && (
                           <Typography
                             variant='body1'
-                            sx={{ textAlign: 'center', color: 'red', marginBottom: '10px', marginTop: '10px' }}
+                            sx={{
+                              textAlign: 'center',
+                              marginBottom: '10px',
+                              marginTop: '10px',
+                              color:
+                                message.type === 'error' ||
+                                message.text ===
+                                  'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
+                                  ? 'red'
+                                  : message.type === 'success'
+                                  ? 'green'
+                                  : 'black'
+                            }}
                           >
-                            {message}
+                            {message.text || message}
                           </Typography>
                         )}
                       </Box>
