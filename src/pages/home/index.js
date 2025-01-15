@@ -101,7 +101,7 @@ const Home = () => {
 
   const fetchUserRFIDCount = () => {
     axios
-      .get('/api/user/logs/count')
+      .get('/api/logs/count')
       .then(response => {
         setUserRFIDCount(response.data)
       })
