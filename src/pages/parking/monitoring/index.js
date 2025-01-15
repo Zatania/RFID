@@ -122,7 +122,7 @@ const ParkingMonitoring = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='Visitors' />
+          <CardHeader title='Currently Parked Vehicles' />
           <DataGrid
             autoHeight
             getRowId={row => row.history_id}
