@@ -36,6 +36,13 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 
   // Check if the account is a visitor or user
   if (account.type === 'Visitor') {
+    // Check if visitor status is active
+    const [visitorStatusResult] = await db.query('SELECT status FROM visitors WHERE id = ?', [account.id])
+
+    if (visitorStatusResult.length === 0 || visitorStatusResult[0].status !== 'Active') {
+      throw new Error('Visitor account status is inactive. Please activate.')
+    }
+
     // For visitors, log into the visitor parking history
     const [existingEntry] = await db.query(
       'SELECT * FROM visitor_parking_history WHERE visitor_id = ? AND timestamp_out IS NULL ORDER BY timestamp_in DESC LIMIT 1',
@@ -74,6 +81,23 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 
     if (!vehicleBelongsToUser) {
       throw new Error('Vehicle does not belong to the user')
+    }
+
+    // Check if user status is active
+    const [userStatusResult] = await db.query('SELECT status FROM users WHERE id = ?', [userId])
+
+    if (userStatusResult.length === 0 || userStatusResult[0].status !== 'Active') {
+      // Add a notification for expired or inactive user account status
+      const notifTitle = 'User Account Status Inactive'
+
+      const notifMessage =
+        'Your user account status is expired or inactive. Please activate your account again to continue using our service.'
+      await db.query(
+        'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+        [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+      )
+
+      throw new Error('User account status is inactive. Please activate your account again.')
     }
 
     // Check if there is an existing entry for the user
