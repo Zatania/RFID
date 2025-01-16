@@ -14,6 +14,7 @@ const defineRulesFor = (role, subject) => {
     cannot('read', 'profile-page')
     cannot(['read'], 'user-management')
     cannot(['read'], 'premium-management')
+    cannot(['read'], 'bao-accounts')
     cannot(['read'], 'bao-activation')
     cannot(['read'], 'bao-topup')
     cannot(['read'], 'visitor-management')
