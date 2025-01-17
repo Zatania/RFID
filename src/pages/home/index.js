@@ -162,7 +162,12 @@ const Home = () => {
 
           {ability?.can('read', 'total_staffs') ? (
             <Grid item xs={12} sm={4}>
-              <UserDetails icon='mdi:account-group-outline' color='primary' count={staffCount} title='Total Staffs' />
+              <UserDetails
+                icon='mdi:account-group-outline'
+                color='primary'
+                count={staffCount}
+                title='Total Employees'
+              />
             </Grid>
           ) : null}
 

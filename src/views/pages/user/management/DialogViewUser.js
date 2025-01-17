@@ -342,7 +342,7 @@ const DialogViewUser = ({ user, refreshData }) => {
                           }}
                         >
                           <MenuItem value='Student'>Student</MenuItem>
-                          <MenuItem value='Staff'>Staff</MenuItem>
+                          <MenuItem value='Employee'>Employee</MenuItem>
                         </Select>
                       )}
                     />

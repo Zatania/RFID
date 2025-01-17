@@ -246,7 +246,7 @@ const BAOActivation = () => {
     <Grid container spacing={8}>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='Inactive Student/Staff Accounts' />
+          <CardHeader title='Inactive Student/Employee Accounts' />
           <DataGrid
             autoHeight
             columns={inactiveStudentStaffColumn}

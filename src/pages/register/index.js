@@ -265,7 +265,7 @@ const RegisterPage = () => {
                             }}
                           >
                             <MenuItem value='Student'>Student</MenuItem>
-                            <MenuItem value='Staff'>Staff</MenuItem>
+                            <MenuItem value='Employee'>Employee</MenuItem>
                             <MenuItem value='Outsider'>Outsider</MenuItem>
                           </Select>
                         )}

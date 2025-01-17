@@ -167,7 +167,7 @@ const DialogAddUser = ({ refreshData }) => {
         variant='outlined'
         style={{ marginLeft: '8px', marginRight: '8px', marginBottom: '8px' }}
       >
-        Add Student/Staff User
+        Add Student/Employee User
       </Button>
       <Dialog
         fullWidth
@@ -192,7 +192,7 @@ const DialogAddUser = ({ refreshData }) => {
             </IconButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h5' sx={{ mb: 3 }}>
-                Add Student/Staff User
+                Add Student/Employee User
               </Typography>
               <Typography variant='body2'>Fill User Information</Typography>
             </Box>
@@ -296,7 +296,7 @@ const DialogAddUser = ({ refreshData }) => {
                         }}
                       >
                         <MenuItem value='Student'>Student</MenuItem>
-                        <MenuItem value='Staff'>Staff</MenuItem>
+                        <MenuItem value='Employee'>Employee</MenuItem>
                       </Select>
                     )}
                   />

@@ -100,7 +100,7 @@ const navigation = () => [
 
   // Guard Page
   {
-    title: 'Attendance',
+    title: 'Monitoring',
     path: '/dashboard',
     action: 'read',
     subject: 'dashboard',

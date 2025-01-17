@@ -57,7 +57,7 @@ function StaffToolbar(props) {
 
   // Refresh list of logs
   const fetchStaffLogs = () => {
-    const userType = 'Staff'
+    const userType = 'Employee'
     axios
       .get(`/api/logs/${userType}`)
       .then(response => {
@@ -181,7 +181,7 @@ const Logs = () => {
 
   // Refresh list of Staff logs
   const fetchStaffLogs = () => {
-    const userType = 'Staff'
+    const userType = 'Employee'
     axios
       .get(`/api/logs/${userType}`)
       .then(response => {
@@ -498,7 +498,7 @@ const Logs = () => {
       </Grid>
       <Grid item sm={12} xs={12} sx={{ width: '100%' }}>
         <Card>
-          <CardHeader title='Staff Logs' />
+          <CardHeader title='Employee Logs' />
           <DataGrid
             autoHeight
             columns={staffColumns}

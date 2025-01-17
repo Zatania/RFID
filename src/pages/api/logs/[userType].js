@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 
 const fetchUserLogs = async userType => {
   try {
-    if (userType === 'Student' || userType === 'Staff') {
+    if (userType === 'Student' || userType === 'Employee') {
       const [rows] = await db.query(
         `
       SELECT

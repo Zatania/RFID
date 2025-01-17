@@ -2,7 +2,7 @@ import db from '../../../db'
 
 const fetchStaffCount = async () => {
   try {
-    const [result] = await db.query('SELECT COUNT(*) AS count FROM users WHERE type = "Staff"')
+    const [result] = await db.query('SELECT COUNT(*) AS count FROM users WHERE type = "Employee"')
 
     return result[0].count
   } catch (error) {
