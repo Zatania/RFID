@@ -340,14 +340,23 @@ const DashboardPage = () => {
                               textAlign: 'center',
                               marginBottom: '10px',
                               marginTop: '10px',
-                              color:
-                                message.type === 'error' ||
-                                message.text ===
-                                  'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
-                                  ? 'red'
-                                  : message.type === 'success'
+                              fontWeight: 'bold', // Bold text
+                              backgroundColor: 'white', // White background
+                              border: `2px solid ${
+                                message.type === 'success'
                                   ? 'green'
-                                  : 'black'
+                                  : message.type === 'error' ||
+                                    message.text ===
+                                      'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
+                                  ? 'red'
+                                  : 'transparent'
+                              }`, // Dynamic border color
+                              borderRadius: '5px', // Optional rounded corners for border
+                              padding: '10px', // Padding inside the border
+                              color: 'transparent', // Make the text transparent
+                              backgroundImage: 'linear-gradient(to right, black, gray, black)', // Glossy black text
+                              WebkitBackgroundClip: 'text', // Clip the background to text
+                              WebkitTextFillColor: 'transparent' // Ensures the gradient only fills text
                             }}
                           >
                             {message.text || message}
