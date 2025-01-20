@@ -118,7 +118,7 @@ const DashboardPage = () => {
         } */
 
         if (error.response) {
-          setMessage({ text: errorMessage, type: 'error' })
+          setMessage({ text: error.response.data.error, type: 'error' })
 
           if (
             error.response.data.error ===
