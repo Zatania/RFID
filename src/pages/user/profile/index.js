@@ -231,7 +231,17 @@ const ProfilePage = () => {
               <Box sx={{ mb: 6 }}>
                 <Typography sx={{ mb: 5, display: 'block', textTransform: 'uppercase' }}>ANNOUNCEMENT</Typography>
                 <Typography variant='caption' sx={{ ml: 1, color: 'red', fontWeight: 600 }}>
-                  Your account is still inactive. Please visit the admin office for further verification.
+                  Your account is still inactive. Please follow these instructions to activate your account.
+                  <br />
+                  <br />
+                  First: Proceed to ICTS office to register your RFID Sticker and Tags.
+                  <br />
+                  Second: Go to BAO Office to pay and to buy load for your account.
+                  <br />
+                  <br />
+                  Note: NEVER RIDE FASTER THAN YOUR GUARDIAN ANGEL CAN FLY.
+                  <br />
+                  Ride Safe ka PIYU!
                 </Typography>
               </Box>
             </CardContent>
