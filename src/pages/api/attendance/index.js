@@ -337,8 +337,8 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
       message = 'User checked in successfully. Thank you for parking with us.'
 
       // Add to notifications about successful check in
-      notifTitle = 'Time In'
-      notifMessage = 'You checked in successfully. Thank you for parking with us.'
+      const notifTitle = 'Time In'
+      const notifMessage = 'You checked in successfully. Thank you for parking with us.'
       await db.query(
         'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
         [phone_number, notifTitle, notifMessage, 'unread', 'pending']
