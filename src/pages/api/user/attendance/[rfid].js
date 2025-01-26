@@ -35,7 +35,7 @@ const updateAttendance = async (user_id, guard_id) => {
       const hours = currentTime.getHours()
 
       if (hours >= 17) {
-        const notes = 'Time out way past 5pm.'
+        const notes = 'User checked out after 5pm and OVERPARKED.'
         await db.query('UPDATE logs SET timestamp_out = ? WHERE log_id = ?', [currentTime, log.log_id])
         await db.query('INSERT INTO daily_logs (daily_user_id, daily_guard_id, daily_status) VALUES (?, ?, ?)', [
           user_id,

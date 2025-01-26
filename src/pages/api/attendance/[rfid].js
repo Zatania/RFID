@@ -28,7 +28,7 @@ const postParking = async (guard_id, account_id, account_type) => {
 
       // Check if time-out is past 5 PM
       if (hours >= 17) {
-        const notes = 'Time out way past 5pm.'
+        const notes = 'User checked out after 5pm and OVERPARKED.'
 
         // Add a violation for late time out
         await db.query(`INSERT INTO violations (user_id, notes, status) VALUES (?, ?, 'Unresolved')`, [
