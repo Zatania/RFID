@@ -31,6 +31,7 @@ jobs:
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             export PATH="$PATH:`yarn global bin`"
+            bash -l
             cd RFID || exit 1
             git pull origin main || exit 1
             yarn install || exit 1  # Install dependencies on the Vultr server
