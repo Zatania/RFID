@@ -23,7 +23,7 @@ jobs:
       # Deploy to Vultr Server
       - name: Deploy to Vultr Server
         run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.VULTR_SERVER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no admin@${{ secrets.VULTR_SERVER_IP }} << 'EOF'
             cd RFID || exit 1
             git pull origin main || exit 1
             yarn install || exit 1  # Install dependencies on the Vultr server
