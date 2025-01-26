@@ -25,12 +25,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.14.0'
-          cache: 'yarn'
 
       # Deploy to Vultr Server
       - name: Deploy to Vultr Server
         run: |
           ssh -o StrictHostKeyChecking=no admin@${{ secrets.VULTR_SERVER_IP }} << 'EOF'
+            export PATH="$PATH:`yarn global bin`"
             cd RFID || exit 1
             git pull origin main || exit 1
             yarn install || exit 1  # Install dependencies on the Vultr server
