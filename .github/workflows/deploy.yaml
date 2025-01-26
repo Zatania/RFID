@@ -20,13 +20,23 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VULTR_SSH_PRIVATE_KEY }}
 
+      # Add the server to known_hosts to avoid SSH verification prompts
+      - name: Add SSH Key to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${VULTR_SERVER_IP} >> ~/.ssh/known_hosts
+
+      # Install Node.js 20.14.0
+      - name: Set up Node.js 20.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.14.0'
+          cache: 'yarn'
+
       # Deploy to Vultr Server
       - name: Deploy to Vultr Server
         run: |
           ssh -o StrictHostKeyChecking=no admin@${{ secrets.VULTR_SERVER_IP }} << 'EOF'
-            yarn config set prefix ~/.yarn
-            export PATH="$PATH:`yarn global bin`"
-            bash -l
             cd RFID || exit 1
             git pull origin main || exit 1
             yarn install || exit 1  # Install dependencies on the Vultr server
