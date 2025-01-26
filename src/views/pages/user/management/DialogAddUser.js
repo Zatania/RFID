@@ -36,6 +36,9 @@ import axios from 'axios'
 import * as bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
+// Load environment variables from .env file
+dotenv.config()
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
 })
