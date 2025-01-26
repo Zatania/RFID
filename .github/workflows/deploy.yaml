@@ -23,7 +23,6 @@ jobs:
       # Add SSH Key to Known Hosts
       - name: Add SSH Key to Known Hosts
         run: |
-          mkdir -p ~/.ssh
           ssh-keyscan -H ${VULTR_SERVER_IP} >> ~/.ssh/known_hosts
 
       # Deploy to Vultr Server
