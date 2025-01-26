@@ -71,7 +71,7 @@ const DialogAddUser = ({ refreshData }) => {
 
   useEffect(() => {
     if (show && rfidRef.current) {
-      const socket = new WebSocket('ws://127.0.0.1:4000/user')
+      const socket = new WebSocket('ws://localhost:4000/user')
 
       console.log('Connecting to websocket server in adding user...')
 
