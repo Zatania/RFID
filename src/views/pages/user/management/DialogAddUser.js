@@ -34,10 +34,6 @@ import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import * as bcrypt from 'bcryptjs'
-import dotenv from 'dotenv'
-
-// Load environment variables from .env file
-dotenv.config()
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />
@@ -75,7 +71,7 @@ const DialogAddUser = ({ refreshData }) => {
 
   useEffect(() => {
     if (show && rfidRef.current) {
-      const socket = new WebSocket(`ws://${process.env.SERVER_IP}:4000/user`)
+      const socket = new WebSocket('ws://localhost:4000/user')
 
       console.log('Connecting to websocket server in adding user...')
 
