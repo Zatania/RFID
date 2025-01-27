@@ -35,6 +35,8 @@ const DashboardPage = () => {
 
   const guard_id = session.user.id
 
+  const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+
   // Test sound example
   const deniedAudio = new Audio('/sounds/alert.mp3')
 
@@ -163,7 +165,6 @@ const DashboardPage = () => {
 
   useEffect(() => {
     // WebSocket for user RFID
-    const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
     const userSocket = new WebSocket(`ws://${serverIp}:4000/user`)
 
     userSocket.addEventListener('message', event => {
