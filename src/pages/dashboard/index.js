@@ -87,8 +87,12 @@ const DashboardPage = () => {
         toast.error(response.data.message)
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
-      toast.error('Error fetching user data.')
+      if (error.response && error.response.status === 404) {
+        toast.error('Vehicle Not Found')
+      } else {
+        console.error('Error fetching vehicle data:', error)
+        toast.error('Error fetching vehicle data.')
+      }
     }
   }, [])
 
@@ -215,6 +219,7 @@ const DashboardPage = () => {
       vehicleSocket.close()
       logsSocket.close()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rfid, vehicleRfid, fetchUserData, fetchVehicleData, parkingAttendance])
 
   useEffect(() => {
