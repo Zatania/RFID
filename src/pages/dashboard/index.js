@@ -163,7 +163,8 @@ const DashboardPage = () => {
 
   useEffect(() => {
     // WebSocket for user RFID
-    const userSocket = new WebSocket('ws://localhost:4000/user')
+    const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+    const socket = new WebSocket(`ws://${serverIp}:4000/user`)
 
     userSocket.addEventListener('message', event => {
       const message = event.data
@@ -175,7 +176,7 @@ const DashboardPage = () => {
     })
 
     // WebSocket for vehicle RFID
-    const vehicleSocket = new WebSocket('ws://localhost:4000/vehicle')
+    const vehicleSocket = new WebSocket(`ws://${serverIp}:4000/vehicle`)
 
     vehicleSocket.addEventListener('message', event => {
       const vehicleMessage = event.data
@@ -187,7 +188,7 @@ const DashboardPage = () => {
     })
 
     // WebSocket for logs
-    const logsSocket = new WebSocket('ws://localhost:4000/logs') // Assuming this is your WebSocket endpoint for logs
+    const logsSocket = new WebSocket(`ws://${serverIp}:4000/logs`) // Assuming this is your WebSocket endpoint for logs
     logsSocket.addEventListener('message', event => {
       const logData = JSON.parse(event.data) // Assuming logs are sent as JSON
 
@@ -200,7 +201,7 @@ const DashboardPage = () => {
     })
 
     // WebSocket for parked vehicles
-    const realtimeSocket = new WebSocket('ws://localhost:4000/realtime') // Assuming this is your WebSocket endpoint for parked vehicles
+    const realtimeSocket = new WebSocket(`ws://${serverIp}:4000/realtime`) // Assuming this is your WebSocket endpoint for parked vehicles
     realtimeSocket.addEventListener('message', event => {
       const realtimeData = JSON.parse(event.data) // Assuming logs are sent as JSON
 

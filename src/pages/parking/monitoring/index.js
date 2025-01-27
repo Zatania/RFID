@@ -28,7 +28,8 @@ const ParkingMonitoring = () => {
   useEffect(() => {
     fetchParkingMonitoring()
 
-    const realtimeSocket = new WebSocket('ws://localhost:4000/realtime')
+    const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+    const realtimeSocket = new WebSocket(`ws://${serverIp}:4000/realtime`)
     realtimeSocket.addEventListener('message', event => {
       const realtimeData = JSON.parse(event.data)
       setParkingMonitoringRows(realtimeData)

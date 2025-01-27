@@ -80,7 +80,8 @@ const DialogViewPremium = ({ premium, refreshData }) => {
 
   useEffect(() => {
     if (show && rfidRef.current) {
-      const socket = new WebSocket('ws://localhost:4000/user')
+      const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+      const socket = new WebSocket(`ws://${serverIp}:4000/user`)
 
       console.log('Connecting to websocket server in editing premium user...')
 

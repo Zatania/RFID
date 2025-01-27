@@ -68,7 +68,8 @@ const DialogAddVehicle = ({ user_id, refreshData }) => {
 
   useEffect(() => {
     if (show && rfidRef.current) {
-      const socket = new WebSocket('ws://localhost:4000/vehicle')
+      const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+      const socket = new WebSocket(`ws://${serverIp}:4000/vehicle`)
 
       console.log('Connecting to websocket server in adding vehicle...')
 
