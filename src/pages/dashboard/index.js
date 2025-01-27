@@ -164,7 +164,7 @@ const DashboardPage = () => {
   useEffect(() => {
     // WebSocket for user RFID
     const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
-    const socket = new WebSocket(`ws://${serverIp}:4000/user`)
+    const userSocket = new WebSocket(`ws://${serverIp}:4000/user`)
 
     userSocket.addEventListener('message', event => {
       const message = event.data
