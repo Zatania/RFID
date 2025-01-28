@@ -44,6 +44,7 @@ const addUser = async data => {
     email_address,
     address,
     image,
+    vehicleImage,
     type,
     license_number,
     expiration,
@@ -129,7 +130,7 @@ const addUser = async data => {
           model,
           color,
           plate_number,
-          'default.png',
+          vehicleImage,
           cr_number,
           or_number,
           dayjs(registration_expiration).format('YYYY-MM-DD')
@@ -171,7 +172,7 @@ const addUser = async data => {
           model,
           color,
           plate_number,
-          'default.png',
+          vehicleImage,
           cr_number,
           or_number,
           dayjs(registration_expiration).format('YYYY-MM-DD')

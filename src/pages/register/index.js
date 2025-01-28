@@ -28,6 +28,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import Input from '@mui/material/Input'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -37,6 +38,7 @@ import { useForm, Controller } from 'react-hook-form'
 import * as bcrypt from 'bcryptjs'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
+import axios from 'axios'
 
 // ** Hooks
 import useBgColor from 'src/@core/hooks/useBgColor'
@@ -99,6 +101,8 @@ const RegisterPage = () => {
   const { skin } = settings
 
   const [showPassword, setShowPassword] = useState(false)
+  const [vehicleImageUploaded, setVehicleImageUploaded] = useState(false)
+  const [vehicleImagePath, setVehicleImagePath] = useState('')
 
   const {
     control,
@@ -113,7 +117,37 @@ const RegisterPage = () => {
     router.push('/')
   }
 
+  const handleImageUpload = async file => {
+    if (!file) return ''
+
+    const formData = new FormData()
+    formData.append('myImage', file)
+
+    try {
+      const response = await axios.post('/api/upload/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      toast.success('Image uploaded successfully')
+
+      return response.data.imagePath
+    } catch (error) {
+      console.error(error)
+      if (error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Failed to upload image')
+      }
+
+      return ''
+    }
+  }
+
   const onSubmit = async data => {
+    const imagePath = vehicleImagePath || 'default.png'
+
     const password = data.password
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -122,7 +156,8 @@ const RegisterPage = () => {
 
     const formData = {
       ...data,
-      image: 'default.png'
+      image: 'default.png',
+      vehicleImage: imagePath
     }
     try {
       const response = await fetch('/api/register', {
@@ -351,6 +386,55 @@ const RegisterPage = () => {
                   </Grid>
                   <Grid item sm={12} xs={12}>
                     <Typography variant='body1'>Vehicle Information</Typography>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Typography variant='body1'>Vehicle Image</Typography>
+                  </Grid>
+                  <Grid item sm={12} xs={12}>
+                    <Grid
+                      container
+                      spacing={6}
+                      sx={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}
+                    >
+                      <Grid item sm={12} xs={12}>
+                        <FormControl>
+                          <Input
+                            type='file'
+                            id='vehicle-image-upload'
+                            style={{ display: 'none' }}
+                            onChange={async ({ target }) => {
+                              if (target.files && target.files.length > 0) {
+                                const file = target.files[0]
+                                const imagePath = await handleImageUpload(file)
+                                if (imagePath) {
+                                  setVehicleImageUploaded(true)
+                                  setVehicleImagePath(imagePath)
+                                }
+                              }
+                            }}
+                          />
+                          {vehicleImageUploaded ? (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                              <img
+                                src={`/api/image/${vehicleImagePath}`}
+                                alt='Vehicle Image'
+                                style={{ maxWidth: '25%' }}
+                              />
+                              <Typography>Vehicle Image Successfully Uploaded</Typography>
+                            </Box>
+                          ) : (
+                            <Button
+                              variant='outlined'
+                              component='label'
+                              htmlFor='vehicle-image-upload'
+                              className='w-40 aspect-video rounded border-2 border-dashed cursor-pointer'
+                            >
+                              Select Image
+                            </Button>
+                          )}
+                        </FormControl>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item sm={4} xs={12}>
                     <Controller
