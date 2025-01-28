@@ -17,7 +17,7 @@ const fetchActives = async () => {
             END AS account_type
         FROM
             rfids
-        LEFT JOIN Users users ON rfids.user_id = users.id
+        LEFT JOIN users ON rfids.user_id = users.id
         WHERE users.status = 'Active';
       `)
 
