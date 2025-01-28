@@ -49,7 +49,7 @@ export const getStaticProps = async ({ params }) => {
 
 AccountSettingsTab.acl = {
   action: 'read',
-  subject: 'account-settingstab'
+  subject: 'bao-settingstab'
 }
 
 export default AccountSettingsTab

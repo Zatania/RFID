@@ -30,7 +30,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'total_premiums')
     can(['read'], 'total_scans')
   } else if (role === 'bao') {
-    can(['read'], 'account-settingstab')
+    can(['read'], 'bao-settingstab')
     can(['read'], 'home')
     can(['read'], 'bao-activation')
     can(['read'], 'bao-accounts')
@@ -52,6 +52,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'total_scans')
   } else if (role === 'user') {
     can(['read'], 'profile-page')
+    can(['read'], 'user-settingstab')
   } else if (role === 'premium') {
     can(['read'], 'profile-page')
   } else {
