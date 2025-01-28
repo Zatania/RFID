@@ -165,6 +165,20 @@ const UserDropdown = props => {
               Settings
             </Box>
           </MenuItem>
+        ) : session?.user.role === 'user' ? (
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user/settings/account')}>
+            <Box sx={styles}>
+              <Icon icon='mdi:cog-outline' />
+              Settings
+            </Box>
+          </MenuItem>
+        ) : session?.user.role === 'premium' ? (
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user/premium/settings/account')}>
+            <Box sx={styles}>
+              <Icon icon='mdi:cog-outline' />
+              Settings
+            </Box>
+          </MenuItem>
         ) : null}
         <Divider />
         <MenuItem

@@ -55,6 +55,7 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'user-settingstab')
   } else if (role === 'premium') {
     can(['read'], 'profile-page')
+    can(['read'], 'premium-settingstab')
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
   }
