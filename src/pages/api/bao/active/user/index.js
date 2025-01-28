@@ -16,7 +16,7 @@ const fetchActives = async () => {
               ELSE 'Unknown'
             END AS account_type
         FROM
-            RFIDs rfids
+            rfids
         LEFT JOIN Users users ON rfids.user_id = users.id
         WHERE users.status = 'Active';
       `)

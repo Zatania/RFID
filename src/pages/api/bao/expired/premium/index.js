@@ -20,7 +20,7 @@ const fetchActives = async () => {
               ELSE 'Unknown'
             END AS account_type
         FROM
-            RFIDs rfids
+            rfids
         LEFT JOIN Premiums premiums ON rfids.premium_id = premiums.id
         WHERE premiums.status = 'Expired';
       `)
