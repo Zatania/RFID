@@ -1,4 +1,5 @@
 import db from '../db'
+import dayjs from 'dayjs'
 
 const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfid) => {
   const currentTime = new Date()
@@ -170,32 +171,57 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
       } else {
         let notifTitle, notifMessage
 
-        // Add to notifications about deduction
-        notifTitle = 'Deduction'
-        notifMessage = `You have been charged for parking. Your new balance is Php${balance}.`
-        await db.query(
-          'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
-          [phone_number, notifTitle, notifMessage, 'unread', 'pending']
-        )
+        // Get current balance to check if balance was deducted
+        const [user] = await db.query('SELECT * FROM rfids WHERE value = ?', [rfid])
 
-        // If there's no existing entry, create a new one
-        const [updateEntry] = await db.query(
-          'INSERT INTO user_parking_history (user_id, guard_id, vehicle_id, timestamp_in) VALUES (?, ?, ?, NOW())',
-          [account.id, guard_id, vehicle_id]
-        )
-        const historyId = updateEntry.insertId
-        await db.query('INSERT INTO user_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME IN'])
-        message = 'User checked in successfully. Thank you for parking with us.'
+        if (user.length > 0) {
+          const currentBalance = parseFloat(user[0].load_balance)
 
-        // Add to notifications about successful check in
-        notifTitle = 'Time In'
-        notifMessage = 'You checked in successfully. Thank you for parking with us.'
-        await db.query(
-          'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
-          [phone_number, notifTitle, notifMessage, 'unread', 'pending']
-        )
+          if (currentBalance === balance) {
+            // Add notification about balance already being deducted
 
-        return message
+            notifTitle = 'Balance Already Deducted'
+            notifMessage = 'Your balance has already been deducted for parking. Thank you for parking with us.'
+
+            await db.query(
+              'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+              [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+            )
+
+            message = 'Balance already deducted for parking. Thank you for parking with us.'
+
+            return message
+          } else {
+            // Add to notifications about deduction
+            notifTitle = 'Deduction'
+            notifMessage = `You have been charged for parking. Your new balance is Php${balance}.`
+            await db.query(
+              'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+              [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+            )
+
+            // If there's no existing entry, create a new one
+            const [updateEntry] = await db.query(
+              'INSERT INTO user_parking_history (user_id, guard_id, vehicle_id, timestamp_in) VALUES (?, ?, ?, NOW())',
+              [account.id, guard_id, vehicle_id]
+            )
+            const historyId = updateEntry.insertId
+            await db.query('INSERT INTO user_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME IN'])
+            message = 'User checked in successfully. Thank you for parking with us.'
+
+            // Add to notifications about successful check in
+            notifTitle = 'Time In'
+            notifMessage = 'You checked in successfully. Thank you for parking with us.'
+            await db.query(
+              'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+              [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+            )
+
+            return message
+          }
+        } else {
+          throw new Error('RFID not found')
+        }
       }
     }
   } else if (account.type === 'Premium') {
@@ -400,6 +426,16 @@ const deductBalance = async rfid => {
 
   if (user.length > 0) {
     const currentBalance = parseFloat(user[0].load_balance)
+    const lastDeductionDate = user[0].last_deduction_date
+
+    const today = dayjs().startOf('day')
+
+    const lastDeductionDay = lastDeductionDate ? dayjs(lastDeductionDate).startOf('day') : null
+
+    if (lastDeductionDay && today.isSame(lastDeductionDay)) {
+      // Deduction already occurred today
+      return currentBalance
+    }
 
     if (currentBalance >= parkingFee) {
       const newBalance = currentBalance - parkingFee
