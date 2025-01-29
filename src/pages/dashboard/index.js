@@ -172,12 +172,45 @@ const DashboardPage = () => {
     const userSocket = new WebSocket(`ws://${serverIp}:4000/user`)
 
     userSocket.addEventListener('message', event => {
-      const message = event.data
+      /* const message = event.data
       console.log('User RFID:', message)
       setRfid(message) // Set user RFID from WebSocket
 
       // Fetch user data when RFID is scanned
-      fetchUserData(message)
+      fetchUserData(message) */
+
+      const rawMessage = event.data
+      try {
+        // Parse message as JSON (if possible)
+        const data = JSON.parse(rawMessage)
+
+        // Handle messages based on type
+        switch (data.type) {
+          case 'rfid':
+            console.log('RFID:', data.value)
+            setRfid(data.value)
+            fetchUserData(data.value)
+            break
+
+          case 'sms':
+            console.log('SMS Status:', data.message)
+            toast[data.status](data.message) // Show success/error toast
+            break
+
+          default:
+            console.warn('Unknown message type:', data.type)
+        }
+      } catch (error) {
+        // Handle non-JSON messages (legacy RFID strings)
+        if (isValidRFID(rawMessage)) {
+          // Add validation for RFID format
+          console.log('Legacy RFID (no JSON):', rawMessage)
+          setRfid(rawMessage)
+          fetchUserData(rawMessage)
+        } else {
+          console.error('Invalid message:', rawMessage)
+        }
+      }
     })
 
     // WebSocket for vehicle RFID
