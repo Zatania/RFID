@@ -188,7 +188,22 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
               [phone_number, notifTitle, notifMessage, 'unread', 'pending']
             )
 
-            message = 'Balance already deducted for parking. Thank you for parking with us.'
+            // If there's no existing entry, create a new one
+            const [updateEntry] = await db.query(
+              'INSERT INTO user_parking_history (user_id, guard_id, vehicle_id, timestamp_in) VALUES (?, ?, ?, NOW())',
+              [account.id, guard_id, vehicle_id]
+            )
+            const historyId = updateEntry.insertId
+            await db.query('INSERT INTO user_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME IN'])
+            message = 'User checked in successfully. Thank you for parking with us.'
+
+            // Add to notifications about successful check in
+            notifTitle = 'Time In'
+            notifMessage = 'You checked in successfully. Thank you for parking with us.'
+            await db.query(
+              'INSERT INTO notifications (phone_number, title, message, status, sms_status) VALUES (?, ?, ?, ?, ?)',
+              [phone_number, notifTitle, notifMessage, 'unread', 'pending']
+            )
 
             return message
           } else {
