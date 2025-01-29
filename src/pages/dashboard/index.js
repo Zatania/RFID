@@ -71,8 +71,8 @@ const DashboardPage = () => {
         toast.error(response.data.message)
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
-      toast.error('Error fetching user data.')
+      console.error(error)
+      toast.error(error)
     }
   }, [])
 
