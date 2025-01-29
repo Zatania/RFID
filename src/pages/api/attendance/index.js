@@ -454,7 +454,12 @@ const deductBalance = async rfid => {
 
     if (currentBalance >= parkingFee) {
       const newBalance = currentBalance - parkingFee
-      await db.query('UPDATE rfids SET load_balance = ? WHERE value = ?', [newBalance, rfid])
+
+      // Update both load_balance and last_deduction_date
+      await db.query('UPDATE rfids SET load_balance = ?, last_deduction_date = NOW() WHERE value = ?', [
+        newBalance,
+        rfid
+      ])
 
       return newBalance
     } else {
