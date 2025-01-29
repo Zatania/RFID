@@ -54,7 +54,10 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
       const historyId = existingEntry[0].id
 
       // If there's an existing entry with no time_out, update the time_out
-      await db.query('UPDATE visitor_parking_history SET timestamp_out = NOW() WHERE id = ?', [historyId])
+      await db.query('UPDATE visitor_parking_history SET timestamp_out = NOW(), status = ? WHERE id = ?', [
+        'Checked-out',
+        historyId
+      ])
       await db.query('INSERT INTO visitor_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME OUT'])
 
       message = 'Visitor Checked out successfully'
@@ -132,14 +135,20 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
         )
 
         // Log for TIME OUT with late violation
-        await db.query('UPDATE user_parking_history SET timestamp_out = NOW() WHERE id = ?', [historyId])
+        await db.query('UPDATE user_parking_history SET timestamp_out = NOW(), status = ? WHERE id = ?', [
+          'Late Checked-out',
+          historyId
+        ])
         await db.query('INSERT INTO user_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'LATE TIME OUT'])
         message = 'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
 
         return message
       } else {
         // If there's an existing entry with no time_out, update the time_out
-        await db.query('UPDATE user_parking_history SET timestamp_out = NOW() WHERE id = ?', [historyId])
+        await db.query('UPDATE user_parking_history SET timestamp_out = NOW(), status = ? WHERE id = ?', [
+          'Checked-out',
+          historyId
+        ])
         await db.query('INSERT INTO user_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME OUT'])
         message = 'User checked out successfully. Thank you for parking with us.'
 
@@ -299,7 +308,10 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
         )
 
         // Log for TIME OUT with late violation
-        await db.query('UPDATE premium_parking_history SET timestamp_out = NOW() WHERE id = ?', [historyId])
+        await db.query('UPDATE premium_parking_history SET timestamp_out = NOW(), status = ? WHERE id = ?', [
+          'Late Checked-out',
+          historyId
+        ])
         await db.query('INSERT INTO premium_parking_logs (history_id, action) VALUES (?, ?)', [
           historyId,
           'LATE TIME OUT'
@@ -309,7 +321,10 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
         return message
       } else {
         // If there's an existing entry with no time_out, update the time_out
-        await db.query('UPDATE premium_parking_history SET timestamp_out = NOW() WHERE id = ?', [historyId])
+        await db.query('UPDATE premium_parking_history SET timestamp_out = NOW(), status = ? WHERE id = ?', [
+          'Late Checked-out',
+          historyId
+        ])
         await db.query('INSERT INTO premium_parking_logs (history_id, action) VALUES (?, ?)', [historyId, 'TIME OUT'])
         message = 'User checked out successfully. Thank you for parking with us.'
 
