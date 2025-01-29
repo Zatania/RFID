@@ -40,6 +40,13 @@ const DashboardPage = () => {
   // Test sound example
   const deniedAudio = new Audio('/sounds/alert.mp3')
 
+  // Helper check rfid
+
+  const isValidRFID = value => {
+    // Example: Check if it's a 8-character hex string (adjust based on your RFID format)
+    return /^[A-F0-9]{8}$/.test(value)
+  }
+
   const fetchUserData = useCallback(async rfid => {
     try {
       const response = await axios.get(`/api/attendance/user/${rfid}`)
