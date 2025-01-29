@@ -112,7 +112,8 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 
       if (hours >= 17) {
         // Add a violation for late time out
-        const violationNotes = 'OVERPARKED. User checked out after 5pm.'
+        const violationNotes =
+          'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
         await db.query('INSERT INTO violations (user_id, user_history_id, notes, status) VALUES (?, ?, ?, ?)', [
           userId,
           historyId,
@@ -278,7 +279,8 @@ const parkingAttendance = async (account, guard_id, vehicle_id, rfid, vehicleRfi
 
       if (hours >= 17) {
         // Add a violation for late time out
-        const violationNotes = 'OVERPARKED. User checked out after 5pm.'
+        const violationNotes =
+          'User checked out after 5pm. Violation added for late time out. Thank you for parking with us.'
         await db.query('INSERT INTO violations (premium_id, premium_history_id, notes, status) VALUES (?, ?, ?, ?)', [
           userId,
           historyId,
