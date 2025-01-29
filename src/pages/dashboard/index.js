@@ -194,7 +194,8 @@ const DashboardPage = () => {
 
           case 'sms':
             console.log('SMS Status:', data.message)
-            toast[data.status](data.message) // Show success/error toast
+
+            /* toast[data.status](data.message) // Show success/error toast */
             break
 
           default:
