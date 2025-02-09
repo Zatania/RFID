@@ -32,6 +32,7 @@ const DashboardPage = () => {
   const [logs, setLogs] = useState([])
   const [parkedVehicles, setParkedVehicles] = useState([])
   const { data: session } = useSession()
+  const [isAlert, setIsAlert] = useState(false)
 
   const guard_id = session.user.id
 
@@ -39,6 +40,7 @@ const DashboardPage = () => {
 
   // Test sound example
   const deniedAudio = new Audio('/sounds/alert.mp3')
+  const noSlotAudio = new Audio('/sounds/noslots.mp3')
 
   // Helper check rfid
 
@@ -313,6 +315,28 @@ const DashboardPage = () => {
     fetchParkedVehicles()
   }, [])
 
+  // Check for available slots
+  useEffect(() => {
+    if (parkedVehicles.length >= 300) {
+      setIsAlert(true)
+      noSlotAudio.muted = true
+      noSlotAudio
+        .play()
+        .then(() => {
+          // After autoplay, you can unmute if needed
+          noSlotAudio.muted = false
+        })
+        .catch(err => {
+          console.error('Error playing sound:', err)
+        })
+
+      toast.error('No available slots')
+    } else {
+      setIsAlert(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parkedVehicles.length])
+
   return (
     <Box
       sx={{
@@ -461,6 +485,48 @@ const DashboardPage = () => {
                 </Grid>
                 <Grid item sm={6} xs={12}>
                   <Grid container spacing={6}>
+                    <Grid item sm={12} xs={12}>
+                      <Box
+                        sx={{
+                          borderRadius: '8px',
+
+                          /*bgcolor: '#4682B4',*/
+                          padding: '20px',
+                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)'
+                        }}
+                      >
+                        <Grid container spacing={3}>
+                          <Grid item sm={12} xs={12}>
+                            <Grid item sm={12} xs={12}>
+                              <Typography
+                                variant='h5'
+                                sx={{
+                                  color: isAlert ? 'red' : '#ffffff',
+                                  textAlign: 'center',
+                                  fontWeight: 'bold',
+                                  animation: isAlert ? 'blink 1s infinite' : 'none'
+                                }}
+                              >
+                                {parkedVehicles.length} / 300
+                              </Typography>
+                            </Grid>
+                            <Typography align='center' sx={{ color: '#252324', fontWeight: 'bold' }} gutterBottom>
+                              Vehicle Inside
+                            </Typography>
+                          </Grid>
+
+                          <style>
+                            {`
+                              @keyframes blink {
+                                0% { opacity: 1; }
+                                50% { opacity: 0; }
+                                100% { opacity: 1; }
+                              }
+                            `}
+                          </style>
+                        </Grid>
+                      </Box>
+                    </Grid>
                     <Grid item sm={12} xs={12}>
                       <Box
                         sx={{
